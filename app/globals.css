@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #241f1a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-poppins);
+
+  /* Paleta madeira (âmbar/marrom claro) — cor primária */
+  --color-wood-50: #fbf6f1;
+  --color-wood-100: #f4e7d8;
+  --color-wood-200: #e7cca9;
+  --color-wood-300: #d9ac78;
+  --color-wood-400: #c88f52;
+  --color-wood-500: #b3763a;
+  --color-wood-600: #93602f;
+  --color-wood-700: #734a26;
+  --color-wood-800: #57391f;
+  --color-wood-900: #3c2715;
+
+  /* Neutros — cinza-escuro quase preto */
+  --color-charcoal-50: #f6f5f4;
+  --color-charcoal-100: #e7e4e1;
+  --color-charcoal-200: #cac4bd;
+  --color-charcoal-300: #a49a8f;
+  --color-charcoal-400: #766a5d;
+  --color-charcoal-500: #564d43;
+  --color-charcoal-600: #3f3830;
+  --color-charcoal-700: #2f2921;
+  --color-charcoal-800: #241f1a;
+  --color-charcoal-900: #171310;
+
+  /* Verde-musgo — detalhes sutis */
+  --color-moss-50: #f1f5ee;
+  --color-moss-100: #e1ead9;
+  --color-moss-200: #c3d6b4;
+  --color-moss-300: #a2be8c;
+  --color-moss-400: #83a76b;
+  --color-moss-500: #6b8f54;
+  --color-moss-600: #557242;
+  --color-moss-700: #435a35;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading), var(--font-sans), sans-serif;
+}
