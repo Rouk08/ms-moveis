@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Inbox, Send, PenSquare } from "lucide-react";
+import { AlertTriangle, Inbox, Send, PenSquare } from "lucide-react";
 import { listMessages, resolveFolder, folderParam } from "@/lib/mail";
 
 export default async function EmailPage({
@@ -11,9 +11,20 @@ export default async function EmailPage({
   const folder = resolveFolder(folderQuery);
   const beforeSeq = before ? Number(before) : undefined;
 
-  const { messages, hasMore, oldestSeq } = await listMessages(folder, {
-    beforeSeq,
-  });
+  let messages: Awaited<ReturnType<typeof listMessages>>["messages"] = [];
+  let hasMore = false;
+  let oldestSeq: number | null = null;
+  let connectionError: string | null = null;
+
+  try {
+    const result = await listMessages(folder, { beforeSeq });
+    messages = result.messages;
+    hasMore = result.hasMore;
+    oldestSeq = result.oldestSeq;
+  } catch (err) {
+    connectionError =
+      err instanceof Error ? err.message : "Não foi possível conectar à caixa de e-mail.";
+  }
 
   const tabs = [
     { label: "Entrada", value: "inbox", icon: Inbox },
@@ -63,7 +74,25 @@ export default async function EmailPage({
         })}
       </div>
 
-      <div className="rounded-2xl border border-charcoal-100 bg-white shadow-sm overflow-hidden">
+      {connectionError && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 mb-6 flex gap-3">
+          <AlertTriangle size={20} className="text-red-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-medium text-red-700">
+              Não foi possível conectar à caixa de e-mail
+            </p>
+            <p className="text-sm text-red-600 mt-1">{connectionError}</p>
+          </div>
+        </div>
+      )}
+
+      <div
+        className={
+          connectionError
+            ? "hidden"
+            : "rounded-2xl border border-charcoal-100 bg-white shadow-sm overflow-hidden"
+        }
+      >
         {messages.length === 0 ? (
           <p className="px-6 py-10 text-sm text-charcoal-400 text-center">
             Nenhum e-mail encontrado.

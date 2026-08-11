@@ -18,14 +18,24 @@ export function folderParam(folder: MailFolder): "inbox" | "enviados" {
 
 const PAGE_SIZE = 20;
 
+function requiredEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(
+      `Variável de ambiente ${name} não configurada. Adicione as credenciais de e-mail no .env do servidor.`
+    );
+  }
+  return value;
+}
+
 function imapConfig() {
   return {
-    host: process.env.IMAP_HOST!,
+    host: requiredEnv("IMAP_HOST"),
     port: Number(process.env.IMAP_PORT ?? 993),
     secure: true,
     auth: {
-      user: process.env.IMAP_USER!,
-      pass: process.env.IMAP_PASSWORD!,
+      user: requiredEnv("IMAP_USER"),
+      pass: requiredEnv("IMAP_PASSWORD"),
     },
     logger: false as const,
   };
@@ -221,8 +231,10 @@ export async function sendMessage({
     }
   }
 
+  const smtpUser = requiredEnv("SMTP_USER");
+
   const composer = new MailComposer({
-    from: process.env.SMTP_USER,
+    from: smtpUser,
     to,
     subject,
     text,
@@ -238,12 +250,12 @@ export async function sendMessage({
   });
 
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: requiredEnv("SMTP_HOST"),
     port: Number(process.env.SMTP_PORT ?? 465),
     secure: Number(process.env.SMTP_PORT ?? 465) === 465,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
+      user: smtpUser,
+      pass: requiredEnv("SMTP_PASSWORD"),
     },
   });
 
