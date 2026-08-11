@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Mail, Phone, Calendar, Tag } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Calendar, Tag, Wallet } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import StatusBadge from "@/components/admin/StatusBadge";
 import EditOrcamentoForm from "@/components/admin/EditOrcamentoForm";
@@ -38,6 +38,16 @@ export default async function OrcamentoDetailPage({
         </div>
         <StatusBadge status={orcamento.status} />
       </div>
+
+      {orcamento.status === "APROVADO" && (
+        <Link
+          href={`/admin/financeiro/contas-a-receber/novo?orcamentoId=${orcamento.id}`}
+          className="mb-6 inline-flex items-center gap-2 rounded-full bg-moss-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-moss-700 transition-colors"
+        >
+          <Wallet size={16} />
+          Gerar conta a receber
+        </Link>
+      )}
 
       <div className="rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm mb-6">
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">

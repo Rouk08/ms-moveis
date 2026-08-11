@@ -22,6 +22,7 @@ type SidebarProps = {
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/orcamentos", label: "Orçamentos", icon: FileText },
+  { href: "/admin/financeiro", label: "Financeiro", icon: Wallet },
   {
     href: "/admin/usuarios",
     label: "Usuários",
@@ -30,10 +31,7 @@ const navItems = [
   },
 ];
 
-const comingSoonItems = [
-  { label: "Financeiro", icon: Wallet },
-  { label: "E-mail", icon: Mail },
-];
+const comingSoonItems = [{ label: "E-mail", icon: Mail }];
 
 export default function Sidebar({ userName, userRole }: SidebarProps) {
   const pathname = usePathname();

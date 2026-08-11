@@ -38,6 +38,7 @@ model Orcamento {
   origem        Origem          @default(SITE)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
+  contasReceber ContaReceber[]
 }
 
 enum OrcamentoStatus {
@@ -50,4 +51,57 @@ enum OrcamentoStatus {
 enum Origem {
   SITE
   MANUAL
+}
+
+model ContaPagar {
+  id            String          @id @default(cuid())
+  descricao     String
+  fornecedor    String?
+  categoria     CategoriaPagar  @default(OUTROS)
+  valor         Decimal         @db.Decimal(10, 2)
+  vencimento    DateTime
+  status        StatusPagamento @default(PENDENTE)
+  dataPagamento DateTime?
+  notasInternas String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+enum CategoriaPagar {
+  MATERIAL
+  FORNECEDOR
+  SALARIOS
+  ALUGUEL
+  IMPOSTOS
+  MARKETING
+  OUTROS
+}
+
+enum StatusPagamento {
+  PENDENTE
+  PAGO
+}
+
+model ContaReceber {
+  id                String            @id @default(cuid())
+  cliente           String
+  telefone          String?
+  email             String?
+  valor             Decimal           @db.Decimal(10, 2)
+  vencimento        DateTime
+  status            StatusRecebimento @default(PENDENTE)
+  dataRecebimento   DateTime?
+  parcela           Int               @default(1)
+  totalParcelas     Int               @default(1)
+  grupoParcelamento String?
+  notasInternas     String?
+  orcamentoId       String?
+  orcamento         Orcamento?        @relation(fields: [orcamentoId], references: [id])
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+
+enum StatusRecebimento {
+  PENDENTE
+  RECEBIDO
 }
