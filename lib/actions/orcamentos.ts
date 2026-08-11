@@ -5,9 +5,18 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
+import fs from "node:fs";
+
+function debugLog(msg: string) {
+  try {
+    fs.appendFileSync("/tmp/orcamento-debug.log", `${new Date().toISOString()} ${msg}\n`);
+  } catch {}
+}
 
 async function requireSession() {
+  debugLog("requireSession: calling auth()");
   const session = await auth();
+  debugLog(`requireSession: session = ${JSON.stringify(session)}`);
   if (!session?.user) throw new Error("Não autenticado.");
   return session;
 }
@@ -42,25 +51,34 @@ export async function createOrcamentoFromSite(
 }
 
 export async function createOrcamentoManual(formData: FormData) {
-  await requireSession();
+  debugLog("createOrcamentoManual: start");
+  try {
+    await requireSession();
+    debugLog("createOrcamentoManual: session OK");
 
-  const nome = String(formData.get("nome") ?? "").trim();
-  const telefone = String(formData.get("telefone") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
-  const tipoProjeto = String(formData.get("tipoProjeto") ?? "").trim();
-  const mensagem = String(formData.get("mensagem") ?? "").trim();
+    const nome = String(formData.get("nome") ?? "").trim();
+    const telefone = String(formData.get("telefone") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim();
+    const tipoProjeto = String(formData.get("tipoProjeto") ?? "").trim();
+    const mensagem = String(formData.get("mensagem") ?? "").trim();
 
-  if (!nome || !telefone || !email || !mensagem) {
-    throw new Error("Preencha todos os campos obrigatórios.");
+    if (!nome || !telefone || !email || !mensagem) {
+      throw new Error("Preencha todos os campos obrigatórios.");
+    }
+
+    const orcamento = await prisma.orcamento.create({
+      data: { nome, telefone, email, tipoProjeto, mensagem, origem: "MANUAL" },
+    });
+    debugLog(`createOrcamentoManual: created ${orcamento.id}`);
+
+    revalidatePath("/admin");
+    revalidatePath("/admin/orcamentos");
+    debugLog("createOrcamentoManual: about to redirect");
+    redirect(`/admin/orcamentos/${orcamento.id}`);
+  } catch (err) {
+    debugLog(`createOrcamentoManual: CAUGHT ${String(err)} ${err instanceof Error ? err.stack : ""}`);
+    throw err;
   }
-
-  const orcamento = await prisma.orcamento.create({
-    data: { nome, telefone, email, tipoProjeto, mensagem, origem: "MANUAL" },
-  });
-
-  revalidatePath("/admin");
-  revalidatePath("/admin/orcamentos");
-  redirect(`/admin/orcamentos/${orcamento.id}`);
 }
 
 const STATUS_VALUES: OrcamentoStatus[] = [
