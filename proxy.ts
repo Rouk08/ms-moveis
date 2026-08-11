@@ -1,40 +1,30 @@
-import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import { authConfig } from "@/auth.config";
+import { getToken } from "next-auth/jwt";
+import type { NextRequest } from "next/server";
 
-const { auth } = NextAuth(authConfig);
+export default async function proxy(req: NextRequest) {
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    secureCookie:
+      req.headers.get("x-forwarded-proto") === "https" ||
+      req.nextUrl.protocol === "https:",
+  });
 
-export default auth((req) => {
-  const isLoggedIn = !!req.auth;
+  const isLoggedIn = !!token;
   const { pathname } = req.nextUrl;
   const isLoginPage = pathname === "/admin/login";
 
-  const debugHeaders = {
-    "x-debug-method": req.method,
-    "x-debug-pathname": pathname,
-    "x-debug-logged-in": String(isLoggedIn),
-    "x-debug-cookie-names": req.cookies
-      .getAll()
-      .map((c) => c.name)
-      .join(","),
-  };
-
   if (!isLoginPage && !isLoggedIn) {
-    const res = NextResponse.redirect(new URL("/admin/login", req.nextUrl));
-    Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
-    return res;
+    return NextResponse.redirect(new URL("/admin/login", req.nextUrl));
   }
 
   if (isLoginPage && isLoggedIn) {
-    const res = NextResponse.redirect(new URL("/admin", req.nextUrl));
-    Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
-    return res;
+    return NextResponse.redirect(new URL("/admin", req.nextUrl));
   }
 
-  const res = NextResponse.next();
-  Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
-  return res;
-});
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: ["/admin/:path*"],
