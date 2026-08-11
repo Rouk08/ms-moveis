@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Sofa } from "lucide-react";
+import { auth } from "@/lib/auth";
 import LoginForm from "@/components/admin/LoginForm";
 
 export const metadata: Metadata = {
@@ -7,7 +9,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function AdminLoginPage() {
+export default async function AdminLoginPage() {
+  const session = await auth();
+  if (session?.user) redirect("/admin");
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-charcoal-50/40 px-4">
       <div className="w-full max-w-sm rounded-2xl border border-charcoal-100 bg-white p-8 shadow-sm">

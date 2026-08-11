@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import Sidebar from "@/components/admin/Sidebar";
 
@@ -12,7 +13,8 @@ export default async function ProtectedAdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  const user = session?.user;
+  if (!session?.user) redirect("/admin/login");
+  const user = session.user;
 
   return (
     <div className="flex min-h-screen bg-charcoal-50/30">
