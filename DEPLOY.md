@@ -1,10 +1,15 @@
 # Deploy — VPS Oracle + domínio Hostinger
 
 Guia passo a passo para publicar o site em `msmoveissobmedida.com.br` numa
-VPS Oracle Cloud (Ubuntu), usando **Node.js + PM2 + Nginx** com SSL grátis
-via Let's Encrypt.
+VPS Oracle Cloud rodando **Oracle Linux 9**, usando **Node.js + PM2 +
+Nginx** com SSL grátis via Let's Encrypt.
 
-IP da VPS: `163.176.167.166` · usuário SSH: `oracle`.
+IP da VPS: `146.235.36.119` · usuário SSH: `opc` · chave privada:
+`~/.ssh/ms_moveis_vps_oracle` (Windows: `C:\Users\natal\.ssh\ms_moveis_vps_oracle`).
+
+Oracle Linux é baseado em RHEL: usa `dnf` no lugar de `apt`, `firewalld`
+no lugar de `ufw`, e vem com **SELinux** ativado por padrão — os passos
+abaixo já levam isso em conta.
 
 ---
 
@@ -15,8 +20,8 @@ No painel da Hostinger, na área de **DNS / Zona DNS** do domínio
 
 | Tipo | Nome | Aponta para      | TTL  |
 |------|------|-------------------|------|
-| A    | @    | `163.176.167.166` | 3600 |
-| A    | www  | `163.176.167.166` | 3600 |
+| A    | @    | `146.235.36.119` | 3600 |
+| A    | www  | `146.235.36.119` | 3600 |
 
 Remova qualquer registro A ou CNAME antigo apontando para o parking page da
 Hostinger. A propagação costuma levar de alguns minutos até algumas horas.
@@ -31,7 +36,7 @@ nslookup www.msmoveissobmedida.com.br
 ## 2. Liberar as portas na Oracle Cloud (passo que todo mundo esquece)
 
 A Oracle Cloud bloqueia tráfego externo em **duas camadas**: o firewall do
-próprio Ubuntu (`ufw`/`iptables`) e a **Security List / Network Security
+próprio Oracle Linux (`firewalld`) e a **Security List / Network Security
 Group** do painel da Oracle. As duas precisam liberar as portas 80 e 443,
 senão o site não abre mesmo com tudo certo na VPS.
 
@@ -47,32 +52,24 @@ No painel da Oracle Cloud:
 ## 3. Acessar a VPS via SSH
 
 ```bash
-ssh oracle@163.176.167.166
-```
-
-Se a chave privada não estiver no local padrão (`~/.ssh/id_rsa`), aponte
-para o arquivo `.pem`/`.key` que a Oracle gerou na criação da instância:
-
-```bash
-ssh -i /caminho/para/sua-chave.key oracle@163.176.167.166
+ssh -i ~/.ssh/ms_moveis_vps_oracle opc@146.235.36.119
 ```
 
 ## 4. Preparar o servidor
 
 ```bash
 # Atualizar pacotes
-sudo apt update && sudo apt upgrade -y
+sudo dnf update -y
 
-# Firewall do próprio Ubuntu
-sudo apt install -y ufw
-sudo ufw allow OpenSSH
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
-sudo ufw --force enable
+# Firewall (firewalld) — libera HTTP e HTTPS
+sudo firewall-cmd --permanent --add-port=80/tcp
+sudo firewall-cmd --permanent --add-port=443/tcp
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-all      # confirma que 80/tcp e 443/tcp aparecem
 
-# Node.js 20 LTS (via NodeSource)
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
+# Node.js 20 LTS (via NodeSource, repositório RPM)
+curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+sudo dnf install -y nodejs
 
 node -v   # deve mostrar v20.x
 npm -v
@@ -81,11 +78,21 @@ npm -v
 sudo npm install -g pm2
 
 # Nginx
-sudo apt install -y nginx
-sudo systemctl enable nginx
+sudo dnf install -y nginx
+sudo systemctl enable --now nginx
 
 # Git (para clonar/atualizar o projeto)
-sudo apt install -y git
+sudo dnf install -y git
+```
+
+### SELinux — passo específico do Oracle Linux
+
+Por padrão o SELinux bloqueia o Nginx de fazer proxy para outra porta da
+própria máquina (o app Next.js na porta 3000). Sem isso você recebe
+`502 Bad Gateway` mesmo com tudo certo:
+
+```bash
+sudo setsebool -P httpd_can_network_connect 1
 ```
 
 ## 5. Enviar o projeto para a VPS
@@ -98,7 +105,7 @@ Suba o projeto para um repositório privado no GitHub/GitLab e, na VPS:
 
 ```bash
 sudo mkdir -p /var/www
-sudo chown $USER:$USER /var/www
+sudo chown opc:opc /var/www
 cd /var/www
 git clone <URL_DO_SEU_REPOSITORIO> ms-moveis-sob-medida
 cd ms-moveis-sob-medida
@@ -109,12 +116,20 @@ cd ms-moveis-sob-medida
 No **seu computador Windows** (Git Bash), a partir da raiz do projeto:
 
 ```bash
-rsync -avz --exclude 'node_modules' --exclude '.next' \
-  ./ oracle@163.176.167.166:/var/www/ms-moveis-sob-medida/
+rsync -avz -e "ssh -i ~/.ssh/ms_moveis_vps_oracle" \
+  --exclude 'node_modules' --exclude '.next' --exclude '.git' \
+  ./ opc@146.235.36.119:/var/www/ms-moveis-sob-medida/
 ```
 
-Se não tiver `rsync` disponível, use `scp -r` no lugar (mais lento, mas
-funciona igual).
+Na primeira vez, crie a pasta de destino antes (via SSH):
+
+```bash
+ssh -i ~/.ssh/ms_moveis_vps_oracle opc@146.235.36.119 \
+  "sudo mkdir -p /var/www/ms-moveis-sob-medida && sudo chown opc:opc /var/www/ms-moveis-sob-medida"
+```
+
+Se não tiver `rsync` disponível, use `scp -i ~/.ssh/ms_moveis_vps_oracle -r`
+no lugar (mais lento, mas funciona igual).
 
 ## 6. Instalar dependências e buildar
 
@@ -128,8 +143,8 @@ npm run build
 
 ## 7. Rodar com PM2
 
-Crie o arquivo `ecosystem.config.js` (já incluso no projeto — veja
-[`ecosystem.config.js`](./ecosystem.config.js)) e suba o processo:
+O arquivo `ecosystem.config.js` já está incluso no projeto — veja
+[`ecosystem.config.js`](./ecosystem.config.js). Suba o processo:
 
 ```bash
 pm2 start ecosystem.config.js
@@ -148,30 +163,31 @@ pm2 restart ms-moveis-sob-medida    # reiniciar após um novo deploy
 
 ## 8. Configurar o Nginx como proxy reverso
 
+O Oracle Linux não usa a estrutura `sites-available`/`sites-enabled` do
+Ubuntu — os arquivos de servidor vão direto em `/etc/nginx/conf.d/`.
+
 Copie o arquivo de referência do projeto
-[`deploy/nginx.conf`](./deploy/nginx.conf) para o Nginx:
+[`deploy/nginx.conf`](./deploy/nginx.conf):
 
 ```bash
 sudo cp /var/www/ms-moveis-sob-medida/deploy/nginx.conf \
-  /etc/nginx/sites-available/msmoveissobmedida.com.br
-
-sudo ln -s /etc/nginx/sites-available/msmoveissobmedida.com.br \
-  /etc/nginx/sites-enabled/
-
-# remove o site padrão de exemplo do Nginx, se existir
-sudo rm -f /etc/nginx/sites-enabled/default
+  /etc/nginx/conf.d/msmoveissobmedida.com.br.conf
 
 sudo nginx -t        # testa a configuração
 sudo systemctl reload nginx
 ```
 
 Nesse ponto, `http://msmoveissobmedida.com.br` já deve carregar o site
-(sem SSL ainda).
+(sem SSL ainda). Se dermos de cara com `502 Bad Gateway`, confira o passo
+do SELinux acima e se o PM2 está rodando (`pm2 status`).
 
 ## 9. Ativar HTTPS com Let's Encrypt (Certbot)
 
+No Oracle Linux 9 o Certbot vem pelo repositório EPEL da própria Oracle:
+
 ```bash
-sudo apt install -y certbot python3-certbot-nginx
+sudo dnf install -y oracle-epel-release-el9
+sudo dnf install -y certbot python3-certbot-nginx
 
 sudo certbot --nginx \
   -d msmoveissobmedida.com.br \
@@ -183,7 +199,7 @@ redirecionar HTTP → HTTPS. O certificado renova sozinho (o pacote já
 instala um timer systemd); para conferir:
 
 ```bash
-sudo systemctl status certbot.timer
+sudo systemctl status certbot-renew.timer
 sudo certbot renew --dry-run   # simula a renovação
 ```
 
@@ -221,8 +237,11 @@ Ou use o script pronto [`deploy/deploy.sh`](./deploy/deploy.sh) (rode
 
 - **Site não abre**: confira as Security Lists da Oracle (passo 2) — é o
   motivo mais comum.
-- **Erro 502 Bad Gateway no Nginx**: o processo do PM2 não está rodando.
-  Rode `pm2 status` e `pm2 logs`.
+- **Erro 502 Bad Gateway no Nginx**: pode ser (a) o processo do PM2 não
+  está rodando (`pm2 status`, `pm2 logs`) ou (b) o SELinux bloqueando o
+  proxy — rode `sudo setsebool -P httpd_can_network_connect 1`.
 - **Certbot falha**: confirme que o DNS já propagou (`nslookup`) e que a
   porta 80 está acessível de fora antes de tentar emitir o certificado.
 - **Mudou o IP da VPS**: atualize os registros A na Hostinger (passo 1).
+- **`Permission denied (publickey)` no SSH**: confirme o usuário (`opc`,
+  não `ubuntu`, para Oracle Linux) e o caminho da chave com `-i`.
