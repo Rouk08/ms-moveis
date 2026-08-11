@@ -37,7 +37,6 @@ export default function NovoOrcamentoForm() {
       }
 
       router.push(`/admin/orcamentos/${data.id}`);
-      router.refresh();
     } catch {
       setError("Não foi possível salvar o orçamento. Tente novamente.");
       setPending(false);
