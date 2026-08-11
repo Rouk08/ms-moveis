@@ -1,0 +1,49 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import NovoAfastamentoForm from "@/components/admin/NovoAfastamentoForm";
+
+export default async function NovoAfastamentoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ colaboradorId?: string }>;
+}) {
+  const session = await auth();
+  if (session?.user.role !== "ADMIN") {
+    redirect("/admin");
+  }
+
+  const { colaboradorId } = await searchParams;
+
+  const colaboradores = await prisma.colaborador.findMany({
+    where: { dataDemissao: null },
+    orderBy: { nome: "asc" },
+    select: { id: true, nome: true },
+  });
+
+  return (
+    <div className="max-w-xl">
+      <Link
+        href="/admin/rh/afastamentos"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-charcoal-500 hover:text-charcoal-700 mb-6"
+      >
+        <ArrowLeft size={16} />
+        Voltar para afastamentos
+      </Link>
+
+      <h1 className="text-2xl font-semibold text-charcoal-800 mb-1">
+        Novo afastamento
+      </h1>
+      <p className="text-sm text-charcoal-500 mb-6">
+        Registre um atestado, licença ou outro afastamento.
+      </p>
+
+      <NovoAfastamentoForm
+        colaboradores={colaboradores}
+        colaboradorId={colaboradorId}
+      />
+    </div>
+  );
+}

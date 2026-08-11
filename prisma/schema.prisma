@@ -105,3 +105,75 @@ enum StatusRecebimento {
   PENDENTE
   RECEBIDO
 }
+
+model Colaborador {
+  id            String        @id @default(cuid())
+  nome          String
+  cpf           String        @unique
+  cargo         String
+  telefone      String?
+  email         String?
+  dataAdmissao  DateTime
+  dataDemissao  DateTime?
+  salario       Decimal?      @db.Decimal(10, 2)
+  pinHash       String
+  notasInternas String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  ferias        Ferias[]
+  afastamentos  Afastamento[]
+  pontos        Ponto[]
+}
+
+model Ferias {
+  id                      String      @id @default(cuid())
+  colaboradorId           String
+  colaborador             Colaborador @relation(fields: [colaboradorId], references: [id])
+  periodoAquisitivoInicio DateTime
+  periodoAquisitivoFim    DateTime
+  diasDireito             Int         @default(30)
+  diasGozados             Int         @default(0)
+  dataGozoInicio          DateTime?
+  dataGozoFim             DateTime?
+  notasInternas           String?
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+}
+
+model Afastamento {
+  id            String          @id @default(cuid())
+  colaboradorId String
+  colaborador   Colaborador     @relation(fields: [colaboradorId], references: [id])
+  tipo          TipoAfastamento @default(OUTROS)
+  dataInicio    DateTime
+  dataFim       DateTime?
+  motivo        String?
+  notasInternas String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+enum TipoAfastamento {
+  ATESTADO
+  LICENCA_MEDICA
+  INSS_AUXILIO_DOENCA
+  MATERNIDADE
+  PATERNIDADE
+  LUTO
+  OUTROS
+}
+
+model Ponto {
+  id            String      @id @default(cuid())
+  colaboradorId String
+  colaborador   Colaborador @relation(fields: [colaboradorId], references: [id])
+  tipo          TipoPonto
+  dataHora      DateTime    @default(now())
+  notasInternas String?
+  createdAt     DateTime    @default(now())
+}
+
+enum TipoPonto {
+  ENTRADA
+  SAIDA
+}

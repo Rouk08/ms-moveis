@@ -7,6 +7,7 @@ import {
   FileText,
   Users,
   Wallet,
+  IdCard,
   Mail,
   LogOut,
   Sofa,
@@ -23,6 +24,7 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/orcamentos", label: "Orçamentos", icon: FileText },
   { href: "/admin/financeiro", label: "Financeiro", icon: Wallet },
+  { href: "/admin/rh", label: "RH", icon: IdCard, adminOnly: true },
   { href: "/admin/email", label: "E-mail", icon: Mail },
   {
     href: "/admin/usuarios",
