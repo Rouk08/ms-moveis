@@ -5,7 +5,9 @@ import Stats from "@/components/sections/Stats";
 import Services from "@/components/sections/Services";
 import Gallery from "@/components/sections/Gallery";
 import Process from "@/components/sections/Process";
+import Partners from "@/components/sections/Partners";
 import Testimonials from "@/components/sections/Testimonials";
+import FAQ from "@/components/FAQ";
 import CtaFinal from "@/components/sections/CtaFinal";
 
 export const metadata: Metadata = {
@@ -26,7 +28,9 @@ export default function Home() {
       <Services />
       <Gallery />
       <Process />
+      <Partners />
       <Testimonials />
+      <FAQ />
       <CtaFinal />
     </>
   );

@@ -69,6 +69,7 @@ export type Service = {
   description: string;
   features: string[];
   image: string;
+  portfolioCategory: string;
 };
 
 export const services: Service[] = [
@@ -88,6 +89,7 @@ export const services: Service[] = [
     ],
     image:
       "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1200&q=80&auto=format&fit=crop",
+    portfolioCategory: "Cozinhas",
   },
   {
     slug: "quartos-planejados",
@@ -105,6 +107,7 @@ export const services: Service[] = [
     ],
     image:
       "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=1200&q=80&auto=format&fit=crop",
+    portfolioCategory: "Quartos",
   },
   {
     slug: "salas-de-estar",
@@ -122,6 +125,7 @@ export const services: Service[] = [
     ],
     image:
       "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=1200&q=80&auto=format&fit=crop",
+    portfolioCategory: "Salas",
   },
   {
     slug: "banheiros",
@@ -139,6 +143,7 @@ export const services: Service[] = [
     ],
     image:
       "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=1200&q=80&auto=format&fit=crop",
+    portfolioCategory: "Banheiros",
   },
   {
     slug: "home-office",
@@ -156,6 +161,7 @@ export const services: Service[] = [
     ],
     image:
       "https://images.unsplash.com/photo-1593476550610-87baa860004a?w=1200&q=80&auto=format&fit=crop",
+    portfolioCategory: "Escritórios",
   },
   {
     slug: "projetos-comerciais",
@@ -173,6 +179,7 @@ export const services: Service[] = [
     ],
     image:
       "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80&auto=format&fit=crop",
+    portfolioCategory: "Comercial",
   },
 ];
 
@@ -356,5 +363,75 @@ export const differentiators = [
     title: "Garantia",
     description:
       "Oferecemos garantia em todos os projetos, com suporte pós-instalação para o que você precisar.",
+  },
+];
+
+export type Faq = {
+  question: string;
+  answer: string;
+};
+
+export const faqs: Faq[] = [
+  {
+    question: "Quanto tempo leva para fabricar um móvel sob medida?",
+    answer:
+      "O prazo varia conforme a complexidade do projeto, mas em geral leva de 30 a 45 dias entre a aprovação do projeto 3D e a instalação final. Passamos um prazo específico para o seu projeto ainda na fase de orçamento.",
+  },
+  {
+    question: "Vocês atendem fora de Gaspar?",
+    answer:
+      "Sim! Além de Gaspar, atendemos Blumenau, Brusque e demais cidades do Vale do Itajaí. Fale com a gente para confirmar o atendimento na sua região.",
+  },
+  {
+    question: "Como funciona o projeto 3D?",
+    answer:
+      "Depois da visita técnica, desenvolvemos um projeto 3D personalizado para você visualizar cada detalhe do móvel — cores, acabamentos e disposição — antes de qualquer fabricação. Ajustes são feitos até você aprovar.",
+  },
+  {
+    question: "Quais formas de pagamento vocês aceitam?",
+    answer:
+      "Trabalhamos com sinal na aprovação do projeto, parcela intermediária no início da fabricação e o restante na entrega. Aceitamos PIX, transferência e cartão. Detalhes são combinados no orçamento.",
+  },
+  {
+    question: "Qual o prazo de entrega médio?",
+    answer:
+      "Em média, do sinal à instalação final, o prazo fica entre 30 e 45 dias corridos, dependendo do volume de móveis e da complexidade do projeto.",
+  },
+  {
+    question: "Vocês fornecem garantia?",
+    answer:
+      "Sim, todos os projetos saem com garantia contra defeitos de fabricação e instalação, com suporte pós-entrega para qualquer ajuste necessário.",
+  },
+];
+
+export type MaterialCategory = {
+  title: string;
+  description: string;
+};
+
+export const materialCategories: MaterialCategory[] = [
+  {
+    title: "MDF de Alta Densidade",
+    description: "Painéis resistentes e duráveis para estrutura e portas.",
+  },
+  {
+    title: "Ferragens Premium",
+    description: "Dobradiças e corrediças com amortecimento silencioso.",
+  },
+  {
+    title: "Puxadores e Acessórios",
+    description: "Linhas modernas em alumínio, inox e perfil embutido.",
+  },
+  {
+    title: "Verniz e Laca Automotiva",
+    description: "Acabamento de alto brilho e resistência a manchas.",
+  },
+  {
+    title: "Iluminação de LED",
+    description: "Perfis embutidos para nichos, gavetas e painéis.",
+  },
+  {
+    title: "Materiais Antiumidade",
+    description: "Chapas próprias para cozinhas e banheiros.",
   },
 ];

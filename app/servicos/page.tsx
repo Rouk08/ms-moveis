@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2, MessageCircle } from "lucide-react";
-import { company, services } from "@/lib/data";
+import { services } from "@/lib/data";
+import ServiceCard from "@/components/ServiceCard";
 import AnimatedSection from "@/components/AnimatedSection";
+import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata: Metadata = {
   title: "Serviços de Móveis Planejados",
@@ -19,6 +19,9 @@ export default function ServicosPage() {
     <>
       <section className="pt-36 pb-20 sm:pt-40 sm:pb-24 bg-charcoal-50/40">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex justify-center mb-6">
+            <Breadcrumb items={[{ label: "Início", href: "/" }, { label: "Serviços" }]} />
+          </div>
           <span className="inline-block text-sm font-semibold uppercase tracking-widest text-wood-600 mb-3">
             Nossos serviços
           </span>
@@ -33,69 +36,17 @@ export default function ServicosPage() {
         </div>
       </section>
 
-      {services.map((service, index) => {
-        const Icon = service.icon;
-        const reversed = index % 2 === 1;
-
-        return (
-          <section
-            key={service.slug}
-            id={service.slug}
-            className="scroll-mt-24 py-20 sm:py-24 border-b border-charcoal-100 last:border-b-0"
-          >
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <div
-                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
-                  reversed ? "lg:[&>*:first-child]:order-2" : ""
-                }`}
-              >
-                <AnimatedSection>
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl">
-                    <Image
-                      src={service.image}
-                      alt={`${service.title} sob medida — MS Móveis, Gaspar/SC`}
-                      fill
-                      sizes="(max-width: 1024px) 90vw, 45vw"
-                      className="object-cover"
-                    />
-                  </div>
-                </AnimatedSection>
-
-                <AnimatedSection delay={0.15}>
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-wood-100 text-wood-600">
-                    <Icon size={24} />
-                  </span>
-                  <h2 className="mt-5 text-2xl sm:text-3xl font-semibold text-charcoal-800">
-                    {service.title}
-                  </h2>
-                  <p className="mt-4 text-charcoal-500 leading-relaxed">
-                    {service.description}
-                  </p>
-                  <ul className="mt-6 space-y-3">
-                    {service.features.map((feature) => (
-                      <li key={feature} className="flex gap-3 text-sm text-charcoal-600">
-                        <CheckCircle2 size={20} className="shrink-0 text-moss-500" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    href={`https://wa.me/${company.whatsapp.raw}?text=${encodeURIComponent(
-                      `Olá! Tenho interesse em ${service.title.toLowerCase()} e gostaria de solicitar um orçamento.`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-8 inline-flex items-center gap-2 rounded-full bg-wood-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-wood-600 transition-colors"
-                  >
-                    <MessageCircle size={16} />
-                    Solicitar orçamento para {service.title.toLowerCase()}
-                  </Link>
-                </AnimatedSection>
-              </div>
-            </div>
-          </section>
-        );
-      })}
+      <section className="py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((service, index) => (
+              <AnimatedSection key={service.slug} delay={(index % 3) * 0.1}>
+                <ServiceCard service={service} />
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="py-24 bg-charcoal-800">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">

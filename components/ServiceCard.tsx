@@ -21,7 +21,7 @@ export default function ServiceCard({ service }: ServiceCardProps) {
         {service.shortDescription}
       </p>
       <Link
-        href={`/servicos#${service.slug}`}
+        href={`/servicos/${service.slug}`}
         className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-wood-600 hover:text-wood-700 transition-colors"
       >
         Saiba mais
