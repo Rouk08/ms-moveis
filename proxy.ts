@@ -8,6 +8,14 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoginPage = pathname === "/admin/login";
 
+  console.log("[proxy-debug]", {
+    method: req.method,
+    pathname,
+    isLoggedIn,
+    hasNextAction: req.headers.has("next-action"),
+    cookieNames: req.cookies.getAll().map((c) => c.name),
+  });
+
   if (!isLoginPage && !isLoggedIn) {
     return Response.redirect(new URL("/admin/login", req.nextUrl));
   }
