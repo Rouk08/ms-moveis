@@ -24,7 +24,7 @@ export default function TestActionForm() {
       </button>
       {state && (
         <p className="mt-2 text-sm">
-          Resultado: ok={String(state.ok)} time={state.time} count={String(state.count)}
+          Resultado: ok={String(state.ok)} time={state.time} id={String(state.id)}
         </p>
       )}
     </form>
