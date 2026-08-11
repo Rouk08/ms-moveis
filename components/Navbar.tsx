@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { company } from "@/lib/data";
 
@@ -71,14 +71,23 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <Link
-          href={`https://wa.me/${company.whatsapp.raw}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden lg:inline-flex items-center rounded-full bg-wood-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-wood-600 transition-colors"
-        >
-          Solicitar Orçamento
-        </Link>
+        <div className="hidden lg:flex items-center gap-4">
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-charcoal-400 hover:text-charcoal-600 transition-colors"
+          >
+            <Lock size={14} />
+            Admin
+          </Link>
+          <Link
+            href={`https://wa.me/${company.whatsapp.raw}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center rounded-full bg-wood-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-wood-600 transition-colors"
+          >
+            Solicitar Orçamento
+          </Link>
+        </div>
 
         <button
           type="button"
@@ -121,6 +130,16 @@ export default function Navbar() {
                   className="block text-center rounded-full bg-wood-500 px-5 py-3 text-sm font-semibold text-white hover:bg-wood-600 transition-colors"
                 >
                   Solicitar Orçamento
+                </Link>
+              </li>
+              <li className="pt-2 text-center">
+                <Link
+                  href="/admin"
+                  onClick={() => setMenuOpen(false)}
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-charcoal-400 hover:text-charcoal-600 transition-colors"
+                >
+                  <Lock size={14} />
+                  Admin
                 </Link>
               </li>
             </ul>

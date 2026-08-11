@@ -11,6 +11,7 @@ import {
   IdCard,
   Mail,
   LogOut,
+  ExternalLink,
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import type { Role } from "@/lib/generated/prisma/enums";
@@ -53,6 +54,16 @@ export default function Sidebar({ userName, userRole }: SidebarProps) {
           </p>
           <p className="text-xs text-charcoal-400">Painel Admin</p>
         </div>
+      </div>
+
+      <div className="px-3 pt-3">
+        <Link
+          href="/"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-charcoal-400 hover:bg-charcoal-50 hover:text-charcoal-600 transition-colors"
+        >
+          <ExternalLink size={14} />
+          Ver site
+        </Link>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
