@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Send } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
 import { company } from "@/lib/data";
 import { createOrcamentoFromSite } from "@/lib/actions/orcamento-publico";
 
@@ -50,6 +50,7 @@ export default function ContactForm() {
   const [form, setForm] = useState<FormState>(initialState);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (field: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -101,6 +102,8 @@ export default function ContactForm() {
 
     if (!validate()) return;
 
+    setIsSubmitting(true);
+
     const lines = [
       "Olá! Vim pelo site da MS Móveis Sob Medida e gostaria de solicitar um orçamento.",
       "",
@@ -124,10 +127,12 @@ export default function ContactForm() {
       email: form.email,
       tipoProjeto: form.projectType,
       mensagem: form.message,
-    }).catch(() => {
-      // Best-effort: se o registro no painel falhar, o fluxo de WhatsApp
-      // já aconteceu e o cliente não deve perceber nenhuma diferença.
-    });
+    })
+      .catch(() => {
+        // Best-effort: se o registro no painel falhar, o fluxo de WhatsApp
+        // já aconteceu e o cliente não deve perceber nenhuma diferença.
+      })
+      .finally(() => setIsSubmitting(false));
   };
 
   return (
@@ -219,10 +224,20 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-wood-500 px-8 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-wood-600 transition-colors"
+        disabled={isSubmitting}
+        className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full bg-wood-500 px-8 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-wood-600 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        Enviar via WhatsApp
-        <Send size={16} />
+        {isSubmitting ? (
+          <>
+            Enviando...
+            <Loader2 size={16} className="animate-spin" />
+          </>
+        ) : (
+          <>
+            Enviar via WhatsApp
+            <Send size={16} />
+          </>
+        )}
       </button>
 
       {submitted && (

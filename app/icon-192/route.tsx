@@ -18,6 +18,7 @@ export async function GET() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={logoSrc}
+          alt="MS Móveis Sob Medida"
           width={192}
           height={192}
           style={{ objectFit: "cover" }}
