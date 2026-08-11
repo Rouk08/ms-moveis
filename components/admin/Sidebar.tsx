@@ -23,6 +23,7 @@ const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/orcamentos", label: "Orçamentos", icon: FileText },
   { href: "/admin/financeiro", label: "Financeiro", icon: Wallet },
+  { href: "/admin/email", label: "E-mail", icon: Mail },
   {
     href: "/admin/usuarios",
     label: "Usuários",
@@ -30,8 +31,6 @@ const navItems = [
     adminOnly: true,
   },
 ];
-
-const comingSoonItems = [{ label: "E-mail", icon: Mail }];
 
 export default function Sidebar({ userName, userRole }: SidebarProps) {
   const pathname = usePathname();
@@ -73,26 +72,6 @@ export default function Sidebar({ userName, userRole }: SidebarProps) {
               </Link>
             );
           })}
-
-        <div className="pt-2">
-          {comingSoonItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div
-                key={item.label}
-                className="flex items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-charcoal-300 cursor-not-allowed"
-              >
-                <span className="flex items-center gap-3">
-                  <Icon size={18} />
-                  {item.label}
-                </span>
-                <span className="text-[10px] uppercase tracking-wide bg-charcoal-100 text-charcoal-400 rounded-full px-2 py-0.5">
-                  Em breve
-                </span>
-              </div>
-            );
-          })}
-        </div>
       </nav>
 
       <div className="border-t border-charcoal-100 p-4">

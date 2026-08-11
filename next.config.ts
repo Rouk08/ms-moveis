@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
       ],
     },
   },
+  serverExternalPackages: ["imapflow", "mailparser"],
   images: {
     remotePatterns: [
       {
