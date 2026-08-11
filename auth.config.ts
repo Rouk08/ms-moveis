@@ -6,6 +6,10 @@ import type { Role } from "@/lib/generated/prisma/enums";
 // provider de fato (Credentials + Prisma) é adicionado só em lib/auth.ts,
 // que roda nas rotas de API (Node.js runtime).
 export const authConfig = {
+  // Necessário atrás de proxy reverso (Nginx): sem isso o Auth.js pode
+  // rejeitar/perder a sessão em requisições POST (Server Actions) mesmo
+  // com a sessão válida em GETs normais.
+  trustHost: true,
   pages: {
     signIn: "/admin/login",
   },
