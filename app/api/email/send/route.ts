@@ -28,9 +28,11 @@ export async function POST(request: Request) {
 
   try {
     await sendMessage({ to, subject, text, replyToUid, replyFolder });
-  } catch {
+  } catch (err) {
+    console.error("Falha ao enviar e-mail:", err);
+    const message = err instanceof Error ? err.message : "Erro desconhecido.";
     return NextResponse.json(
-      { error: "Não foi possível enviar o e-mail. Tente novamente." },
+      { error: `Não foi possível enviar o e-mail: ${message}` },
       { status: 502 }
     );
   }
