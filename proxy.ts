@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { NextResponse } from "next/server";
 import { authConfig } from "@/auth.config";
 
 const { auth } = NextAuth(authConfig);
@@ -8,21 +9,31 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoginPage = pathname === "/admin/login";
 
-  console.log("[proxy-debug]", {
-    method: req.method,
-    pathname,
-    isLoggedIn,
-    hasNextAction: req.headers.has("next-action"),
-    cookieNames: req.cookies.getAll().map((c) => c.name),
-  });
+  const debugHeaders = {
+    "x-debug-method": req.method,
+    "x-debug-pathname": pathname,
+    "x-debug-logged-in": String(isLoggedIn),
+    "x-debug-cookie-names": req.cookies
+      .getAll()
+      .map((c) => c.name)
+      .join(","),
+  };
 
   if (!isLoginPage && !isLoggedIn) {
-    return Response.redirect(new URL("/admin/login", req.nextUrl));
+    const res = NextResponse.redirect(new URL("/admin/login", req.nextUrl));
+    Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
+    return res;
   }
 
   if (isLoginPage && isLoggedIn) {
-    return Response.redirect(new URL("/admin", req.nextUrl));
+    const res = NextResponse.redirect(new URL("/admin", req.nextUrl));
+    Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
+    return res;
   }
+
+  const res = NextResponse.next();
+  Object.entries(debugHeaders).forEach(([k, v]) => res.headers.set(k, v));
+  return res;
 });
 
 export const config = {
