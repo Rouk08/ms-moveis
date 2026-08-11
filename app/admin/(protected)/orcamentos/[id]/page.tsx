@@ -2,15 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Mail, Phone, Calendar, Tag } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { updateOrcamento } from "@/lib/actions/orcamentos";
 import StatusBadge from "@/components/admin/StatusBadge";
-
-const statusOptions = [
-  { value: "NOVO", label: "Novo" },
-  { value: "EM_ANDAMENTO", label: "Em andamento" },
-  { value: "APROVADO", label: "Aprovado" },
-  { value: "RECUSADO", label: "Recusado" },
-];
+import EditOrcamentoForm from "@/components/admin/EditOrcamentoForm";
 
 export default async function OrcamentoDetailPage({
   params,
@@ -21,8 +14,6 @@ export default async function OrcamentoDetailPage({
   const orcamento = await prisma.orcamento.findUnique({ where: { id } });
 
   if (!orcamento) notFound();
-
-  const updateOrcamentoWithId = updateOrcamento.bind(null, orcamento.id);
 
   return (
     <div className="max-w-3xl">
@@ -91,78 +82,12 @@ export default async function OrcamentoDetailPage({
         </div>
       </div>
 
-      <form
-        action={updateOrcamentoWithId}
-        className="rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm space-y-5"
-      >
-        <h2 className="font-semibold text-charcoal-800">
-          Acompanhamento interno
-        </h2>
-
-        <div>
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium text-charcoal-700 mb-1.5"
-          >
-            Status
-          </label>
-          <select
-            id="status"
-            name="status"
-            defaultValue={orcamento.status}
-            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-          >
-            {statusOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label
-            htmlFor="valorEstimado"
-            className="block text-sm font-medium text-charcoal-700 mb-1.5"
-          >
-            Valor estimado (R$)
-          </label>
-          <input
-            id="valorEstimado"
-            name="valorEstimado"
-            type="number"
-            step="0.01"
-            min="0"
-            defaultValue={orcamento.valorEstimado?.toString() ?? ""}
-            placeholder="0,00"
-            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-          />
-        </div>
-
-        <div>
-          <label
-            htmlFor="notasInternas"
-            className="block text-sm font-medium text-charcoal-700 mb-1.5"
-          >
-            Notas internas
-          </label>
-          <textarea
-            id="notasInternas"
-            name="notasInternas"
-            rows={4}
-            defaultValue={orcamento.notasInternas ?? ""}
-            placeholder="Observações visíveis só para a equipe..."
-            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="rounded-full bg-wood-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-wood-600 transition-colors"
-        >
-          Salvar alterações
-        </button>
-      </form>
+      <EditOrcamentoForm
+        id={orcamento.id}
+        status={orcamento.status}
+        valorEstimado={orcamento.valorEstimado?.toString() ?? ""}
+        notasInternas={orcamento.notasInternas ?? ""}
+      />
     </div>
   );
 }

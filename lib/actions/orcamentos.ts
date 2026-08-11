@@ -5,18 +5,9 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
-import fs from "node:fs";
-
-function debugLog(msg: string) {
-  try {
-    fs.appendFileSync("/tmp/orcamento-debug.log", `${new Date().toISOString()} ${msg}\n`);
-  } catch {}
-}
 
 async function requireSession() {
-  debugLog("requireSession: calling auth()");
   const session = await auth();
-  debugLog(`requireSession: session = ${JSON.stringify(session)}`);
   if (!session?.user) throw new Error("Não autenticado.");
   return session;
 }
@@ -50,35 +41,31 @@ export async function createOrcamentoFromSite(
   revalidatePath("/admin/orcamentos");
 }
 
-export async function createOrcamentoManual(formData: FormData) {
-  debugLog("createOrcamentoManual: start");
-  try {
-    await requireSession();
-    debugLog("createOrcamentoManual: session OK");
+export type CreateOrcamentoState = { error?: string } | undefined;
 
-    const nome = String(formData.get("nome") ?? "").trim();
-    const telefone = String(formData.get("telefone") ?? "").trim();
-    const email = String(formData.get("email") ?? "").trim();
-    const tipoProjeto = String(formData.get("tipoProjeto") ?? "").trim();
-    const mensagem = String(formData.get("mensagem") ?? "").trim();
+export async function createOrcamentoManual(
+  _prevState: CreateOrcamentoState,
+  formData: FormData
+): Promise<CreateOrcamentoState> {
+  await requireSession();
 
-    if (!nome || !telefone || !email || !mensagem) {
-      throw new Error("Preencha todos os campos obrigatórios.");
-    }
+  const nome = String(formData.get("nome") ?? "").trim();
+  const telefone = String(formData.get("telefone") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const tipoProjeto = String(formData.get("tipoProjeto") ?? "").trim();
+  const mensagem = String(formData.get("mensagem") ?? "").trim();
 
-    const orcamento = await prisma.orcamento.create({
-      data: { nome, telefone, email, tipoProjeto, mensagem, origem: "MANUAL" },
-    });
-    debugLog(`createOrcamentoManual: created ${orcamento.id}`);
-
-    revalidatePath("/admin");
-    revalidatePath("/admin/orcamentos");
-    debugLog("createOrcamentoManual: about to redirect");
-    redirect(`/admin/orcamentos/${orcamento.id}`);
-  } catch (err) {
-    debugLog(`createOrcamentoManual: CAUGHT ${String(err)} ${err instanceof Error ? err.stack : ""}`);
-    throw err;
+  if (!nome || !telefone || !email || !mensagem) {
+    return { error: "Preencha todos os campos obrigatórios." };
   }
+
+  const orcamento = await prisma.orcamento.create({
+    data: { nome, telefone, email, tipoProjeto, mensagem, origem: "MANUAL" },
+  });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/orcamentos");
+  redirect(`/admin/orcamentos/${orcamento.id}`);
 }
 
 const STATUS_VALUES: OrcamentoStatus[] = [
@@ -88,7 +75,13 @@ const STATUS_VALUES: OrcamentoStatus[] = [
   "RECUSADO",
 ];
 
-export async function updateOrcamento(id: string, formData: FormData) {
+export type UpdateOrcamentoState = { error?: string; success?: boolean } | undefined;
+
+export async function updateOrcamento(
+  id: string,
+  _prevState: UpdateOrcamentoState,
+  formData: FormData
+): Promise<UpdateOrcamentoState> {
   await requireSession();
 
   const statusRaw = String(formData.get("status") ?? "");
@@ -111,4 +104,6 @@ export async function updateOrcamento(id: string, formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/admin/orcamentos");
   revalidatePath(`/admin/orcamentos/${id}`);
+
+  return { success: true };
 }
