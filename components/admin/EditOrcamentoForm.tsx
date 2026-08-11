@@ -1,10 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
-import {
-  updateOrcamento,
-  type UpdateOrcamentoState,
-} from "@/lib/actions/atualizar-orcamento";
+import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const statusOptions = [
@@ -27,15 +24,50 @@ export default function EditOrcamentoForm({
   valorEstimado,
   notasInternas,
 }: EditOrcamentoFormProps) {
-  const updateOrcamentoWithId = updateOrcamento.bind(null, id);
-  const [state, formAction, pending] = useActionState<
-    UpdateOrcamentoState,
-    FormData
-  >(updateOrcamentoWithId, undefined);
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [pending, setPending] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError(null);
+    setSuccess(false);
+    setPending(true);
+
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      status: String(formData.get("status") ?? ""),
+      valorEstimado: String(formData.get("valorEstimado") ?? "").trim(),
+      notasInternas: String(formData.get("notasInternas") ?? "").trim(),
+    };
+
+    try {
+      const res = await fetch(`/api/orcamentos/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "Não foi possível salvar as alterações.");
+        setPending(false);
+        return;
+      }
+
+      setSuccess(true);
+      setPending(false);
+      router.refresh();
+    } catch {
+      setError("Não foi possível salvar as alterações. Tente novamente.");
+      setPending(false);
+    }
+  };
 
   return (
     <form
-      action={formAction}
+      onSubmit={handleSubmit}
       className="rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm space-y-5"
     >
       <h2 className="font-semibold text-charcoal-800">
@@ -99,7 +131,12 @@ export default function EditOrcamentoForm({
         />
       </div>
 
-      {state?.success && (
+      {error && (
+        <p className="text-sm text-red-600" role="alert">
+          {error}
+        </p>
+      )}
+      {success && (
         <p className="text-sm text-moss-600" role="status">
           Alterações salvas.
         </p>

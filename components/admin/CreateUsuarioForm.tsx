@@ -1,19 +1,51 @@
 "use client";
 
-import { useActionState } from "react";
-import {
-  createUsuario,
-  type CreateUsuarioState,
-} from "@/lib/actions/usuarios";
+import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreateUsuarioForm() {
-  const [state, formAction, pending] = useActionState<
-    CreateUsuarioState,
-    FormData
-  >(createUsuario, undefined);
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError(null);
+    setPending(true);
+
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      name: String(formData.get("name") ?? "").trim(),
+      email: String(formData.get("email") ?? "").trim(),
+      password: String(formData.get("password") ?? ""),
+      role: String(formData.get("role") ?? "MEMBER"),
+    };
+
+    try {
+      const res = await fetch("/api/usuarios", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "Não foi possível criar o usuário.");
+        setPending(false);
+        return;
+      }
+
+      event.currentTarget.reset();
+      setPending(false);
+      router.refresh();
+    } catch {
+      setError("Não foi possível criar o usuário. Tente novamente.");
+      setPending(false);
+    }
+  };
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label
@@ -83,9 +115,9 @@ export default function CreateUsuarioForm() {
         </div>
       </div>
 
-      {state?.error && (
+      {error && (
         <p className="text-sm text-red-600" role="alert">
-          {state.error}
+          {error}
         </p>
       )}
 

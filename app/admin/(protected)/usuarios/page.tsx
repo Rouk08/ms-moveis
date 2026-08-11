@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { setUsuarioActive } from "@/lib/actions/usuarios";
 import CreateUsuarioForm from "@/components/admin/CreateUsuarioForm";
+import ToggleUsuarioButton from "@/components/admin/ToggleUsuarioButton";
 
 export default async function UsuariosPage() {
   const session = await auth();
@@ -43,11 +43,6 @@ export default async function UsuariosPage() {
           </thead>
           <tbody className="divide-y divide-charcoal-100">
             {usuarios.map((usuario) => {
-              const toggleAction = setUsuarioActive.bind(
-                null,
-                usuario.id,
-                !usuario.active
-              );
               const isSelf = usuario.email === session.user.email;
 
               return (
@@ -79,14 +74,10 @@ export default async function UsuariosPage() {
                   </td>
                   <td className="px-6 py-4 text-right">
                     {!isSelf && (
-                      <form action={toggleAction}>
-                        <button
-                          type="submit"
-                          className="text-sm font-medium text-wood-600 hover:text-wood-700"
-                        >
-                          {usuario.active ? "Desativar" : "Ativar"}
-                        </button>
-                      </form>
+                      <ToggleUsuarioButton
+                        id={usuario.id}
+                        active={usuario.active}
+                      />
                     )}
                   </td>
                 </tr>
