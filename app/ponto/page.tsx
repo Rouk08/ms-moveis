@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Sofa } from "lucide-react";
+import Image from "next/image";
 import PontoKioskForm from "@/components/PontoKioskForm";
 import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 
@@ -27,9 +27,13 @@ export default function PontoPage() {
       <RegisterServiceWorker />
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center gap-2 mb-8">
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-wood-500 text-white">
-            <Sofa size={24} />
-          </span>
+          <Image
+            src="/logo.jpg"
+            alt="MS Móveis"
+            width={48}
+            height={48}
+            className="h-12 w-12 rounded-full object-cover"
+          />
           <p className="font-heading font-semibold text-xl text-charcoal-800">
             MS Móveis
           </p>

@@ -1,6 +1,11 @@
+import { readFileSync } from "fs";
+import { join } from "path";
 import { ImageResponse } from "next/og";
 
 export async function GET() {
+  const logo = readFileSync(join(process.cwd(), "public/logo.jpg"));
+  const logoSrc = `data:image/jpeg;base64,${logo.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -8,16 +13,15 @@ export async function GET() {
           width: "100%",
           height: "100%",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "#b3763a",
-          color: "#ffffff",
-          fontSize: 84,
-          fontWeight: 700,
-          fontFamily: "sans-serif",
         }}
       >
-        MS
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={logoSrc}
+          width={192}
+          height={192}
+          style={{ objectFit: "cover" }}
+        />
       </div>
     ),
     { width: 192, height: 192 }

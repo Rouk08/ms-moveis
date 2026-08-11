@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { MapPin, Phone, Mail, Clock, Sofa } from "lucide-react";
+import Image from "next/image";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { InstagramIcon, FacebookIcon } from "@/components/icons/SocialIcons";
 import { company, services } from "@/lib/data";
 
@@ -9,9 +10,13 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
         <div>
           <Link href="/" className="flex items-center gap-2 font-heading text-xl font-semibold text-white">
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-wood-500 text-white">
-              <Sofa size={18} />
-            </span>
+            <Image
+              src="/logo.jpg"
+              alt="MS Móveis"
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-full object-cover"
+            />
             MS Móveis
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-charcoal-300">

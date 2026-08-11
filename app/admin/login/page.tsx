@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { Sofa } from "lucide-react";
+import Image from "next/image";
 import { auth } from "@/lib/auth";
 import LoginForm from "@/components/admin/LoginForm";
 
@@ -17,9 +17,13 @@ export default async function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-charcoal-50/40 px-4">
       <div className="w-full max-w-sm rounded-2xl border border-charcoal-100 bg-white p-8 shadow-sm">
         <div className="flex flex-col items-center text-center mb-8">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-wood-500 text-white">
-            <Sofa size={20} />
-          </span>
+          <Image
+            src="/logo.jpg"
+            alt="MS Móveis"
+            width={44}
+            height={44}
+            className="h-11 w-11 rounded-full object-cover"
+          />
           <h1 className="mt-4 text-xl font-semibold text-charcoal-800">
             Painel Admin
           </h1>

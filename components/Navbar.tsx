@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Menu, X, Sofa } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { company } from "@/lib/data";
 
@@ -47,9 +48,13 @@ export default function Navbar() {
           className="flex items-center gap-2 font-heading text-xl font-semibold text-charcoal-800"
           onClick={() => setMenuOpen(false)}
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-wood-500 text-white">
-            <Sofa size={18} />
-          </span>
+          <Image
+            src="/logo.jpg"
+            alt="MS Móveis"
+            width={36}
+            height={36}
+            className="h-9 w-9 rounded-full object-cover"
+          />
           MS Móveis
         </Link>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -10,7 +11,6 @@ import {
   IdCard,
   Mail,
   LogOut,
-  Sofa,
 } from "lucide-react";
 import { logoutAction } from "@/lib/actions/auth";
 import type { Role } from "@/lib/generated/prisma/enums";
@@ -40,9 +40,13 @@ export default function Sidebar({ userName, userRole }: SidebarProps) {
   return (
     <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-charcoal-100 bg-white">
       <div className="flex items-center gap-2 px-6 py-5 border-b border-charcoal-100">
-        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-wood-500 text-white">
-          <Sofa size={18} />
-        </span>
+        <Image
+          src="/logo.jpg"
+          alt="MS Móveis"
+          width={36}
+          height={36}
+          className="h-9 w-9 rounded-full object-cover"
+        />
         <div>
           <p className="font-heading font-semibold text-charcoal-800 leading-tight">
             MS Móveis
