@@ -11,6 +11,9 @@ git pull
 echo "==> Instalando dependências"
 npm ci
 
+echo "==> Aplicando migrations do banco de dados"
+npx prisma migrate deploy
+
 echo "==> Build de produção"
 npm run build
 

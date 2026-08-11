@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 import { company } from "@/lib/data";
+import { createOrcamentoFromSite } from "@/lib/actions/orcamentos";
 
 type FormState = {
   name: string;
@@ -88,6 +89,17 @@ export default function ContactForm() {
 
     setSubmitted(true);
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+
+    createOrcamentoFromSite({
+      nome: form.name,
+      telefone: form.phone,
+      email: form.email,
+      tipoProjeto: form.projectType,
+      mensagem: form.message,
+    }).catch(() => {
+      // Best-effort: se o registro no painel falhar, o fluxo de WhatsApp
+      // já aconteceu e o cliente não deve perceber nenhuma diferença.
+    });
   };
 
   return (

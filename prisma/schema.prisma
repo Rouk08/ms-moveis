@@ -1,0 +1,53 @@
+// Prisma schema — painel admin MS Móveis Sob Medida
+// A URL de conexão fica em prisma.config.ts (padrão Prisma 7), não aqui.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(MEMBER)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+model Orcamento {
+  id            String          @id @default(cuid())
+  nome          String
+  telefone      String
+  email         String
+  tipoProjeto   String
+  mensagem      String
+  status        OrcamentoStatus @default(NOVO)
+  valorEstimado Decimal?        @db.Decimal(10, 2)
+  notasInternas String?
+  origem        Origem          @default(SITE)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+enum OrcamentoStatus {
+  NOVO
+  EM_ANDAMENTO
+  APROVADO
+  RECUSADO
+}
+
+enum Origem {
+  SITE
+  MANUAL
+}
