@@ -15,6 +15,14 @@ export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isLoginPage = pathname === "/admin/login";
 
+  try {
+    const fs = await import("node:fs");
+    fs.appendFileSync(
+      "/tmp/proxy-debug2.log",
+      `${new Date().toISOString()} method=${req.method} path=${pathname} isLoggedIn=${isLoggedIn} nextAction=${req.headers.get("next-action")}\n`
+    );
+  } catch {}
+
   if (!isLoginPage && !isLoggedIn) {
     return NextResponse.redirect(new URL("/admin/login", req.nextUrl));
   }
