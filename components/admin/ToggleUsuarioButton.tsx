@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 type ToggleUsuarioButtonProps = {
   id: string;
@@ -12,21 +11,16 @@ export default function ToggleUsuarioButton({
   id,
   active,
 }: ToggleUsuarioButtonProps) {
-  const router = useRouter();
   const [pending, setPending] = useState(false);
 
   const handleClick = async () => {
     setPending(true);
-    try {
-      await fetch(`/api/usuarios/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ active: !active }),
-      });
-      router.refresh();
-    } finally {
-      setPending(false);
-    }
+    await fetch(`/api/usuarios/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ active: !active }),
+    });
+    window.location.reload();
   };
 
   return (

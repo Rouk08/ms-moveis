@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 
 export default function CreateUsuarioForm() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -35,9 +33,7 @@ export default function CreateUsuarioForm() {
         return;
       }
 
-      event.currentTarget.reset();
-      setPending(false);
-      router.refresh();
+      window.location.reload();
     } catch {
       setError("Não foi possível criar o usuário. Tente novamente.");
       setPending(false);

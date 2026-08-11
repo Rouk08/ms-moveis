@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 
 export default function NovoOrcamentoForm() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -36,7 +34,7 @@ export default function NovoOrcamentoForm() {
         return;
       }
 
-      router.push(`/admin/orcamentos/${data.id}`);
+      window.location.href = `/admin/orcamentos/${data.id}`;
     } catch {
       setError("Não foi possível salvar o orçamento. Tente novamente.");
       setPending(false);

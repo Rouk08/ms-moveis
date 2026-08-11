@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const statusOptions = [
@@ -24,7 +23,6 @@ export default function EditOrcamentoForm({
   valorEstimado,
   notasInternas,
 }: EditOrcamentoFormProps) {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [pending, setPending] = useState(false);
@@ -58,7 +56,6 @@ export default function EditOrcamentoForm({
 
       setSuccess(true);
       setPending(false);
-      router.refresh();
     } catch {
       setError("Não foi possível salvar as alterações. Tente novamente.");
       setPending(false);
