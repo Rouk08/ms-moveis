@@ -33,6 +33,56 @@ export default function NovoOrcamentoForm() {
         />
       </div>
 
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label
+            htmlFor="telefone"
+            className="block text-sm font-medium text-charcoal-700 mb-1.5"
+          >
+            Telefone *
+          </label>
+          <input
+            id="telefone"
+            name="telefone"
+            type="text"
+            required
+            placeholder="(47) 99999-8888"
+            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-charcoal-700 mb-1.5"
+          >
+            E-mail *
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label
+          htmlFor="mensagem"
+          className="block text-sm font-medium text-charcoal-700 mb-1.5"
+        >
+          Mensagem *
+        </label>
+        <textarea
+          id="mensagem"
+          name="mensagem"
+          rows={4}
+          required
+          className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+        />
+      </div>
+
       {state?.error && (
         <p className="text-sm text-red-600" role="alert">
           {state.error}
@@ -44,7 +94,7 @@ export default function NovoOrcamentoForm() {
         disabled={pending}
         className="rounded-full bg-wood-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-wood-600 disabled:opacity-60 transition-colors"
       >
-        {pending ? "Salvando..." : "Salvar orçamento (SIMPLIFICADO)"}
+        {pending ? "Salvando..." : "Salvar orçamento (SEM SELECT)"}
       </button>
     </form>
   );
