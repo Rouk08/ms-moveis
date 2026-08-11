@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -14,14 +15,17 @@ export async function testAction(
 
   const created = await prisma.orcamento.create({
     data: {
-      nome: "Teste Diagnostico Write",
+      nome: "Teste Diagnostico Revalidate",
       telefone: "000",
-      email: "diag@example.com",
+      email: "diag2@example.com",
       tipoProjeto: "Teste",
-      mensagem: "diagnostico write",
+      mensagem: "diagnostico revalidate",
       origem: "MANUAL",
     },
   });
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/orcamentos");
 
   return { ok: true, time: new Date().toISOString(), id: created.id };
 }
