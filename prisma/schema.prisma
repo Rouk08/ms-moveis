@@ -39,6 +39,7 @@ model Orcamento {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   contasReceber ContaReceber[]
+  contrato      Contrato?
 }
 
 enum OrcamentoStatus {
@@ -176,4 +177,46 @@ model Ponto {
 enum TipoPonto {
   ENTRADA
   SAIDA
+}
+
+model Contrato {
+  id                   String          @id @default(cuid())
+  orcamentoId          String          @unique
+  orcamento            Orcamento       @relation(fields: [orcamentoId], references: [id])
+  tipoContratante      TipoContratante @default(PESSOA_FISICA)
+  contratanteNome      String
+  contratanteDocumento String
+  contratanteEndereco  String
+  contratanteCep       String
+  contratanteBairro    String
+  contratanteCidade    String
+  contratanteUf        String
+  contratanteRepNome   String?
+  contratanteRepCpf    String?
+  contratanteRepRg     String?
+  contratanteRepCargo  String?
+  enderecoInstalacao   String
+  prazoExecucaoDias    Int
+  valorTotal           Decimal         @db.Decimal(10, 2)
+  valorSinal           Decimal         @db.Decimal(10, 2)
+  valorFabricacao      Decimal         @db.Decimal(10, 2)
+  valorEntrega         Decimal         @db.Decimal(10, 2)
+  foroCidade           String
+  foroUf               String
+  dataContrato         DateTime        @default(now())
+  status               StatusContrato  @default(RASCUNHO)
+  notasInternas        String?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+}
+
+enum TipoContratante {
+  PESSOA_FISICA
+  PESSOA_JURIDICA
+}
+
+enum StatusContrato {
+  RASCUNHO
+  GERADO
+  ASSINADO
 }

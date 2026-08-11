@@ -1,8 +1,17 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Mail, Phone, Calendar, Tag, Wallet } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  Phone,
+  Calendar,
+  Tag,
+  Wallet,
+  FileSignature,
+} from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import StatusBadge from "@/components/admin/StatusBadge";
+import StatusBadgeContrato from "@/components/admin/StatusBadgeContrato";
 import EditOrcamentoForm from "@/components/admin/EditOrcamentoForm";
 
 export default async function OrcamentoDetailPage({
@@ -11,7 +20,10 @@ export default async function OrcamentoDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const orcamento = await prisma.orcamento.findUnique({ where: { id } });
+  const orcamento = await prisma.orcamento.findUnique({
+    where: { id },
+    include: { contrato: true },
+  });
 
   if (!orcamento) notFound();
 
@@ -40,13 +52,33 @@ export default async function OrcamentoDetailPage({
       </div>
 
       {orcamento.status === "APROVADO" && (
-        <Link
-          href={`/admin/financeiro/contas-a-receber/novo?orcamentoId=${orcamento.id}`}
-          className="mb-6 inline-flex items-center gap-2 rounded-full bg-moss-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-moss-700 transition-colors"
-        >
-          <Wallet size={16} />
-          Gerar conta a receber
-        </Link>
+        <div className="flex flex-wrap items-center gap-3 mb-6">
+          <Link
+            href={`/admin/financeiro/contas-a-receber/novo?orcamentoId=${orcamento.id}`}
+            className="inline-flex items-center gap-2 rounded-full bg-moss-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-moss-700 transition-colors"
+          >
+            <Wallet size={16} />
+            Gerar conta a receber
+          </Link>
+          {orcamento.contrato ? (
+            <Link
+              href={`/admin/orcamentos/${orcamento.id}/contrato`}
+              className="inline-flex items-center gap-2 rounded-full bg-white border border-charcoal-200 px-5 py-2.5 text-sm font-semibold text-charcoal-700 hover:bg-charcoal-50 transition-colors"
+            >
+              <FileSignature size={16} />
+              Contrato
+              <StatusBadgeContrato status={orcamento.contrato.status} />
+            </Link>
+          ) : (
+            <Link
+              href={`/admin/orcamentos/${orcamento.id}/contrato/novo`}
+              className="inline-flex items-center gap-2 rounded-full bg-white border border-charcoal-200 px-5 py-2.5 text-sm font-semibold text-charcoal-700 hover:bg-charcoal-50 transition-colors"
+            >
+              <FileSignature size={16} />
+              Criar contrato
+            </Link>
+          )}
+        </div>
       )}
 
       <div className="rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm mb-6">
