@@ -259,7 +259,10 @@ export async function sendMessage({
     },
   });
 
-  await transporter.sendMail({ raw: message });
+  await transporter.sendMail({
+    raw: message,
+    envelope: { from: smtpUser, to },
+  });
 
   await withImap(async (client) => {
     await client.append(SENT_FOLDER, message, ["\\Seen"]);
