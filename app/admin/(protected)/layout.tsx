@@ -13,6 +13,15 @@ export default async function ProtectedAdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+
+  try {
+    const fs = await import("node:fs");
+    fs.appendFileSync(
+      "/tmp/layout-debug.log",
+      `${new Date().toISOString()} session=${JSON.stringify(session)}\n`
+    );
+  } catch {}
+
   if (!session?.user) redirect("/admin/login");
   const user = session.user;
 
