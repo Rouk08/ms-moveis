@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import {
   updateOrcamento,
   type UpdateOrcamentoState,
-} from "@/lib/actions/orcamentos";
+} from "@/lib/actions/atualizar-orcamento";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const statusOptions = [
