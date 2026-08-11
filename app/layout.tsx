@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import SiteChrome from "@/components/SiteChrome";
 import { company } from "@/lib/data";
@@ -67,6 +67,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: siteUrl,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#b3763a",
+  width: "device-width",
+  initialScale: 1,
 };
 
 const jsonLd = {
