@@ -1,10 +1,13 @@
 "use server";
 
-export type TestState = { ok: boolean; time: string } | undefined;
+import { auth } from "@/lib/auth";
+
+export type TestState = { ok: boolean; time: string; session?: string } | undefined;
 
 export async function testAction(
   _prevState: TestState,
   _formData: FormData
 ): Promise<TestState> {
-  return { ok: true, time: new Date().toISOString() };
+  const session = await auth();
+  return { ok: true, time: new Date().toISOString(), session: JSON.stringify(session) };
 }
