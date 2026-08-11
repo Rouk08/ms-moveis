@@ -8,7 +8,9 @@ import Process from "@/components/sections/Process";
 import Partners from "@/components/sections/Partners";
 import Testimonials from "@/components/sections/Testimonials";
 import FAQ from "@/components/FAQ";
+import InstagramFeed from "@/components/sections/InstagramFeed";
 import CtaFinal from "@/components/sections/CtaFinal";
+import Newsletter from "@/components/sections/Newsletter";
 
 export const metadata: Metadata = {
   title: "MS Móveis Sob Medida | Móveis Planejados em Gaspar/SC",
@@ -31,7 +33,9 @@ export default function Home() {
       <Partners />
       <Testimonials />
       <FAQ />
+      <InstagramFeed />
       <CtaFinal />
+      <Newsletter />
     </>
   );
 }
