@@ -14,18 +14,17 @@ export async function createOrcamentoManual(
   const session = await auth();
   if (!session?.user) throw new Error("Não autenticado.");
 
-  const nome = String(formData.get("nome") ?? "").trim();
-  const telefone = String(formData.get("telefone") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
-  const tipoProjeto = String(formData.get("tipoProjeto") ?? "").trim();
-  const mensagem = String(formData.get("mensagem") ?? "").trim();
-
-  if (!nome || !telefone || !email || !mensagem) {
-    return { error: "Preencha todos os campos obrigatórios." };
-  }
+  console.log("DEBUG formData entries:", Array.from(formData.entries()));
 
   const orcamento = await prisma.orcamento.create({
-    data: { nome, telefone, email, tipoProjeto, mensagem, origem: "MANUAL" },
+    data: {
+      nome: "HARDCODED TEST",
+      telefone: "000",
+      email: "hardcoded@example.com",
+      tipoProjeto: "Teste",
+      mensagem: "hardcoded, sem ler formData",
+      origem: "MANUAL",
+    },
   });
 
   revalidatePath("/admin");
