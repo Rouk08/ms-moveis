@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import NovoOrcamentoForm from "@/components/admin/NovoOrcamentoForm";
-import TestActionForm from "@/components/admin/TestActionForm";
 
 export default function NovoOrcamentoPage() {
   return (
@@ -20,8 +19,6 @@ export default function NovoOrcamentoPage() {
       <p className="text-sm text-charcoal-500 mb-6">
         Cadastre um orçamento recebido por telefone ou outro canal.
       </p>
-
-      <TestActionForm />
 
       <NovoOrcamentoForm />
     </div>

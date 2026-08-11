@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Send } from "lucide-react";
 import { company } from "@/lib/data";
-import { createOrcamentoFromSite } from "@/lib/actions/orcamentos";
+import { createOrcamentoFromSite } from "@/lib/actions/orcamento-publico";
 
 type FormState = {
   name: string;
