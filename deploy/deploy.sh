@@ -14,6 +14,9 @@ npm ci
 echo "==> Aplicando migrations do banco de dados"
 npx prisma migrate deploy
 
+echo "==> Gerando Prisma Client"
+npx prisma generate
+
 echo "==> Build de produção"
 npm run build
 
