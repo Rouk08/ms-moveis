@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, Tag, Truck } from "lucide-react";
+import { ArrowLeft, Calendar, Repeat, Tag, Truck } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import StatusBadgePagamento from "@/components/admin/StatusBadgePagamento";
 import EditContaPagarForm from "@/components/admin/EditContaPagarForm";
+import ExcluirContaPagarButton from "@/components/admin/ExcluirContaPagarButton";
 
 const categoriaLabels: Record<string, string> = {
   MATERIAL: "Material",
@@ -13,6 +14,13 @@ const categoriaLabels: Record<string, string> = {
   IMPOSTOS: "Impostos",
   MARKETING: "Marketing",
   OUTROS: "Outros",
+};
+
+const frequenciaLabels: Record<string, string> = {
+  SEMANAL: "semanal",
+  MENSAL: "mensal",
+  TRIMESTRAL: "trimestral",
+  ANUAL: "anual",
 };
 
 export default async function ContaPagarDetailPage({
@@ -88,7 +96,26 @@ export default async function ContaPagarDetailPage({
               </div>
             </div>
           )}
+          {conta.grupoRecorrencia && conta.frequenciaRecorrencia && (
+            <div className="flex gap-2.5">
+              <Repeat size={16} className="text-wood-500 mt-0.5 shrink-0" />
+              <div>
+                <dt className="text-charcoal-400">Recorrência</dt>
+                <dd className="text-charcoal-700">
+                  {frequenciaLabels[conta.frequenciaRecorrencia]} — ocorrência{" "}
+                  {conta.numeroOcorrencia} de {conta.totalOcorrencias}
+                </dd>
+              </div>
+            </div>
+          )}
         </dl>
+      </div>
+
+      <div className="mb-6">
+        <ExcluirContaPagarButton
+          id={conta.id}
+          ehRecorrente={Boolean(conta.grupoRecorrencia)}
+        />
       </div>
 
       <EditContaPagarForm

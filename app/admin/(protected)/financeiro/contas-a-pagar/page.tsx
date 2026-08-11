@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Repeat } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import StatusBadgePagamento from "@/components/admin/StatusBadgePagamento";
 
@@ -8,6 +8,7 @@ const filters = [
   { label: "Pendentes", value: "PENDENTE" },
   { label: "Atrasados", value: "ATRASADO" },
   { label: "Pagos", value: "PAGO" },
+  { label: "Recorrentes", value: "RECORRENTE" },
 ] as const;
 
 const categoriaLabels: Record<string, string> = {
@@ -37,7 +38,9 @@ export default async function ContasAPagarPage({
         ? { status: "PENDENTE" as const }
         : activeStatus === "ATRASADO"
           ? { status: "PENDENTE" as const, vencimento: { lt: new Date() } }
-          : { status: "PAGO" as const };
+          : activeStatus === "RECORRENTE"
+            ? { grupoRecorrencia: { not: null } }
+            : { status: "PAGO" as const };
 
   const contas = await prisma.contaPagar.findMany({
     where,
@@ -111,9 +114,21 @@ export default async function ContasAPagarPage({
                     <td className="px-6 py-4">
                       <Link
                         href={`/admin/financeiro/contas-a-pagar/${conta.id}`}
-                        className="block font-medium text-charcoal-800"
+                        className="flex items-center gap-1.5 font-medium text-charcoal-800"
                       >
+                        {conta.grupoRecorrencia && (
+                          <Repeat
+                            size={13}
+                            className="shrink-0 text-charcoal-400"
+                            aria-label="Conta recorrente"
+                          />
+                        )}
                         {conta.descricao}
+                        {conta.grupoRecorrencia && (
+                          <span className="text-xs font-normal text-charcoal-400">
+                            ({conta.numeroOcorrencia}/{conta.totalOcorrencias})
+                          </span>
+                        )}
                       </Link>
                     </td>
                     <td className="px-6 py-4 text-charcoal-600">

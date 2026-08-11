@@ -12,9 +12,17 @@ const categoriaOptions = [
   { value: "OUTROS", label: "Outros" },
 ];
 
+const frequenciaOptions = [
+  { value: "SEMANAL", label: "Semanal" },
+  { value: "MENSAL", label: "Mensal" },
+  { value: "TRIMESTRAL", label: "Trimestral" },
+  { value: "ANUAL", label: "Anual" },
+];
+
 export default function NovaContaPagarForm() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [recorrente, setRecorrente] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,6 +37,11 @@ export default function NovaContaPagarForm() {
       valor: String(formData.get("valor") ?? "").trim(),
       vencimento: String(formData.get("vencimento") ?? "").trim(),
       notasInternas: String(formData.get("notasInternas") ?? "").trim(),
+      recorrente,
+      frequenciaRecorrencia: String(
+        formData.get("frequenciaRecorrencia") ?? "MENSAL"
+      ),
+      totalOcorrencias: String(formData.get("totalOcorrencias") ?? "12"),
     };
 
     try {
@@ -45,7 +58,10 @@ export default function NovaContaPagarForm() {
         return;
       }
 
-      window.location.href = `/admin/financeiro/contas-a-pagar/${data.id}`;
+      window.location.href =
+        data.count > 1
+          ? "/admin/financeiro/contas-a-pagar"
+          : `/admin/financeiro/contas-a-pagar/${data.id}`;
     } catch {
       setError("Não foi possível salvar a conta. Tente novamente.");
       setPending(false);
@@ -144,6 +160,64 @@ export default function NovaContaPagarForm() {
             className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
           />
         </div>
+      </div>
+
+      <div className="rounded-lg border border-charcoal-100 p-4">
+        <label className="flex items-center gap-2.5 text-sm font-medium text-charcoal-700">
+          <input
+            type="checkbox"
+            checked={recorrente}
+            onChange={(e) => setRecorrente(e.target.checked)}
+            className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
+          />
+          Conta recorrente
+        </label>
+
+        {recorrente && (
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label
+                htmlFor="frequenciaRecorrencia"
+                className="block text-sm font-medium text-charcoal-700 mb-1.5"
+              >
+                Frequência
+              </label>
+              <select
+                id="frequenciaRecorrencia"
+                name="frequenciaRecorrencia"
+                defaultValue="MENSAL"
+                className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+              >
+                {frequenciaOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label
+                htmlFor="totalOcorrencias"
+                className="block text-sm font-medium text-charcoal-700 mb-1.5"
+              >
+                Repetir quantas vezes
+              </label>
+              <input
+                id="totalOcorrencias"
+                name="totalOcorrencias"
+                type="number"
+                min="2"
+                max="60"
+                defaultValue="12"
+                className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+              />
+            </div>
+            <p className="sm:col-span-2 text-xs text-charcoal-400">
+              Cria uma conta para cada ocorrência, com o mesmo valor e
+              descrição, a partir do vencimento informado acima.
+            </p>
+          </div>
+        )}
       </div>
 
       <div>

@@ -55,17 +55,28 @@ enum Origem {
 }
 
 model ContaPagar {
-  id            String          @id @default(cuid())
-  descricao     String
-  fornecedor    String?
-  categoria     CategoriaPagar  @default(OUTROS)
-  valor         Decimal         @db.Decimal(10, 2)
-  vencimento    DateTime
-  status        StatusPagamento @default(PENDENTE)
-  dataPagamento DateTime?
-  notasInternas String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id                     String                  @id @default(cuid())
+  descricao              String
+  fornecedor             String?
+  categoria              CategoriaPagar          @default(OUTROS)
+  valor                  Decimal                 @db.Decimal(10, 2)
+  vencimento             DateTime
+  status                 StatusPagamento         @default(PENDENTE)
+  dataPagamento          DateTime?
+  grupoRecorrencia       String?
+  frequenciaRecorrencia  FrequenciaRecorrencia?
+  numeroOcorrencia       Int?
+  totalOcorrencias       Int?
+  notasInternas          String?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+}
+
+enum FrequenciaRecorrencia {
+  SEMANAL
+  MENSAL
+  TRIMESTRAL
+  ANUAL
 }
 
 enum CategoriaPagar {

@@ -69,3 +69,48 @@ export async function PATCH(
 
   return NextResponse.json({ success: true });
 }
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const { searchParams } = new URL(request.url);
+  const scope = searchParams.get("scope") === "futuras" ? "futuras" : "unica";
+
+  const conta = await prisma.contaPagar.findUnique({ where: { id } });
+  if (!conta) {
+    return NextResponse.json({ error: "Conta não encontrada." }, { status: 404 });
+  }
+  if (conta.status === "PAGO") {
+    return NextResponse.json(
+      { error: "Não é possível excluir uma conta já paga." },
+      { status: 400 }
+    );
+  }
+
+  if (scope === "futuras" && conta.grupoRecorrencia) {
+    const { count } = await prisma.contaPagar.deleteMany({
+      where: {
+        grupoRecorrencia: conta.grupoRecorrencia,
+        status: "PENDENTE",
+        vencimento: { gte: conta.vencimento },
+      },
+    });
+    revalidatePath("/admin/financeiro");
+    revalidatePath("/admin/financeiro/contas-a-pagar");
+    return NextResponse.json({ success: true, count });
+  }
+
+  await prisma.contaPagar.delete({ where: { id } });
+
+  revalidatePath("/admin/financeiro");
+  revalidatePath("/admin/financeiro/contas-a-pagar");
+
+  return NextResponse.json({ success: true, count: 1 });
+}
