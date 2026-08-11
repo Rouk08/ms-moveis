@@ -33,7 +33,7 @@ export const company = {
     display: "(47) 99999-8888",
     raw: "5547999998888",
   },
-  email: "contato@msmoveissobmedida.com.br",
+  email: "comercial@msmoveissobmedida.com.br",
   social: {
     instagram: "https://instagram.com/msmoveissobmedida",
     facebook: "https://facebook.com/msmoveissobmedida",
