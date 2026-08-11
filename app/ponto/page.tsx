@@ -1,15 +1,30 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Sofa } from "lucide-react";
 import PontoKioskForm from "@/components/PontoKioskForm";
+import RegisterServiceWorker from "@/components/RegisterServiceWorker";
 
 export const metadata: Metadata = {
   title: "Ponto",
   robots: { index: false, follow: false },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Ponto",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#b3763a",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function PontoPage() {
   return (
     <div className="min-h-screen bg-charcoal-50/30 flex items-center justify-center p-6">
+      <RegisterServiceWorker />
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center gap-2 mb-8">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-wood-500 text-white">
