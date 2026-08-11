@@ -5,6 +5,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
 import { testimonials } from "@/lib/data";
 
+function initials(name: string): string {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+}
+
 export default function TestimonialCarousel() {
   const [index, setIndex] = useState(0);
 
@@ -51,10 +61,19 @@ export default function TestimonialCarousel() {
                 />
               ))}
             </div>
-            <p className="mt-4 font-heading font-semibold text-charcoal-800">
-              {testimonial.name}
-            </p>
-            <p className="text-sm text-charcoal-500">{testimonial.location}</p>
+            <div className="mt-6 flex items-center justify-center gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-wood-500 text-sm font-semibold text-white">
+                {initials(testimonial.name)}
+              </span>
+              <div className="text-left">
+                <p className="font-heading font-semibold text-charcoal-800">
+                  {testimonial.name}
+                </p>
+                <p className="text-sm text-charcoal-500">
+                  {testimonial.location}
+                </p>
+              </div>
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>

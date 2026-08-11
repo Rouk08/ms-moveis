@@ -55,14 +55,42 @@ export default function ContactForm() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const validateField = (
+    field: keyof FormState,
+    values: FormState
+  ): string | undefined => {
+    switch (field) {
+      case "name":
+        return !values.name.trim() ? "Informe o seu nome." : undefined;
+      case "phone":
+        return values.phone.replace(/\D/g, "").length < 10
+          ? "Informe um telefone válido com DDD."
+          : undefined;
+      case "email":
+        return !isValidEmail(values.email)
+          ? "Informe um e-mail válido."
+          : undefined;
+      case "message":
+        return !values.message.trim()
+          ? "Conte um pouco sobre o seu projeto."
+          : undefined;
+      default:
+        return undefined;
+    }
+  };
+
+  const handleBlur = (field: keyof FormState) => {
+    setErrors((prev) => ({ ...prev, [field]: validateField(field, form) }));
+  };
+
   const validate = (): boolean => {
+    const fields: (keyof FormState)[] = ["name", "phone", "email", "message"];
     const nextErrors: Partial<Record<keyof FormState, string>> = {};
 
-    if (!form.name.trim()) nextErrors.name = "Informe o seu nome.";
-    if (form.phone.replace(/\D/g, "").length < 10)
-      nextErrors.phone = "Informe um telefone válido com DDD.";
-    if (!isValidEmail(form.email)) nextErrors.email = "Informe um e-mail válido.";
-    if (!form.message.trim()) nextErrors.message = "Conte um pouco sobre o seu projeto.";
+    for (const field of fields) {
+      const error = validateField(field, form);
+      if (error) nextErrors[field] = error;
+    }
 
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
@@ -113,6 +141,7 @@ export default function ContactForm() {
           type="text"
           value={form.name}
           onChange={(e) => handleChange("name", e.target.value)}
+          onBlur={() => handleBlur("name")}
           className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
           placeholder="Seu nome"
         />
@@ -130,6 +159,7 @@ export default function ContactForm() {
             inputMode="numeric"
             value={form.phone}
             onChange={(e) => handleChange("phone", maskPhone(e.target.value))}
+            onBlur={() => handleBlur("phone")}
             className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
             placeholder="(47) 99999-8888"
           />
@@ -145,6 +175,7 @@ export default function ContactForm() {
             type="email"
             value={form.email}
             onChange={(e) => handleChange("email", e.target.value)}
+            onBlur={() => handleBlur("email")}
             className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
             placeholder="seuemail@exemplo.com"
           />
@@ -179,6 +210,7 @@ export default function ContactForm() {
           rows={4}
           value={form.message}
           onChange={(e) => handleChange("message", e.target.value)}
+          onBlur={() => handleBlur("message")}
           className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
           placeholder="Conte um pouco sobre o ambiente que deseja planejar..."
         />

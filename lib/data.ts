@@ -48,6 +48,19 @@ export const company = {
   serviceArea: ["Gaspar", "Blumenau", "Brusque", "Vale do Itajaí"],
 };
 
+export type Stat = {
+  value: number;
+  suffix: string;
+  label: string;
+};
+
+export const stats: Stat[] = [
+  { value: company.yearsOfExperience, suffix: "+", label: "Anos de experiência" },
+  { value: 500, suffix: "+", label: "Projetos entregues" },
+  { value: 1000, suffix: "+", label: "Clientes satisfeitos" },
+  { value: 100, suffix: "%", label: "Sob medida" },
+];
+
 export type Service = {
   slug: string;
   title: string;
@@ -228,6 +241,18 @@ export const testimonials: Testimonial[] = [
     rating: 4,
     text: "Ótimo custo-benefício e muita transparência durante todo o processo. O home office ficou funcional e bonito, exatamente o que eu precisava para trabalhar de casa.",
   },
+  {
+    name: "Patrícia Almeida",
+    location: "Gaspar/SC",
+    rating: 5,
+    text: "O banheiro pequeno virou um espaço muito mais organizado com o gabinete planejado. Os materiais aguentam bem a umidade e o acabamento ficou impecável.",
+  },
+  {
+    name: "Eduardo Zimmermann",
+    location: "Blumenau/SC",
+    rating: 5,
+    text: "Montamos a loja inteira com a MS Móveis. Balcão, prateleiras e recepção ficaram com a cara da marca. Equipe muito profissional do orçamento à instalação.",
+  },
 ];
 
 export type PortfolioItem = {
@@ -272,6 +297,42 @@ export const portfolio: PortfolioItem[] = [
     category: "Comercial",
     image:
       "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "Cozinha Integrada com Ilha",
+    category: "Cozinhas",
+    image:
+      "https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=900&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "Guarda-Roupa de Casal",
+    category: "Quartos",
+    image:
+      "https://images.unsplash.com/photo-1611048268330-53de574cae3b?w=900&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "Estante para Sala de Jantar",
+    category: "Salas",
+    image:
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "Estação de Trabalho Planejada",
+    category: "Escritórios",
+    image:
+      "https://images.unsplash.com/photo-1526887593587-a307ea5d46b4?w=900&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "Lavabo com Cuba Esculpida",
+    category: "Banheiros",
+    image:
+      "https://images.unsplash.com/photo-1576698483491-8c43f0862543?w=900&q=80&auto=format&fit=crop",
+  },
+  {
+    title: "Balcão de Loja Sob Medida",
+    category: "Comercial",
+    image:
+      "https://images.unsplash.com/photo-1687583636159-6ecd166b8389?w=900&q=80&auto=format&fit=crop",
   },
 ];
 
