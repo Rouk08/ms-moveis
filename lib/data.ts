@@ -5,6 +5,7 @@ import {
   Bath,
   Briefcase,
   Building2,
+  HardHat,
   type LucideIcon,
 } from "lucide-react";
 
@@ -61,6 +62,16 @@ export const stats: Stat[] = [
   { value: 100, suffix: "%", label: "Sob medida" },
 ];
 
+export type ServicoParceiro = {
+  empresa: string;
+  nome: string;
+  cargo: string;
+  registro: string;
+  whatsapp: { display: string; raw: string };
+  email: string;
+  linkedin: string;
+};
+
 export type Service = {
   slug: string;
   title: string;
@@ -70,6 +81,7 @@ export type Service = {
   features: string[];
   image: string;
   portfolioCategory: string;
+  parceiro?: ServicoParceiro;
 };
 
 export const services: Service[] = [
@@ -180,6 +192,35 @@ export const services: Service[] = [
     image:
       "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80&auto=format&fit=crop",
     portfolioCategory: "Comercial",
+  },
+  {
+    slug: "engenharia-estrutural",
+    title: "Engenharia Estrutural",
+    icon: HardHat,
+    shortDescription:
+      "Projetos estruturais em concreto armado e protendido, em parceria com engenheiro civil especializado.",
+    description:
+      "Em parceria com a PROM Consultoria, oferecemos projetos estruturais completos para obras residenciais e comerciais — do desenvolvimento em concreto armado e protendido à compatibilização com arquitetura e instalações, com acompanhamento técnico até a entrega da obra.",
+    features: [
+      "Projetos estruturais em concreto armado e protendido",
+      "Compatibilização entre estrutura, arquitetura e instalações",
+      "Definição de soluções técnicas com foco em segurança e viabilidade",
+      "Acompanhamento e suporte técnico durante a execução da obra",
+      "Gestão de prazos, custos e qualidade da obra",
+    ],
+    image:
+      "https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?w=1200&q=80&auto=format&fit=crop",
+    portfolioCategory: "Engenharia Estrutural",
+    parceiro: {
+      empresa: "PROM Consultoria em Engenharia Estrutural",
+      nome: "Paulo Roberto de Oliveira",
+      cargo: "Engenheiro Civil",
+      registro: "CREA/SC 053.734-0",
+      whatsapp: { display: "(47) 99744-9637", raw: "5547997449637" },
+      email: "paulo@mendesdeoliveira.com.br",
+      linkedin:
+        "https://www.linkedin.com/in/paulo-roberto-de-o-mendes-1a8bba35",
+    },
   },
 ];
 

@@ -9,8 +9,8 @@ export default function Services() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Nossos serviços"
-          title="Móveis planejados para cada ambiente"
-          description="Do projeto à instalação, criamos soluções sob medida que aproveitam cada detalhe do seu espaço, residencial ou comercial."
+          title="Soluções sob medida para cada etapa do seu projeto"
+          description="Do móvel planejado ao projeto estrutural, oferecemos soluções sob medida — direto ou em parceria — para o seu espaço residencial ou comercial."
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (

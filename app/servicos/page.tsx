@@ -6,9 +6,9 @@ import AnimatedSection from "@/components/AnimatedSection";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata: Metadata = {
-  title: "Serviços de Móveis Planejados",
+  title: "Serviços de Móveis Planejados e Engenharia Estrutural",
   description:
-    "Conheça os serviços de móveis planejados e sob medida da MS Móveis: cozinhas, quartos, salas, banheiros, home office e projetos comerciais em Gaspar, Blumenau e Brusque.",
+    "Conheça os serviços da MS Móveis: cozinhas, quartos, salas, banheiros, home office e projetos comerciais planejados, além de engenharia estrutural em parceria, em Gaspar, Blumenau e Brusque.",
   alternates: {
     canonical: "/servicos",
   },
@@ -26,12 +26,14 @@ export default function ServicosPage() {
             Nossos serviços
           </span>
           <h1 className="text-4xl sm:text-5xl font-semibold text-charcoal-800">
-            Móveis planejados sob medida para cada ambiente
+            Móveis planejados e engenharia estrutural sob medida
           </h1>
           <p className="mt-5 text-lg text-charcoal-500 leading-relaxed">
             Da cozinha ao escritório comercial, desenvolvemos projetos
-            personalizados que aproveitam cada detalhe do seu espaço em
-            Gaspar, Blumenau, Brusque e Vale do Itajaí.
+            personalizados que aproveitam cada detalhe do seu espaço — e, em
+            parceria com um engenheiro civil especializado, também cuidamos
+            do projeto estrutural da sua obra em Gaspar, Blumenau, Brusque e
+            Vale do Itajaí.
           </p>
         </div>
       </section>
