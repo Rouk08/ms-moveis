@@ -27,8 +27,8 @@ export const company = {
     full: "Rua 1 de Janeiro, 30 — Bairro Sete de Setembro, Gaspar/SC",
   },
   phone: {
-    display: "(47) 3333-4444",
-    raw: "554733334444",
+    display: "(47) 3285-0409",
+    raw: "554732850409",
   },
   whatsapp: {
     display: "(47) 99921-4414",
@@ -36,7 +36,7 @@ export const company = {
   },
   email: "comercial@msmoveissobmedida.com.br",
   social: {
-    instagram: "https://instagram.com/msmoveissobmedida",
+    instagram: "https://www.instagram.com/moveissantos_gaspar_/",
     facebook: "https://facebook.com/msmoveissobmedida",
   },
   hours: [
