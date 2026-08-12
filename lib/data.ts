@@ -31,8 +31,8 @@ export const company = {
     raw: "554733334444",
   },
   whatsapp: {
-    display: "(47) 99999-8888",
-    raw: "5547999998888",
+    display: "(47) 99921-4414",
+    raw: "5547999214414",
   },
   email: "comercial@msmoveissobmedida.com.br",
   social: {
