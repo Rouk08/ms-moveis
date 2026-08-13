@@ -208,15 +208,15 @@ export const services: Service[] = [
     title: "Engenharia Estrutural",
     icon: HardHat,
     shortDescription:
-      "Projetos estruturais em concreto armado e protendido, em parceria com engenheiro civil especializado.",
+      "Projetos estruturais e gerenciamento de obras, em parceria com engenheiro civil especializado.",
     description:
-      "Em parceria com a PROM Consultoria, oferecemos projetos estruturais completos para obras residenciais e comerciais — do desenvolvimento em concreto armado e protendido à compatibilização com arquitetura e instalações, com acompanhamento técnico até a entrega da obra.",
+      "Em parceria com a PROM Consultoria, oferecemos desde o projeto estrutural em concreto armado e protendido até o gerenciamento e fiscalização completa da obra — acompanhamento técnico, controle de etapas, prazos e custos, e relatórios claros da evolução, para você construir com mais segurança e tranquilidade, mesmo sem poder estar presente todos os dias.",
     features: [
-      "Projetos estruturais em concreto armado e protendido",
-      "Compatibilização entre estrutura, arquitetura e instalações",
-      "Definição de soluções técnicas com foco em segurança e viabilidade",
-      "Acompanhamento e suporte técnico durante a execução da obra",
-      "Gestão de prazos, custos e qualidade da obra",
+      "Acompanhamento técnico da execução conforme projeto e boas práticas",
+      "Controle de etapas, prazos e evolução física da obra",
+      "Controle de custos, medições e conferência de materiais",
+      "Gestão de fornecedores, equipes e interface com o proprietário",
+      "Inspeções e relatórios fotográficos periódicos",
     ],
     image:
       "https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?w=1200&q=80&auto=format&fit=crop",
