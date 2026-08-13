@@ -12,7 +12,7 @@ import {
 export const company = {
   name: "MS Móveis Sob Medida",
   shortName: "MS Móveis",
-  slogan: "Móveis Sob Medida que Transformam Seu Espaço",
+  slogan: "Móveis Planejados em Gaspar e Blumenau, do Projeto 3D à Instalação",
   description:
     "Marcenaria especializada em móveis planejados e sob medida para ambientes residenciais e comerciais em Gaspar, Blumenau, Brusque e todo o Vale do Itajaí.",
   foundingYear: 2011,
@@ -37,7 +37,6 @@ export const company = {
   email: "comercial@msmoveissobmedida.com.br",
   social: {
     instagram: "https://www.instagram.com/moveissantos_gaspar_/",
-    facebook: "https://facebook.com/msmoveissobmedida",
   },
   hours: [
     { day: "Segunda a Sexta", time: "08h às 18h" },

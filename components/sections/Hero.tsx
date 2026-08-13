@@ -32,7 +32,8 @@ export default function Hero() {
             Marcenaria sob medida em Gaspar/SC
           </span>
           <h1 className="mt-6 text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight">
-            Móveis Sob Medida que Transformam Seu Espaço
+            Móveis Planejados em Gaspar e Blumenau, do Projeto 3D à
+            Instalação
           </h1>
           <p className="mt-6 text-lg text-charcoal-100 leading-relaxed max-w-xl">
             Projetamos e fabricamos móveis planejados para cozinhas, quartos,

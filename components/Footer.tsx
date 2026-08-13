@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { InstagramIcon, FacebookIcon } from "@/components/icons/SocialIcons";
+import { InstagramIcon } from "@/components/icons/SocialIcons";
 import { company, services } from "@/lib/data";
 
 export default function Footer() {
@@ -33,15 +33,6 @@ export default function Footer() {
               className="flex h-9 w-9 items-center justify-center rounded-full bg-charcoal-700 hover:bg-wood-500 transition-colors"
             >
               <InstagramIcon size={16} />
-            </Link>
-            <Link
-              href={company.social.facebook}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook da MS Móveis Sob Medida"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-charcoal-700 hover:bg-wood-500 transition-colors"
-            >
-              <FacebookIcon size={16} />
             </Link>
           </div>
         </div>

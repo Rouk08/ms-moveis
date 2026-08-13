@@ -119,7 +119,7 @@ const jsonLd = {
       closes: "12:00",
     },
   ],
-  sameAs: [company.social.instagram, company.social.facebook],
+  sameAs: [company.social.instagram],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -3,7 +3,7 @@ import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
 import { company } from "@/lib/data";
 import ContactForm from "@/components/ContactForm";
 import AnimatedSection from "@/components/AnimatedSection";
-import { InstagramIcon, FacebookIcon } from "@/components/icons/SocialIcons";
+import { InstagramIcon } from "@/components/icons/SocialIcons";
 
 export const metadata: Metadata = {
   title: "Contato",
@@ -106,15 +106,6 @@ export default function ContatoPage() {
                   className="flex h-11 w-11 items-center justify-center rounded-full border border-charcoal-200 text-charcoal-600 hover:bg-wood-50 hover:text-wood-600 hover:border-wood-200 transition-colors"
                 >
                   <InstagramIcon size={18} />
-                </a>
-                <a
-                  href={company.social.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook da MS Móveis"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-charcoal-200 text-charcoal-600 hover:bg-wood-50 hover:text-wood-600 hover:border-wood-200 transition-colors"
-                >
-                  <FacebookIcon size={18} />
                 </a>
               </div>
             </div>
