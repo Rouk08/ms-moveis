@@ -14,6 +14,10 @@ function formatBRL(value: number): string {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+const INCLUDE_TITLE_OVERRIDES: Record<string, string> = {
+  "Projeto 3D Personalizado": "Projeto",
+};
+
 const styles = StyleSheet.create({
   page: {
     padding: 48,
@@ -307,7 +311,9 @@ export default function OrcamentoTemplate({
           {differentiators.map((item) => (
             <View key={item.title} style={styles.includeItem}>
               <View style={styles.includeBullet} />
-              <Text style={styles.includeTitle}>{item.title}</Text>
+              <Text style={styles.includeTitle}>
+                {INCLUDE_TITLE_OVERRIDES[item.title] ?? item.title}
+              </Text>
             </View>
           ))}
         </View>
