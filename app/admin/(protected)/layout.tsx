@@ -17,7 +17,7 @@ export default async function ProtectedAdminLayout({
   const user = session.user;
 
   return (
-    <div className="flex min-h-screen bg-charcoal-50/30">
+    <div className="flex min-h-screen flex-col bg-charcoal-50/30 lg:flex-row">
       <Sidebar
         userName={user?.name ?? user?.email ?? "Usuário"}
         userRole={user?.role ?? "MEMBER"}
