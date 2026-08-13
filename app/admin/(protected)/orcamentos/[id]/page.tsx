@@ -8,6 +8,7 @@ import {
   Tag,
   Wallet,
   FileSignature,
+  Download,
 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import StatusBadge from "@/components/admin/StatusBadge";
@@ -50,6 +51,14 @@ export default async function OrcamentoDetailPage({
         </div>
         <StatusBadge status={orcamento.status} />
       </div>
+
+      <a
+        href={`/api/orcamentos/${orcamento.id}/pdf`}
+        className="mb-6 inline-flex items-center gap-2 rounded-full bg-wood-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-wood-600 transition-colors"
+      >
+        <Download size={16} />
+        Baixar PDF do orçamento
+      </a>
 
       {orcamento.status === "APROVADO" && (
         <div className="flex flex-wrap items-center gap-3 mb-6">
