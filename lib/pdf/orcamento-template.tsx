@@ -135,7 +135,7 @@ export default function OrcamentoTemplate({
 }: OrcamentoTemplateProps) {
   const dataFormatada = formatDateLong(o.createdAt);
   const validade = new Date(o.createdAt);
-  validade.setDate(validade.getDate() + 15);
+  validade.setDate(validade.getDate() + 10);
 
   return (
     <Document>
