@@ -111,7 +111,20 @@ export default async function OrcamentoDetailPage({
             <div>
               <dt className="text-charcoal-400">Tipo de projeto</dt>
               <dd className="text-charcoal-700">
-                {orcamento.tipoProjeto || "—"}
+                {orcamento.tipoProjeto.length > 0 ? (
+                  <div className="flex flex-wrap gap-1.5 mt-0.5">
+                    {orcamento.tipoProjeto.map((tipo) => (
+                      <span
+                        key={tipo}
+                        className="inline-flex items-center rounded-full bg-wood-50 px-2.5 py-1 text-xs font-medium text-wood-700"
+                      >
+                        {tipo}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  "—"
+                )}
               </dd>
             </div>
           </div>

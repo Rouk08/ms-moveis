@@ -7,7 +7,7 @@ export type CreateOrcamentoFromSiteInput = {
   nome: string;
   telefone: string;
   email: string;
-  tipoProjeto: string;
+  tipoProjeto: string[];
   mensagem: string;
 };
 

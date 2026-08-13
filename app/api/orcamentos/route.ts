@@ -13,7 +13,9 @@ export async function POST(request: Request) {
   const nome = String(body.nome ?? "").trim();
   const telefone = String(body.telefone ?? "").trim();
   const email = String(body.email ?? "").trim();
-  const tipoProjeto = String(body.tipoProjeto ?? "").trim();
+  const tipoProjeto = Array.isArray(body.tipoProjeto)
+    ? body.tipoProjeto.map((t: unknown) => String(t).trim()).filter(Boolean)
+    : [];
   const mensagem = String(body.mensagem ?? "").trim();
 
   if (!nome || !telefone || !email || !mensagem) {

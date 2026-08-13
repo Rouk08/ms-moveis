@@ -49,6 +49,17 @@ export const company = {
   serviceArea: ["Gaspar", "Blumenau", "Brusque", "Vale do Itajaí"],
 };
 
+export const projectTypes = [
+  "Cozinha Planejada",
+  "Quarto Planejado",
+  "Sala de Estar",
+  "Banheiro",
+  "Home Office",
+  "Projeto Comercial",
+  "Engenharia Estrutural",
+  "Outro",
+] as const;
+
 export type Stat = {
   value: number;
   suffix: string;

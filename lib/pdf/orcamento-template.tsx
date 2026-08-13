@@ -124,7 +124,7 @@ type OrcamentoData = {
   nome: string;
   telefone: string;
   email: string;
-  tipoProjeto: string;
+  tipoProjeto: string[];
   mensagem: string;
   valorEstimado: number | null;
   createdAt: Date;
@@ -184,7 +184,7 @@ export default function OrcamentoTemplate({
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Tipo de projeto</Text>
-          <Text style={styles.value}>{o.tipoProjeto || "—"}</Text>
+          <Text style={styles.value}>{o.tipoProjeto.join(", ") || "—"}</Text>
         </View>
 
         <Text style={styles.sectionTitle}>Descrição do projeto</Text>

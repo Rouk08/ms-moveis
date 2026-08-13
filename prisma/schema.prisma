@@ -30,7 +30,7 @@ model Orcamento {
   nome          String
   telefone      String
   email         String
-  tipoProjeto   String
+  tipoProjeto   String[]
   mensagem      String
   status        OrcamentoStatus @default(NOVO)
   valorEstimado Decimal?        @db.Decimal(10, 2)

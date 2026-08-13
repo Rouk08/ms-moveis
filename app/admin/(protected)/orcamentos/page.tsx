@@ -106,7 +106,7 @@ export default async function OrcamentosPage({
                     </td>
                     <td className="px-6 py-4 text-charcoal-600">
                       <Link href={`/admin/orcamentos/${orcamento.id}`}>
-                        {orcamento.tipoProjeto || "—"}
+                        {orcamento.tipoProjeto.join(", ") || "—"}
                       </Link>
                     </td>
                     <td className="px-6 py-4 text-charcoal-500">

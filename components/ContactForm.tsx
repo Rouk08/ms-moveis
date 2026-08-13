@@ -2,14 +2,14 @@
 
 import { useState, type FormEvent } from "react";
 import { Send, Loader2 } from "lucide-react";
-import { company } from "@/lib/data";
+import { company, projectTypes } from "@/lib/data";
 import { createOrcamentoFromSite } from "@/lib/actions/orcamento-publico";
 
 type FormState = {
   name: string;
   phone: string;
   email: string;
-  projectType: string;
+  projectTypes: string[];
   message: string;
 };
 
@@ -17,19 +17,9 @@ const initialState: FormState = {
   name: "",
   phone: "",
   email: "",
-  projectType: "Cozinha Planejada",
+  projectTypes: ["Cozinha Planejada"],
   message: "",
 };
-
-const projectTypes = [
-  "Cozinha Planejada",
-  "Quarto Planejado",
-  "Sala de Estar",
-  "Banheiro",
-  "Home Office",
-  "Projeto Comercial",
-  "Outro",
-];
 
 function maskPhone(value: string) {
   const digits = value.replace(/\D/g, "").slice(0, 11);
@@ -54,6 +44,15 @@ export default function ContactForm() {
 
   const handleChange = (field: keyof FormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const toggleProjectType = (type: string) => {
+    setForm((prev) => ({
+      ...prev,
+      projectTypes: prev.projectTypes.includes(type)
+        ? prev.projectTypes.filter((t) => t !== type)
+        : [...prev.projectTypes, type],
+    }));
   };
 
   const validateField = (
@@ -110,7 +109,7 @@ export default function ContactForm() {
       `Nome: ${form.name}`,
       `Telefone: ${form.phone}`,
       `E-mail: ${form.email}`,
-      `Tipo de projeto: ${form.projectType}`,
+      `Tipo de projeto: ${form.projectTypes.join(", ") || "—"}`,
       `Mensagem: ${form.message}`,
     ];
 
@@ -125,7 +124,7 @@ export default function ContactForm() {
       nome: form.name,
       telefone: form.phone,
       email: form.email,
-      tipoProjeto: form.projectType,
+      tipoProjeto: form.projectTypes,
       mensagem: form.message,
     })
       .catch(() => {
@@ -189,21 +188,32 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="projectType" className="block text-sm font-medium text-charcoal-700 mb-1.5">
-          Tipo de projeto
-        </label>
-        <select
-          id="projectType"
-          value={form.projectType}
-          onChange={(e) => handleChange("projectType", e.target.value)}
-          className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-        >
-          {projectTypes.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
+        <span className="block text-sm font-medium text-charcoal-700 mb-1.5">
+          Tipo de projeto (selecione um ou mais)
+        </span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {projectTypes.map((type) => {
+            const checked = form.projectTypes.includes(type);
+            return (
+              <label
+                key={type}
+                className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm cursor-pointer transition-colors ${
+                  checked
+                    ? "border-wood-500 bg-wood-50 text-wood-700"
+                    : "border-charcoal-200 text-charcoal-600 hover:bg-charcoal-50"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggleProjectType(type)}
+                  className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
+                />
+                {type}
+              </label>
+            );
+          })}
+        </div>
       </div>
 
       <div>

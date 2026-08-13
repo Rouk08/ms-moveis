@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { projectTypes } from "@/lib/data";
 
 export default function NovoOrcamentoForm() {
   const [error, setError] = useState<string | null>(null);
@@ -16,7 +17,7 @@ export default function NovoOrcamentoForm() {
       nome: String(formData.get("nome") ?? "").trim(),
       telefone: String(formData.get("telefone") ?? "").trim(),
       email: String(formData.get("email") ?? "").trim(),
-      tipoProjeto: String(formData.get("tipoProjeto") ?? "").trim(),
+      tipoProjeto: formData.getAll("tipoProjeto").map(String),
       mensagem: String(formData.get("mensagem") ?? "").trim(),
     };
 
@@ -97,26 +98,26 @@ export default function NovoOrcamentoForm() {
       </div>
 
       <div>
-        <label
-          htmlFor="tipoProjeto"
-          className="block text-sm font-medium text-charcoal-700 mb-1.5"
-        >
-          Tipo de projeto
-        </label>
-        <select
-          id="tipoProjeto"
-          name="tipoProjeto"
-          defaultValue="Cozinha Planejada"
-          className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-        >
-          <option>Cozinha Planejada</option>
-          <option>Quarto Planejado</option>
-          <option>Sala de Estar</option>
-          <option>Banheiro</option>
-          <option>Home Office</option>
-          <option>Projeto Comercial</option>
-          <option>Outro</option>
-        </select>
+        <span className="block text-sm font-medium text-charcoal-700 mb-1.5">
+          Tipo de projeto (selecione um ou mais)
+        </span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {projectTypes.map((type) => (
+            <label
+              key={type}
+              className="flex items-center gap-2 rounded-lg border border-charcoal-200 px-3 py-2.5 text-sm text-charcoal-600 cursor-pointer transition-colors hover:bg-charcoal-50 has-[:checked]:border-wood-500 has-[:checked]:bg-wood-50 has-[:checked]:text-wood-700"
+            >
+              <input
+                type="checkbox"
+                name="tipoProjeto"
+                value={type}
+                defaultChecked={type === "Cozinha Planejada"}
+                className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
+              />
+              {type}
+            </label>
+          ))}
+        </div>
       </div>
 
       <div>

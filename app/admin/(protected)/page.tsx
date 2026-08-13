@@ -71,7 +71,7 @@ export default async function AdminDashboardPage() {
                       {orcamento.nome}
                     </p>
                     <p className="text-xs text-charcoal-500">
-                      {orcamento.tipoProjeto}
+                      {orcamento.tipoProjeto.join(", ") || "—"}
                     </p>
                   </div>
                   <span className="text-xs font-medium text-charcoal-400">
