@@ -40,6 +40,7 @@ export async function GET(
         valorEstimado: orcamento.valorEstimado
           ? Number(orcamento.valorEstimado)
           : null,
+        incluiProjeto: orcamento.incluiProjeto,
         createdAt: orcamento.createdAt,
       }}
       company={company}

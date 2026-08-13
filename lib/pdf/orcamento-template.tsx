@@ -18,6 +18,12 @@ const INCLUDE_TITLE_OVERRIDES: Record<string, string> = {
   "Projeto 3D Personalizado": "Projeto",
 };
 
+const PROCESS_TITLE_OVERRIDES: Record<string, string> = {
+  "Projeto 3D": "Projeto",
+};
+
+const PROJETO_DIFERENCIAL_TITLE = "Projeto 3D Personalizado";
+
 const styles = StyleSheet.create({
   page: {
     padding: 48,
@@ -225,6 +231,7 @@ type OrcamentoData = {
   tipoProjeto: string[];
   mensagem: string;
   valorEstimado: number | null;
+  incluiProjeto: boolean;
   createdAt: Date;
 };
 
@@ -308,14 +315,19 @@ export default function OrcamentoTemplate({
 
         <Text style={styles.sectionTitle}>O que está incluso</Text>
         <View style={styles.includeGrid}>
-          {differentiators.map((item) => (
-            <View key={item.title} style={styles.includeItem}>
-              <View style={styles.includeBullet} />
-              <Text style={styles.includeTitle}>
-                {INCLUDE_TITLE_OVERRIDES[item.title] ?? item.title}
-              </Text>
-            </View>
-          ))}
+          {differentiators
+            .filter(
+              (item) =>
+                o.incluiProjeto || item.title !== PROJETO_DIFERENCIAL_TITLE
+            )
+            .map((item) => (
+              <View key={item.title} style={styles.includeItem}>
+                <View style={styles.includeBullet} />
+                <Text style={styles.includeTitle}>
+                  {INCLUDE_TITLE_OVERRIDES[item.title] ?? item.title}
+                </Text>
+              </View>
+            ))}
         </View>
 
         <Text style={styles.sectionTitle}>Como funciona</Text>
@@ -325,7 +337,9 @@ export default function OrcamentoTemplate({
               <View style={styles.processNumberBadge}>
                 <Text style={styles.processNumberText}>{step.step}</Text>
               </View>
-              <Text style={styles.processTitle}>{step.title}</Text>
+              <Text style={styles.processTitle}>
+                {PROCESS_TITLE_OVERRIDES[step.title] ?? step.title}
+              </Text>
             </View>
           ))}
         </View>

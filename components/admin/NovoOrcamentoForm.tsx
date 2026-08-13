@@ -19,6 +19,7 @@ export default function NovoOrcamentoForm() {
       email: String(formData.get("email") ?? "").trim(),
       tipoProjeto: formData.getAll("tipoProjeto").map(String),
       mensagem: String(formData.get("mensagem") ?? "").trim(),
+      incluiProjeto: formData.get("incluiProjeto") === "on",
     };
 
     try {
@@ -118,6 +119,22 @@ export default function NovoOrcamentoForm() {
             </label>
           ))}
         </div>
+      </div>
+
+      <div>
+        <label className="flex items-center gap-2.5 text-sm font-medium text-charcoal-700">
+          <input
+            type="checkbox"
+            name="incluiProjeto"
+            defaultChecked
+            className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
+          />
+          Incluir projeto (elaboração de projeto)
+        </label>
+        <p className="mt-1.5 text-xs text-charcoal-400">
+          Desmarque se o cliente já tem o projeto pronto e só precisa da
+          fabricação.
+        </p>
       </div>
 
       <div>

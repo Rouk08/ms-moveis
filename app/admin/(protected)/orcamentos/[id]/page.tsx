@@ -152,6 +152,7 @@ export default async function OrcamentoDetailPage({
         status={orcamento.status}
         valorEstimado={orcamento.valorEstimado?.toString() ?? ""}
         notasInternas={orcamento.notasInternas ?? ""}
+        incluiProjeto={orcamento.incluiProjeto}
       />
 
       <div className="mt-6">

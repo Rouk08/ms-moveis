@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     ? body.tipoProjeto.map((t: unknown) => String(t).trim()).filter(Boolean)
     : [];
   const mensagem = String(body.mensagem ?? "").trim();
+  const incluiProjeto = body.incluiProjeto !== false;
 
   if (!nome || !telefone || !email || !mensagem) {
     return NextResponse.json(
@@ -26,7 +27,15 @@ export async function POST(request: Request) {
   }
 
   const orcamento = await prisma.orcamento.create({
-    data: { nome, telefone, email, tipoProjeto, mensagem, origem: "MANUAL" },
+    data: {
+      nome,
+      telefone,
+      email,
+      tipoProjeto,
+      mensagem,
+      incluiProjeto,
+      origem: "MANUAL",
+    },
   });
 
   revalidatePath("/admin");

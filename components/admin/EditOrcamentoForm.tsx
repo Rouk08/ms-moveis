@@ -15,6 +15,7 @@ type EditOrcamentoFormProps = {
   status: OrcamentoStatus;
   valorEstimado: string;
   notasInternas: string;
+  incluiProjeto: boolean;
 };
 
 export default function EditOrcamentoForm({
@@ -22,6 +23,7 @@ export default function EditOrcamentoForm({
   status,
   valorEstimado,
   notasInternas,
+  incluiProjeto,
 }: EditOrcamentoFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -38,6 +40,7 @@ export default function EditOrcamentoForm({
       status: String(formData.get("status") ?? ""),
       valorEstimado: String(formData.get("valorEstimado") ?? "").trim(),
       notasInternas: String(formData.get("notasInternas") ?? "").trim(),
+      incluiProjeto: formData.get("incluiProjeto") === "on",
     };
 
     try {
@@ -109,6 +112,22 @@ export default function EditOrcamentoForm({
           placeholder="0,00"
           className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
         />
+      </div>
+
+      <div>
+        <label className="flex items-center gap-2.5 text-sm font-medium text-charcoal-700">
+          <input
+            type="checkbox"
+            name="incluiProjeto"
+            defaultChecked={incluiProjeto}
+            className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
+          />
+          Incluir projeto (elaboração de projeto)
+        </label>
+        <p className="mt-1.5 text-xs text-charcoal-400">
+          Controla se &ldquo;Projeto&rdquo; aparece no PDF do orçamento
+          enviado ao cliente.
+        </p>
       </div>
 
       <div>

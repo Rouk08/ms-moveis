@@ -32,6 +32,7 @@ model Orcamento {
   email         String
   tipoProjeto   String[]
   mensagem      String
+  incluiProjeto Boolean         @default(true)
   status        OrcamentoStatus @default(NOVO)
   valorEstimado Decimal?        @db.Decimal(10, 2)
   notasInternas String?

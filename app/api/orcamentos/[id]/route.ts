@@ -30,6 +30,7 @@ export async function PATCH(
 
   const valorRaw = String(body.valorEstimado ?? "").trim();
   const notasInternas = String(body.notasInternas ?? "").trim();
+  const incluiProjeto = body.incluiProjeto !== false;
 
   await prisma.orcamento.update({
     where: { id },
@@ -37,6 +38,7 @@ export async function PATCH(
       ...(status ? { status } : {}),
       valorEstimado: valorRaw || null,
       notasInternas: notasInternas || null,
+      incluiProjeto,
     },
   });
 
