@@ -14,6 +14,7 @@ import { prisma } from "@/lib/prisma";
 import StatusBadge from "@/components/admin/StatusBadge";
 import StatusBadgeContrato from "@/components/admin/StatusBadgeContrato";
 import EditOrcamentoForm from "@/components/admin/EditOrcamentoForm";
+import ExcluirOrcamentoButton from "@/components/admin/ExcluirOrcamentoButton";
 
 export default async function OrcamentoDetailPage({
   params,
@@ -152,6 +153,10 @@ export default async function OrcamentoDetailPage({
         valorEstimado={orcamento.valorEstimado?.toString() ?? ""}
         notasInternas={orcamento.notasInternas ?? ""}
       />
+
+      <div className="mt-6">
+        <ExcluirOrcamentoButton id={orcamento.id} />
+      </div>
     </div>
   );
 }
