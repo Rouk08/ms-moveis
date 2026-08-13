@@ -22,14 +22,6 @@ const styles = StyleSheet.create({
     color: "#1f1a17",
     lineHeight: 1.4,
   },
-  watermark: {
-    position: "absolute",
-    top: 261,
-    left: 137,
-    width: 320,
-    height: 320,
-    opacity: 0.06,
-  },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -148,9 +140,6 @@ export default function OrcamentoTemplate({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img */}
-        <Image src={logoSrc} style={styles.watermark} fixed />
-
         <View style={styles.header}>
           {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img */}
           <Image src={logoSrc} style={styles.logo} />
