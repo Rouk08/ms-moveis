@@ -5,7 +5,10 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { company } from "@/lib/data";
+import { orcamentoFotosDir } from "@/lib/uploads";
 import OrcamentoTemplate from "@/lib/pdf/orcamento-template";
+
+const MAX_FOTOS_NO_PDF = 8;
 
 export async function GET(
   request: Request,
@@ -17,7 +20,15 @@ export async function GET(
   }
 
   const { id } = await params;
-  const orcamento = await prisma.orcamento.findUnique({ where: { id } });
+  const orcamento = await prisma.orcamento.findUnique({
+    where: { id },
+    include: {
+      fotos: {
+        orderBy: { createdAt: "asc" },
+        take: MAX_FOTOS_NO_PDF,
+      },
+    },
+  });
 
   if (!orcamento) {
     return NextResponse.json(
@@ -28,6 +39,16 @@ export async function GET(
 
   const logo = readFileSync(join(process.cwd(), "public/logo.jpg"));
   const logoSrc = `data:image/jpeg;base64,${logo.toString("base64")}`;
+
+  const fotosDir = orcamentoFotosDir(id);
+  const fotosSrc = orcamento.fotos.flatMap((foto) => {
+    try {
+      const bytes = readFileSync(join(fotosDir, foto.caminho));
+      return [`data:${foto.contentType};base64,${bytes.toString("base64")}`];
+    } catch {
+      return [];
+    }
+  });
 
   const buffer = await renderToBuffer(
     <OrcamentoTemplate
@@ -45,6 +66,7 @@ export async function GET(
       }}
       company={company}
       logoSrc={logoSrc}
+      fotosSrc={fotosSrc}
     />
   );
 

@@ -140,6 +140,18 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     color: "#1f1a17",
   },
+  fotosGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  fotoItem: {
+    width: "32%",
+    aspectRatio: 1,
+    marginBottom: 10,
+    borderRadius: 6,
+    objectFit: "cover",
+  },
   includeGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -239,12 +251,14 @@ type OrcamentoTemplateProps = {
   orcamento: OrcamentoData;
   company: typeof companyData;
   logoSrc: string;
+  fotosSrc?: string[];
 };
 
 export default function OrcamentoTemplate({
   orcamento: o,
   company,
   logoSrc,
+  fotosSrc = [],
 }: OrcamentoTemplateProps) {
   const dataFormatada = formatDateLong(o.createdAt);
   const validade = new Date(o.createdAt);
@@ -296,6 +310,18 @@ export default function OrcamentoTemplate({
 
         <Text style={styles.sectionTitle}>Descrição do projeto</Text>
         <Text style={styles.paragraph}>{o.mensagem}</Text>
+
+        {fotosSrc.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>Fotos do projeto</Text>
+            <View style={styles.fotosGrid}>
+              {fotosSrc.map((src, index) => (
+                // eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img
+                <Image key={index} src={src} style={styles.fotoItem} />
+              ))}
+            </View>
+          </>
+        )}
 
         <View style={styles.valorBox}>
           <View style={styles.valorBlock}>
