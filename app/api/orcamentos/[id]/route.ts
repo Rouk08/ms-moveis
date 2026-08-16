@@ -1,7 +1,9 @@
+import { rm } from "fs/promises";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { orcamentoFotosDir } from "@/lib/uploads";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const STATUS_VALUES: OrcamentoStatus[] = [
@@ -82,6 +84,12 @@ export async function DELETE(
   }
 
   await prisma.orcamento.delete({ where: { id } });
+
+  try {
+    await rm(orcamentoFotosDir(id), { recursive: true, force: true });
+  } catch {
+    // Sem fotos no disco para este orçamento — nada a fazer.
+  }
 
   revalidatePath("/admin");
   revalidatePath("/admin/orcamentos");

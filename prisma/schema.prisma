@@ -41,6 +41,18 @@ model Orcamento {
   updatedAt     DateTime        @updatedAt
   contasReceber ContaReceber[]
   contrato      Contrato?
+  fotos         OrcamentoFoto[]
+}
+
+model OrcamentoFoto {
+  id          String    @id @default(cuid())
+  orcamentoId String
+  orcamento   Orcamento @relation(fields: [orcamentoId], references: [id], onDelete: Cascade)
+  nomeArquivo String
+  caminho     String
+  contentType String
+  tamanho     Int
+  createdAt   DateTime  @default(now())
 }
 
 enum OrcamentoStatus {

@@ -313,3 +313,9 @@ pasta do projeto.
 - **App sobe mas `/admin` dá erro 500 / painel não abre**: confira se o
   `.env` existe e está preenchido (passo 6) e se as migrations rodaram
   (`npx prisma migrate deploy`).
+- **Upload de foto falha com erro 413**: o nginx bloqueia requisições
+  acima de `client_max_body_size` (já configurado em
+  [`deploy/nginx.conf`](./deploy/nginx.conf), mas confira se essa linha
+  está presente no arquivo ativo em `/etc/nginx/conf.d/` — o Certbot só
+  edita os blocos de SSL, não remove alterações manuais, mas vale
+  conferir depois de reinstalar o nginx.conf do zero).

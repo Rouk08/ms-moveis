@@ -15,6 +15,7 @@ import StatusBadge from "@/components/admin/StatusBadge";
 import StatusBadgeContrato from "@/components/admin/StatusBadgeContrato";
 import EditOrcamentoForm from "@/components/admin/EditOrcamentoForm";
 import ExcluirOrcamentoButton from "@/components/admin/ExcluirOrcamentoButton";
+import OrcamentoFotos from "@/components/admin/OrcamentoFotos";
 
 export default async function OrcamentoDetailPage({
   params,
@@ -24,7 +25,10 @@ export default async function OrcamentoDetailPage({
   const { id } = await params;
   const orcamento = await prisma.orcamento.findUnique({
     where: { id },
-    include: { contrato: true },
+    include: {
+      contrato: true,
+      fotos: { orderBy: { createdAt: "desc" } },
+    },
   });
 
   if (!orcamento) notFound();
@@ -146,6 +150,14 @@ export default async function OrcamentoDetailPage({
           </p>
         </div>
       </div>
+
+      <OrcamentoFotos
+        orcamentoId={orcamento.id}
+        fotosIniciais={orcamento.fotos.map((foto) => ({
+          id: foto.id,
+          nomeArquivo: foto.nomeArquivo,
+        }))}
+      />
 
       <EditOrcamentoForm
         id={orcamento.id}
