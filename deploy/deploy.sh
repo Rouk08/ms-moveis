@@ -17,6 +17,13 @@ npx prisma migrate deploy
 echo "==> Gerando Prisma Client"
 npx prisma generate
 
+echo "==> Limpando cache de otimização de imagens"
+# Sem isso, trocar um arquivo estático (ex: public/logo.jpg) mantendo o
+# mesmo nome não atualiza o que é servido em /_next/image — o Next.js
+# cacheia a versão otimizada em disco por URL, sem detectar que o
+# arquivo de origem mudou.
+rm -rf .next/cache/images
+
 echo "==> Build de produção"
 npm run build
 
