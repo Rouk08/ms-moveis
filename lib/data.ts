@@ -221,8 +221,7 @@ export const services: Service[] = [
       "Iluminação interna de gavetas e nichos",
       "Divisórias internas personalizadas",
     ],
-    image:
-      "https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=1200&q=80&auto=format&fit=crop",
+    image: "/quarto-planejado.jpg",
     portfolioCategory: "Quartos",
   },
   {
