@@ -103,6 +103,19 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Rodapé / soco",
     "Iluminação em LED",
   ],
+  "Banheiro": [
+    "Módulo da pia/lavatório (base)",
+    "Módulo espelho/sobrepor",
+    "Módulo de coluna (gabinete alto)",
+    "Nicho embutido na parede",
+    "Porta de módulo",
+    "Frente de gaveta",
+    "Gaveta interna com corrediça",
+    "Porta de vidro",
+    "Espelho (com moldura ou LED embutido)",
+    "Rodapé / soco",
+    "Iluminação em LED",
+  ],
 };
 
 export type Stat = {
