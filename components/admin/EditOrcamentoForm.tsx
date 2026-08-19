@@ -81,6 +81,7 @@ export default function EditOrcamentoForm({
         categoria: i.categoria,
         item: i.item,
         valorUnitario: i.valorUnitario.replace(",", ".") || "0",
+        observacao: i.observacao.trim(),
       })),
     };
 

@@ -52,6 +52,7 @@ model OrcamentoItem {
   categoria     String
   item          String
   valorUnitario Decimal   @db.Decimal(10, 2)
+  observacao    String?
   createdAt     DateTime  @default(now())
 }
 

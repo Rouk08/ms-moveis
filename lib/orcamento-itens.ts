@@ -2,6 +2,7 @@ export type OrcamentoItemInput = {
   categoria: string;
   item: string;
   valorUnitario: string;
+  observacao: string;
 };
 
 export function parseItensFromBody(body: unknown): OrcamentoItemInput[] {
@@ -15,7 +16,10 @@ export function parseItensFromBody(body: unknown): OrcamentoItemInput[] {
       const valorUnitario = String(
         (entry as { valorUnitario?: unknown })?.valorUnitario ?? "0"
       ).trim();
-      return { categoria, item, valorUnitario };
+      const observacao = String(
+        (entry as { observacao?: unknown })?.observacao ?? ""
+      ).trim();
+      return { categoria, item, valorUnitario, observacao };
     })
     .filter((entry) => entry.categoria && entry.item);
 }

@@ -111,6 +111,7 @@ export default async function OrcamentoDetailPage({
           categoria: i.categoria,
           item: i.item,
           valorUnitario: i.valorUnitario.toString(),
+          observacao: i.observacao ?? "",
         }))}
       />
 

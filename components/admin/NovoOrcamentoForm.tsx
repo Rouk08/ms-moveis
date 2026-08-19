@@ -39,6 +39,7 @@ export default function NovoOrcamentoForm() {
         categoria: i.categoria,
         item: i.item,
         valorUnitario: i.valorUnitario.replace(",", ".") || "0",
+        observacao: i.observacao.trim(),
       })),
       ...(itens.length > 0 ? { valorEstimado: total.toFixed(2) } : {}),
     };

@@ -75,6 +75,7 @@ export async function PATCH(
               categoria: i.categoria,
               item: i.item,
               valorUnitario: i.valorUnitario,
+              observacao: i.observacao || null,
             })),
           }),
         ]

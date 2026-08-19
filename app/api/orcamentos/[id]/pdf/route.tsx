@@ -68,6 +68,7 @@ export async function GET(
           categoria: i.categoria,
           item: i.item,
           valorUnitario: Number(i.valorUnitario),
+          observacao: i.observacao,
         })),
       }}
       company={company}

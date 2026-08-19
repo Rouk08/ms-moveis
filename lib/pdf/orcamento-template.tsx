@@ -120,13 +120,23 @@ const styles = StyleSheet.create({
   itemRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "flex-start",
     paddingVertical: 4,
     borderBottomWidth: 1,
     borderBottomColor: "#f0eae1",
   },
-  itemNome: {
+  itemNomeBlock: {
     flex: 1,
+    paddingRight: 10,
+  },
+  itemNome: {
     color: "#1f1a17",
+  },
+  itemObservacao: {
+    fontSize: 8,
+    fontStyle: "italic",
+    color: "#8a8078",
+    marginTop: 2,
   },
   itemValor: {
     color: "#1f1a17",
@@ -281,6 +291,7 @@ type OrcamentoItemData = {
   categoria: string;
   item: string;
   valorUnitario: number;
+  observacao?: string | null;
 };
 
 type OrcamentoData = {
@@ -388,7 +399,14 @@ export default function OrcamentoTemplate({
                 <Text style={styles.itemCategoria}>{categoria}</Text>
                 {itensDaCategoria.map((i, index) => (
                   <View key={`${i.item}-${index}`} style={styles.itemRow}>
-                    <Text style={styles.itemNome}>{i.item}</Text>
+                    <View style={styles.itemNomeBlock}>
+                      <Text style={styles.itemNome}>{i.item}</Text>
+                      {i.observacao && (
+                        <Text style={styles.itemObservacao}>
+                          {i.observacao}
+                        </Text>
+                      )}
+                    </View>
                     <Text style={styles.itemValor}>
                       {formatBRL(i.valorUnitario)}
                     </Text>
