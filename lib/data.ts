@@ -467,8 +467,7 @@ export const portfolio: PortfolioItem[] = [
   {
     title: "Estação de Trabalho Planejada",
     category: "Escritórios",
-    image:
-      "https://images.unsplash.com/photo-1526887593587-a307ea5d46b4?w=900&q=80&auto=format&fit=crop",
+    image: "/estacao-trabalho-planejada.jpg",
   },
   {
     title: "Lavabo com Cuba Esculpida",
