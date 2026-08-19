@@ -75,6 +75,20 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Cama",
     "Painel de TV",
   ],
+  "Cozinha Planejada": [
+    "Módulo de baixo (gabinete de base)",
+    "Módulo de alto/coluna (despensa, geladeira, forno)",
+    "Módulo suspenso (parede)",
+    "Porta de módulo",
+    "Frente de gaveta",
+    "Gaveta interna com corrediça",
+    "Porta de vidro",
+    "Painel lateral",
+    "Painel de fundo / contramarco",
+    "Rodapé / soco",
+    "Recorte (cooktop, pia, tomadas, embutidos)",
+    "Iluminação em LED",
+  ],
 };
 
 export type Stat = {
