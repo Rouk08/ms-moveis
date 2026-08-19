@@ -29,7 +29,7 @@ model Orcamento {
   id            String          @id @default(cuid())
   nome          String
   telefone      String
-  email         String
+  email         String?
   tipoProjeto   String[]
   mensagem      String
   incluiProjeto Boolean         @default(true)

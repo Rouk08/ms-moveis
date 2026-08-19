@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
 type OrcamentoData = {
   nome: string;
   telefone: string;
-  email: string;
+  email: string | null;
   tipoProjeto: string[];
   mensagem: string;
   valorEstimado: number | null;
@@ -299,10 +299,12 @@ export default function OrcamentoTemplate({
           <Text style={styles.label}>Telefone</Text>
           <Text style={styles.value}>{o.telefone}</Text>
         </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>E-mail</Text>
-          <Text style={styles.value}>{o.email}</Text>
-        </View>
+        {o.email && (
+          <View style={styles.row}>
+            <Text style={styles.label}>E-mail</Text>
+            <Text style={styles.value}>{o.email}</Text>
+          </View>
+        )}
         <View style={styles.row}>
           <Text style={styles.label}>Tipo de projeto</Text>
           <Text style={styles.value}>{o.tipoProjeto.join(", ") || "—"}</Text>

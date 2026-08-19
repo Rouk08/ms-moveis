@@ -15,13 +15,13 @@ export type CreateOrcamentoFromSiteInput = {
 export async function createOrcamentoFromSite(
   data: CreateOrcamentoFromSiteInput
 ) {
-  if (!data.nome || !data.telefone || !data.email || !data.mensagem) return;
+  if (!data.nome || !data.telefone || !data.mensagem) return;
 
   await prisma.orcamento.create({
     data: {
       nome: data.nome,
       telefone: data.telefone,
-      email: data.email,
+      email: data.email.trim() || null,
       tipoProjeto: data.tipoProjeto,
       mensagem: data.mensagem,
       origem: "SITE",

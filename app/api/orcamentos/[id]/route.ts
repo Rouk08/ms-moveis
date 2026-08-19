@@ -34,9 +34,29 @@ export async function PATCH(
   const notasInternas = String(body.notasInternas ?? "").trim();
   const incluiProjeto = body.incluiProjeto !== false;
 
+  const nome = String(body.nome ?? "").trim();
+  const telefone = String(body.telefone ?? "").trim();
+  const email = String(body.email ?? "").trim();
+  const mensagem = String(body.mensagem ?? "").trim();
+  const tipoProjeto = Array.isArray(body.tipoProjeto)
+    ? body.tipoProjeto.map((t: unknown) => String(t).trim()).filter(Boolean)
+    : undefined;
+
+  if (!nome || !telefone || !mensagem) {
+    return NextResponse.json(
+      { error: "Preencha nome, telefone e mensagem." },
+      { status: 400 }
+    );
+  }
+
   await prisma.orcamento.update({
     where: { id },
     data: {
+      nome,
+      telefone,
+      email: email || null,
+      mensagem,
+      ...(tipoProjeto ? { tipoProjeto } : {}),
       ...(status ? { status } : {}),
       valorEstimado: valorRaw || null,
       notasInternas: notasInternas || null,

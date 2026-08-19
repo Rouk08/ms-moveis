@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { projectTypes } from "@/lib/data";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const statusOptions = [
@@ -12,6 +13,11 @@ const statusOptions = [
 
 type EditOrcamentoFormProps = {
   id: string;
+  nome: string;
+  telefone: string;
+  email: string;
+  tipoProjeto: string[];
+  mensagem: string;
   status: OrcamentoStatus;
   valorEstimado: string;
   notasInternas: string;
@@ -20,23 +26,31 @@ type EditOrcamentoFormProps = {
 
 export default function EditOrcamentoForm({
   id,
+  nome,
+  telefone,
+  email,
+  tipoProjeto,
+  mensagem,
   status,
   valorEstimado,
   notasInternas,
   incluiProjeto,
 }: EditOrcamentoFormProps) {
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [pending, setPending] = useState(false);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(null);
-    setSuccess(false);
     setPending(true);
 
     const formData = new FormData(event.currentTarget);
     const payload = {
+      nome: String(formData.get("nome") ?? "").trim(),
+      telefone: String(formData.get("telefone") ?? "").trim(),
+      email: String(formData.get("email") ?? "").trim(),
+      tipoProjeto: formData.getAll("tipoProjeto").map(String),
+      mensagem: String(formData.get("mensagem") ?? "").trim(),
       status: String(formData.get("status") ?? ""),
       valorEstimado: String(formData.get("valorEstimado") ?? "").trim(),
       notasInternas: String(formData.get("notasInternas") ?? "").trim(),
@@ -57,8 +71,7 @@ export default function EditOrcamentoForm({
         return;
       }
 
-      setSuccess(true);
-      setPending(false);
+      window.location.reload();
     } catch {
       setError("Não foi possível salvar as alterações. Tente novamente.");
       setPending(false);
@@ -70,6 +83,102 @@ export default function EditOrcamentoForm({
       onSubmit={handleSubmit}
       className="rounded-2xl border border-charcoal-100 bg-white p-6 shadow-sm space-y-5"
     >
+      <h2 className="font-semibold text-charcoal-800">Dados do cliente</h2>
+
+      <div>
+        <label
+          htmlFor="nome"
+          className="block text-sm font-medium text-charcoal-700 mb-1.5"
+        >
+          Nome do cliente *
+        </label>
+        <input
+          id="nome"
+          name="nome"
+          type="text"
+          required
+          defaultValue={nome}
+          className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label
+            htmlFor="telefone"
+            className="block text-sm font-medium text-charcoal-700 mb-1.5"
+          >
+            Telefone *
+          </label>
+          <input
+            id="telefone"
+            name="telefone"
+            type="text"
+            required
+            defaultValue={telefone}
+            placeholder="(47) 99999-8888"
+            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-charcoal-700 mb-1.5"
+          >
+            E-mail
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            defaultValue={email}
+            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+          />
+        </div>
+      </div>
+
+      <div>
+        <span className="block text-sm font-medium text-charcoal-700 mb-1.5">
+          Tipo de projeto (selecione um ou mais)
+        </span>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {projectTypes.map((type) => (
+            <label
+              key={type}
+              className="flex items-center gap-2 rounded-lg border border-charcoal-200 px-3 py-2.5 text-sm text-charcoal-600 cursor-pointer transition-colors hover:bg-charcoal-50 has-[:checked]:border-wood-500 has-[:checked]:bg-wood-50 has-[:checked]:text-wood-700"
+            >
+              <input
+                type="checkbox"
+                name="tipoProjeto"
+                value={type}
+                defaultChecked={tipoProjeto.includes(type)}
+                className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
+              />
+              {type}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label
+          htmlFor="mensagem"
+          className="block text-sm font-medium text-charcoal-700 mb-1.5"
+        >
+          Mensagem *
+        </label>
+        <textarea
+          id="mensagem"
+          name="mensagem"
+          rows={4}
+          required
+          defaultValue={mensagem}
+          className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+        />
+      </div>
+
+      <div className="pt-2 border-t border-charcoal-100" />
+
       <h2 className="font-semibold text-charcoal-800">
         Acompanhamento interno
       </h2>
@@ -150,11 +259,6 @@ export default function EditOrcamentoForm({
       {error && (
         <p className="text-sm text-red-600" role="alert">
           {error}
-        </p>
-      )}
-      {success && (
-        <p className="text-sm text-moss-600" role="status">
-          Alterações salvas.
         </p>
       )}
 

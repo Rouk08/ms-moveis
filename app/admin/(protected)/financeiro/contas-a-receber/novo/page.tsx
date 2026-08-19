@@ -35,7 +35,7 @@ export default async function NovaContaReceberPage({
         orcamentoId={orcamento?.id}
         cliente={orcamento?.nome}
         telefone={orcamento?.telefone}
-        email={orcamento?.email}
+        email={orcamento?.email ?? undefined}
         valor={orcamento?.valorEstimado?.toString()}
       />
     </div>

@@ -67,7 +67,7 @@ export default function ContactForm() {
           ? "Informe um telefone válido com DDD."
           : undefined;
       case "email":
-        return !isValidEmail(values.email)
+        return values.email.trim() && !isValidEmail(values.email)
           ? "Informe um e-mail válido."
           : undefined;
       case "message":
@@ -84,7 +84,7 @@ export default function ContactForm() {
   };
 
   const validate = (): boolean => {
-    const fields: (keyof FormState)[] = ["name", "phone", "email", "message"];
+    const fields: (keyof FormState)[] = ["name", "phone", "message", "email"];
     const nextErrors: Partial<Record<keyof FormState, string>> = {};
 
     for (const field of fields) {
@@ -108,7 +108,7 @@ export default function ContactForm() {
       "",
       `Nome: ${form.name}`,
       `Telefone: ${form.phone}`,
-      `E-mail: ${form.email}`,
+      ...(form.email.trim() ? [`E-mail: ${form.email}`] : []),
       `Tipo de projeto: ${form.projectTypes.join(", ") || "—"}`,
       `Mensagem: ${form.message}`,
     ];
@@ -172,7 +172,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-charcoal-700 mb-1.5">
-            E-mail *
+            E-mail
           </label>
           <input
             id="email"

@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   const mensagem = String(body.mensagem ?? "").trim();
   const incluiProjeto = body.incluiProjeto !== false;
 
-  if (!nome || !telefone || !email || !mensagem) {
+  if (!nome || !telefone || !mensagem) {
     return NextResponse.json(
       { error: "Preencha todos os campos obrigatórios." },
       { status: 400 }
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     data: {
       nome,
       telefone,
-      email,
+      email: email || null,
       tipoProjeto,
       mensagem,
       incluiProjeto,

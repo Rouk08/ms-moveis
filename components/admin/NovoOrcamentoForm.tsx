@@ -86,13 +86,12 @@ export default function NovoOrcamentoForm() {
             htmlFor="email"
             className="block text-sm font-medium text-charcoal-700 mb-1.5"
           >
-            E-mail *
+            E-mail
           </label>
           <input
             id="email"
             name="email"
             type="email"
-            required
             className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
           />
         </div>
