@@ -142,6 +142,22 @@ const styles = StyleSheet.create({
     color: "#1f1a17",
     fontFamily: "Helvetica-Bold",
   },
+  categoriaSubtotalRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 4,
+    paddingBottom: 2,
+  },
+  categoriaSubtotalLabel: {
+    fontSize: 8.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#6b6156",
+  },
+  categoriaSubtotalValor: {
+    fontSize: 8.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#6b6156",
+  },
   itemTotalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -412,6 +428,19 @@ export default function OrcamentoTemplate({
                     </Text>
                   </View>
                 ))}
+                <View style={styles.categoriaSubtotalRow}>
+                  <Text style={styles.categoriaSubtotalLabel}>
+                    Subtotal — {categoria.toLowerCase()}
+                  </Text>
+                  <Text style={styles.categoriaSubtotalValor}>
+                    {formatBRL(
+                      itensDaCategoria.reduce(
+                        (soma, i) => soma + i.valorUnitario,
+                        0
+                      )
+                    )}
+                  </Text>
+                </View>
               </View>
             ))}
             <View style={styles.itemTotalRow}>

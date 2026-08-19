@@ -100,7 +100,11 @@ export default function ItensOrcamentoField({
 
   return (
     <div className="space-y-5">
-      {categoriasComItens.map((categoria) => (
+      {categoriasComItens.map((categoria) => {
+        const itensDaCategoria = itens.filter((i) => i.categoria === categoria);
+        const subtotalCategoria = totalItens(itensDaCategoria);
+
+        return (
         <div key={categoria}>
           <span className="block text-sm font-medium text-charcoal-700 mb-1.5">
             Itens de {categoria.toLowerCase()}
@@ -177,8 +181,19 @@ export default function ItensOrcamentoField({
               );
             })}
           </div>
+          {itensDaCategoria.length > 0 && (
+            <div className="mt-2 flex items-center justify-between px-1">
+              <span className="text-xs font-medium text-charcoal-500">
+                Subtotal — {categoria.toLowerCase()}
+              </span>
+              <span className="text-sm font-semibold text-charcoal-600">
+                {formatBRL(subtotalCategoria)}
+              </span>
+            </div>
+          )}
         </div>
-      ))}
+        );
+      })}
 
       {itens.length > 0 && (
         <div className="flex items-center justify-between rounded-lg bg-wood-50 px-4 py-3">
