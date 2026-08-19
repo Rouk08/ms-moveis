@@ -10,8 +10,8 @@ export default function About() {
         <AnimatedSection>
           <div className="relative aspect-[4/5] max-w-md mx-auto lg:mx-0 overflow-hidden rounded-2xl">
             <Image
-              src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?w=900&q=80&auto=format&fit=crop"
-              alt="Marceneiro finalizando móvel planejado sob medida"
+              src="/sobre-recepcao.jpg"
+              alt="Balcão de recepção planejado sob medida, projeto entregue pela MS Móveis"
               fill
               sizes="(max-width: 1024px) 90vw, 40vw"
               className="object-cover"
