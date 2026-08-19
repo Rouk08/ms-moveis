@@ -27,6 +27,7 @@ export async function GET(
         orderBy: { createdAt: "asc" },
         take: MAX_FOTOS_NO_PDF,
       },
+      itens: { orderBy: { createdAt: "asc" } },
     },
   });
 
@@ -63,6 +64,11 @@ export async function GET(
           : null,
         incluiProjeto: orcamento.incluiProjeto,
         createdAt: orcamento.createdAt,
+        itens: orcamento.itens.map((i) => ({
+          categoria: i.categoria,
+          item: i.item,
+          valorUnitario: Number(i.valorUnitario),
+        })),
       }}
       company={company}
       logoSrc={logoSrc}

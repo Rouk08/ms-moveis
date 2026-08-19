@@ -2,10 +2,24 @@
 
 import { useState, type FormEvent } from "react";
 import { projectTypes } from "@/lib/data";
+import ItensOrcamentoField, {
+  totalItens,
+  type ItemOrcamento,
+} from "@/components/admin/ItensOrcamentoField";
 
 export default function NovoOrcamentoForm() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [tipoProjeto, setTipoProjeto] = useState<string[]>([
+    "Cozinha Planejada",
+  ]);
+  const [itens, setItens] = useState<ItemOrcamento[]>([]);
+
+  const toggleTipo = (tipo: string) => {
+    setTipoProjeto((prev) =>
+      prev.includes(tipo) ? prev.filter((t) => t !== tipo) : [...prev, tipo]
+    );
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -13,13 +27,20 @@ export default function NovoOrcamentoForm() {
     setPending(true);
 
     const formData = new FormData(event.currentTarget);
+    const total = totalItens(itens);
     const payload = {
       nome: String(formData.get("nome") ?? "").trim(),
       telefone: String(formData.get("telefone") ?? "").trim(),
       email: String(formData.get("email") ?? "").trim(),
-      tipoProjeto: formData.getAll("tipoProjeto").map(String),
+      tipoProjeto,
       mensagem: String(formData.get("mensagem") ?? "").trim(),
       incluiProjeto: formData.get("incluiProjeto") === "on",
+      itens: itens.map((i) => ({
+        categoria: i.categoria,
+        item: i.item,
+        valorUnitario: i.valorUnitario.replace(",", ".") || "0",
+      })),
+      ...(itens.length > 0 ? { valorEstimado: total.toFixed(2) } : {}),
     };
 
     try {
@@ -105,13 +126,16 @@ export default function NovoOrcamentoForm() {
           {projectTypes.map((type) => (
             <label
               key={type}
-              className="flex items-center gap-2 rounded-lg border border-charcoal-200 px-3 py-2.5 text-sm text-charcoal-600 cursor-pointer transition-colors hover:bg-charcoal-50 has-[:checked]:border-wood-500 has-[:checked]:bg-wood-50 has-[:checked]:text-wood-700"
+              className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm cursor-pointer transition-colors ${
+                tipoProjeto.includes(type)
+                  ? "border-wood-500 bg-wood-50 text-wood-700"
+                  : "border-charcoal-200 text-charcoal-600 hover:bg-charcoal-50"
+              }`}
             >
               <input
                 type="checkbox"
-                name="tipoProjeto"
-                value={type}
-                defaultChecked={type === "Cozinha Planejada"}
+                checked={tipoProjeto.includes(type)}
+                onChange={() => toggleTipo(type)}
                 className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
               />
               {type}
@@ -119,6 +143,12 @@ export default function NovoOrcamentoForm() {
           ))}
         </div>
       </div>
+
+      <ItensOrcamentoField
+        tipoProjeto={tipoProjeto}
+        itens={itens}
+        onChange={setItens}
+      />
 
       <div>
         <label className="flex items-center gap-2.5 text-sm font-medium text-charcoal-700">

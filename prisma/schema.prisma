@@ -42,6 +42,17 @@ model Orcamento {
   contasReceber ContaReceber[]
   contrato      Contrato?
   fotos         OrcamentoFoto[]
+  itens         OrcamentoItem[]
+}
+
+model OrcamentoItem {
+  id            String    @id @default(cuid())
+  orcamentoId   String
+  orcamento     Orcamento @relation(fields: [orcamentoId], references: [id], onDelete: Cascade)
+  categoria     String
+  item          String
+  valorUnitario Decimal   @db.Decimal(10, 2)
+  createdAt     DateTime  @default(now())
 }
 
 model OrcamentoFoto {

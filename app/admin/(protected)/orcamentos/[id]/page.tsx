@@ -19,6 +19,7 @@ export default async function OrcamentoDetailPage({
     include: {
       contrato: true,
       fotos: { orderBy: { createdAt: "desc" } },
+      itens: { orderBy: { createdAt: "asc" } },
     },
   });
 
@@ -106,6 +107,11 @@ export default async function OrcamentoDetailPage({
         valorEstimado={orcamento.valorEstimado?.toString() ?? ""}
         notasInternas={orcamento.notasInternas ?? ""}
         incluiProjeto={orcamento.incluiProjeto}
+        itensIniciais={orcamento.itens.map((i) => ({
+          categoria: i.categoria,
+          item: i.item,
+          valorUnitario: i.valorUnitario.toString(),
+        }))}
       />
 
       <div className="mt-6">

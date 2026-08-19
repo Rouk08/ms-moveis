@@ -2,6 +2,10 @@
 
 import { useState, type FormEvent } from "react";
 import { projectTypes } from "@/lib/data";
+import ItensOrcamentoField, {
+  totalItens,
+  type ItemOrcamento,
+} from "@/components/admin/ItensOrcamentoField";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const statusOptions = [
@@ -10,6 +14,10 @@ const statusOptions = [
   { value: "APROVADO", label: "Aprovado" },
   { value: "RECUSADO", label: "Recusado" },
 ];
+
+function formatBRL(value: number) {
+  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
 
 type EditOrcamentoFormProps = {
   id: string;
@@ -22,6 +30,7 @@ type EditOrcamentoFormProps = {
   valorEstimado: string;
   notasInternas: string;
   incluiProjeto: boolean;
+  itensIniciais: ItemOrcamento[];
 };
 
 export default function EditOrcamentoForm({
@@ -29,15 +38,28 @@ export default function EditOrcamentoForm({
   nome,
   telefone,
   email,
-  tipoProjeto,
+  tipoProjeto: tipoProjetoInicial,
   mensagem,
   status,
   valorEstimado,
   notasInternas,
   incluiProjeto,
+  itensIniciais,
 }: EditOrcamentoFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [tipoProjeto, setTipoProjeto] = useState<string[]>(tipoProjetoInicial);
+  const [itens, setItens] = useState<ItemOrcamento[]>(itensIniciais);
+  const [valorManual, setValorManual] = useState(valorEstimado);
+
+  const toggleTipo = (tipo: string) => {
+    setTipoProjeto((prev) =>
+      prev.includes(tipo) ? prev.filter((t) => t !== tipo) : [...prev, tipo]
+    );
+  };
+
+  const usaItens = itens.length > 0;
+  const valorEfetivo = usaItens ? totalItens(itens).toFixed(2) : valorManual;
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,12 +71,17 @@ export default function EditOrcamentoForm({
       nome: String(formData.get("nome") ?? "").trim(),
       telefone: String(formData.get("telefone") ?? "").trim(),
       email: String(formData.get("email") ?? "").trim(),
-      tipoProjeto: formData.getAll("tipoProjeto").map(String),
+      tipoProjeto,
       mensagem: String(formData.get("mensagem") ?? "").trim(),
       status: String(formData.get("status") ?? ""),
-      valorEstimado: String(formData.get("valorEstimado") ?? "").trim(),
+      valorEstimado: valorEfetivo,
       notasInternas: String(formData.get("notasInternas") ?? "").trim(),
       incluiProjeto: formData.get("incluiProjeto") === "on",
+      itens: itens.map((i) => ({
+        categoria: i.categoria,
+        item: i.item,
+        valorUnitario: i.valorUnitario.replace(",", ".") || "0",
+      })),
     };
 
     try {
@@ -145,13 +172,16 @@ export default function EditOrcamentoForm({
           {projectTypes.map((type) => (
             <label
               key={type}
-              className="flex items-center gap-2 rounded-lg border border-charcoal-200 px-3 py-2.5 text-sm text-charcoal-600 cursor-pointer transition-colors hover:bg-charcoal-50 has-[:checked]:border-wood-500 has-[:checked]:bg-wood-50 has-[:checked]:text-wood-700"
+              className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm cursor-pointer transition-colors ${
+                tipoProjeto.includes(type)
+                  ? "border-wood-500 bg-wood-50 text-wood-700"
+                  : "border-charcoal-200 text-charcoal-600 hover:bg-charcoal-50"
+              }`}
             >
               <input
                 type="checkbox"
-                name="tipoProjeto"
-                value={type}
-                defaultChecked={tipoProjeto.includes(type)}
+                checked={tipoProjeto.includes(type)}
+                onChange={() => toggleTipo(type)}
                 className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
               />
               {type}
@@ -159,6 +189,12 @@ export default function EditOrcamentoForm({
           ))}
         </div>
       </div>
+
+      <ItensOrcamentoField
+        tipoProjeto={tipoProjeto}
+        itens={itens}
+        onChange={setItens}
+      />
 
       <div>
         <label
@@ -211,16 +247,27 @@ export default function EditOrcamentoForm({
         >
           Valor estimado (R$)
         </label>
-        <input
-          id="valorEstimado"
-          name="valorEstimado"
-          type="number"
-          step="0.01"
-          min="0"
-          defaultValue={valorEstimado}
-          placeholder="0,00"
-          className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-        />
+        {usaItens ? (
+          <div className="w-full rounded-lg border border-charcoal-100 bg-charcoal-50 px-4 py-2.5 text-charcoal-800">
+            {formatBRL(parseFloat(valorEfetivo))}
+          </div>
+        ) : (
+          <input
+            id="valorEstimado"
+            type="number"
+            step="0.01"
+            min="0"
+            value={valorManual}
+            onChange={(e) => setValorManual(e.target.value)}
+            placeholder="0,00"
+            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+          />
+        )}
+        <p className="mt-1.5 text-xs text-charcoal-400">
+          {usaItens
+            ? "Calculado automaticamente a partir dos itens selecionados acima."
+            : "Preencha manualmente ou selecione itens com preço acima para calcular automaticamente."}
+        </p>
       </div>
 
       <div>

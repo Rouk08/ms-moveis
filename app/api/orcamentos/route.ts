@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { parseItensFromBody } from "@/lib/orcamento-itens";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -18,6 +19,8 @@ export async function POST(request: Request) {
     : [];
   const mensagem = String(body.mensagem ?? "").trim();
   const incluiProjeto = body.incluiProjeto !== false;
+  const itens = parseItensFromBody(body);
+  const valorEstimadoRaw = String(body.valorEstimado ?? "").trim();
 
   if (!nome || !telefone || !mensagem) {
     return NextResponse.json(
@@ -34,7 +37,15 @@ export async function POST(request: Request) {
       tipoProjeto,
       mensagem,
       incluiProjeto,
+      valorEstimado: valorEstimadoRaw || null,
       origem: "MANUAL",
+      itens: {
+        create: itens.map((i) => ({
+          categoria: i.categoria,
+          item: i.item,
+          valorUnitario: i.valorUnitario,
+        })),
+      },
     },
   });
 

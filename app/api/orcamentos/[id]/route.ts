@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { orcamentoFotosDir } from "@/lib/uploads";
+import { parseItensFromBody } from "@/lib/orcamento-itens";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const STATUS_VALUES: OrcamentoStatus[] = [
@@ -41,6 +42,7 @@ export async function PATCH(
   const tipoProjeto = Array.isArray(body.tipoProjeto)
     ? body.tipoProjeto.map((t: unknown) => String(t).trim()).filter(Boolean)
     : undefined;
+  const itens = parseItensFromBody(body);
 
   if (!nome || !telefone || !mensagem) {
     return NextResponse.json(
@@ -49,20 +51,35 @@ export async function PATCH(
     );
   }
 
-  await prisma.orcamento.update({
-    where: { id },
-    data: {
-      nome,
-      telefone,
-      email: email || null,
-      mensagem,
-      ...(tipoProjeto ? { tipoProjeto } : {}),
-      ...(status ? { status } : {}),
-      valorEstimado: valorRaw || null,
-      notasInternas: notasInternas || null,
-      incluiProjeto,
-    },
-  });
+  await prisma.$transaction([
+    prisma.orcamento.update({
+      where: { id },
+      data: {
+        nome,
+        telefone,
+        email: email || null,
+        mensagem,
+        ...(tipoProjeto ? { tipoProjeto } : {}),
+        ...(status ? { status } : {}),
+        valorEstimado: valorRaw || null,
+        notasInternas: notasInternas || null,
+        incluiProjeto,
+      },
+    }),
+    prisma.orcamentoItem.deleteMany({ where: { orcamentoId: id } }),
+    ...(itens.length > 0
+      ? [
+          prisma.orcamentoItem.createMany({
+            data: itens.map((i) => ({
+              orcamentoId: id,
+              categoria: i.categoria,
+              item: i.item,
+              valorUnitario: i.valorUnitario,
+            })),
+          }),
+        ]
+      : []),
+  ]);
 
   revalidatePath("/admin");
   revalidatePath("/admin/orcamentos");

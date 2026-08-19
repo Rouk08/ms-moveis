@@ -59,6 +59,24 @@ export const projectTypes = [
   "Outro",
 ] as const;
 
+/**
+ * Itens específicos por categoria, usados no orçamento (painel admin) para
+ * montar a lista de preço unitário. Categorias sem entrada aqui continuam
+ * funcionando como um tipo de projeto simples, sem submenu de itens.
+ */
+export const itensPorCategoria: Record<string, string[]> = {
+  "Quarto Planejado": [
+    "Guarda-roupa em formato L",
+    "Guarda-roupa com portas de abrir",
+    "Guarda-roupa com portas de correr",
+    "Criado-mudo",
+    "Bancada com espelho",
+    "Cabeceira de cama",
+    "Cama",
+    "Painel de TV",
+  ],
+};
+
 export type Stat = {
   value: number;
   suffix: string;

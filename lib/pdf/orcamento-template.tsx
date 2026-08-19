@@ -108,6 +108,47 @@ const styles = StyleSheet.create({
     textAlign: "justify",
     color: "#1f1a17",
   },
+  itemCategoria: {
+    fontSize: 8.5,
+    fontFamily: "Helvetica-Bold",
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+    color: "#8a6d3f",
+    marginTop: 8,
+    marginBottom: 4,
+  },
+  itemRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0eae1",
+  },
+  itemNome: {
+    flex: 1,
+    color: "#1f1a17",
+  },
+  itemValor: {
+    color: "#1f1a17",
+    fontFamily: "Helvetica-Bold",
+  },
+  itemTotalRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#e5ddd4",
+  },
+  itemTotalLabel: {
+    fontFamily: "Helvetica-Bold",
+    color: "#1f1a17",
+  },
+  itemTotalValor: {
+    fontFamily: "Helvetica-Bold",
+    color: "#8a5a2b",
+    fontSize: 11,
+  },
   valorBox: {
     marginTop: 10,
     padding: 16,
@@ -236,6 +277,12 @@ const styles = StyleSheet.create({
   },
 });
 
+type OrcamentoItemData = {
+  categoria: string;
+  item: string;
+  valorUnitario: number;
+};
+
 type OrcamentoData = {
   nome: string;
   telefone: string;
@@ -245,6 +292,7 @@ type OrcamentoData = {
   valorEstimado: number | null;
   incluiProjeto: boolean;
   createdAt: Date;
+  itens?: OrcamentoItemData[];
 };
 
 type OrcamentoTemplateProps = {
@@ -260,6 +308,8 @@ export default function OrcamentoTemplate({
   logoSrc,
   fotosSrc = [],
 }: OrcamentoTemplateProps) {
+  const itens = o.itens ?? [];
+  const totalItens = itens.reduce((soma, i) => soma + i.valorUnitario, 0);
   const dataFormatada = formatDateLong(o.createdAt);
   const validade = new Date(o.createdAt);
   validade.setDate(validade.getDate() + 10);
@@ -321,6 +371,36 @@ export default function OrcamentoTemplate({
                 // eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img
                 <Image key={index} src={src} style={styles.fotoItem} />
               ))}
+            </View>
+          </>
+        )}
+
+        {itens.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>Itens do orçamento</Text>
+            {Object.entries(
+              itens.reduce<Record<string, OrcamentoItemData[]>>((grupos, i) => {
+                (grupos[i.categoria] ??= []).push(i);
+                return grupos;
+              }, {})
+            ).map(([categoria, itensDaCategoria]) => (
+              <View key={categoria}>
+                <Text style={styles.itemCategoria}>{categoria}</Text>
+                {itensDaCategoria.map((i, index) => (
+                  <View key={`${i.item}-${index}`} style={styles.itemRow}>
+                    <Text style={styles.itemNome}>{i.item}</Text>
+                    <Text style={styles.itemValor}>
+                      {formatBRL(i.valorUnitario)}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            ))}
+            <View style={styles.itemTotalRow}>
+              <Text style={styles.itemTotalLabel}>Total dos itens</Text>
+              <Text style={styles.itemTotalValor}>
+                {formatBRL(totalItens)}
+              </Text>
             </View>
           </>
         )}
