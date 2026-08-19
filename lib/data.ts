@@ -116,6 +116,23 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Rodapé / soco",
     "Iluminação em LED",
   ],
+  "Home Office": [
+    "Módulo da mesa/bancada (base)",
+    "Módulo suspenso (parede)",
+    "Módulo de coluna/alto (estante, arquivo)",
+    "Módulo para CPU/gabinete do computador",
+    "Tampo / bancada de trabalho",
+    "Porta de módulo",
+    "Frente de gaveta",
+    "Gaveta interna com corrediça",
+    "Gaveta com trava (documentos)",
+    "Painel para TV/monitor",
+    "Nicho para TV/monitor",
+    "Gaveteiro / arquivo com fechadura",
+    "Painel decorativo de parede",
+    "Rodapé / soco",
+    "Iluminação em LED",
+  ],
 };
 
 export type Stat = {
