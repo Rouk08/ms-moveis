@@ -203,8 +203,7 @@ export const services: Service[] = [
       "Ferragens com amortecimento silencioso",
       "Iluminação de destaque embutida",
     ],
-    image:
-      "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1200&q=80&auto=format&fit=crop",
+    image: "/cozinha-planejada.jpg",
     portfolioCategory: "Cozinhas",
   },
   {
