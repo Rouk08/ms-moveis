@@ -432,8 +432,7 @@ export const portfolio: PortfolioItem[] = [
   {
     title: "Home Office Compacto",
     category: "Escritórios",
-    image:
-      "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=900&q=80&auto=format&fit=crop",
+    image: "/home-office-compacto.jpg",
   },
   {
     title: "Banheiro com Gabinete Planejado",
