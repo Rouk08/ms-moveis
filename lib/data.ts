@@ -89,6 +89,20 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Recorte (cooktop, pia, tomadas, embutidos)",
     "Iluminação em LED",
   ],
+  "Sala de Estar": [
+    "Módulo de baixo (painel de TV, aparador ou baú)",
+    "Módulo suspenso (parede)",
+    "Módulo de coluna/alto (rack, estante ou adega)",
+    "Painel para TV",
+    "Nicho para TV",
+    "Painel decorativo de parede (ripado/slat)",
+    "Estante aberta",
+    "Nicho decorativo",
+    "Aparador / console",
+    "Buffet / bar",
+    "Rodapé / soco",
+    "Iluminação em LED",
+  ],
 };
 
 export type Stat = {
