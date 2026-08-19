@@ -274,8 +274,7 @@ export const services: Service[] = [
       "Armários e estantes para documentos",
       "Aproveitamento de espaços pequenos",
     ],
-    image:
-      "https://images.unsplash.com/photo-1593476550610-87baa860004a?w=1200&q=80&auto=format&fit=crop",
+    image: "/home-office.jpg",
     portfolioCategory: "Escritórios",
   },
   {
