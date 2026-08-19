@@ -133,6 +133,24 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Rodapé / soco",
     "Iluminação em LED",
   ],
+  "Projeto Comercial": [
+    "Divisória / parede divisória",
+    "Porta de acesso",
+    "Mesa / bancada de trabalho (escritório)",
+    "Balcão de atendimento / recepção",
+    "Módulo de armazenamento (gaveteiro/arquivo)",
+    "Estante / rack de arquivos",
+    "Painel para TV/monitor",
+    "Estante industrial / cantilever",
+    "Rack seletivo / prateleira galvanizada",
+    "Bancada de produção/montagem",
+    "Bancada de inox (copa/cozinha industrial)",
+    "Armário/locker individual (vestiário)",
+    "Módulo da pia/lavatório comercial",
+    "Armário de higiene (banheiro)",
+    "Mesa coletiva (refeitório)",
+    "Mesa de reuniões",
+  ],
 };
 
 export type Stat = {
