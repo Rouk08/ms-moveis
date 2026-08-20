@@ -14,6 +14,10 @@ function formatBRL(value: number): string {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
+function formatPercent(value: number): string {
+  return value.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+}
+
 const INCLUDE_TITLE_OVERRIDES: Record<string, string> = {
   "Projeto 3D Personalizado": "Projeto",
 };
@@ -254,18 +258,6 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     color: "#1f1a17",
   },
-  fotosGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  fotoItem: {
-    width: "32%",
-    aspectRatio: 1,
-    marginBottom: 10,
-    borderRadius: 6,
-    objectFit: "cover",
-  },
   includeGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -389,9 +381,10 @@ export default function OrcamentoTemplate({
   const valorFinal = o.valorEstimado;
   const subtotal =
     itens.length > 0 ? totalItens : valorFinal !== null ? valorFinal + desconto : null;
+  const descontoPercentual =
+    desconto > 0 && subtotal ? (desconto / subtotal) * 100 : 0;
   const dataFormatada = formatDateLong(o.createdAt);
   const fotoDestaque = fotosSrc[0];
-  const maisFotos = fotosSrc.slice(1);
 
   return (
     <Document>
@@ -460,18 +453,6 @@ export default function OrcamentoTemplate({
         <Text style={styles.sectionTitle}>Descrição do projeto</Text>
         <Text style={styles.paragraph}>{o.mensagem}</Text>
 
-        {maisFotos.length > 0 && (
-          <>
-            <Text style={styles.sectionTitle}>Mais fotos do projeto</Text>
-            <View style={styles.fotosGrid}>
-              {maisFotos.map((src, index) => (
-                // eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img
-                <Image key={index} src={src} style={styles.fotoItem} />
-              ))}
-            </View>
-          </>
-        )}
-
         {itens.length > 0 && (
           <>
             <Text style={styles.sectionTitle}>Itens do orçamento</Text>
@@ -532,7 +513,9 @@ export default function OrcamentoTemplate({
           )}
           {desconto > 0 && (
             <View style={styles.resumoRow}>
-              <Text style={styles.resumoLabel}>Desconto</Text>
+              <Text style={styles.resumoLabel}>
+                Desconto à vista de {formatPercent(descontoPercentual)}%
+              </Text>
               <Text style={styles.resumoDescontoValue}>
                 - {formatBRL(desconto)}
               </Text>
@@ -623,7 +606,7 @@ export default function OrcamentoTemplate({
         <View style={styles.footerDivider} />
         <Text style={styles.footer}>
           {company.name} · {company.phone.display} ·{" "}
-          {company.whatsapp.display} · {company.email}
+          {company.whatsapp.display} · {company.email} · {company.website}
         </Text>
       </Page>
     </Document>

@@ -6,6 +6,10 @@ import ItensOrcamentoField, {
   totalItens,
   type ItemOrcamento,
 } from "@/components/admin/ItensOrcamentoField";
+import DescontoField, {
+  calcDescontoValor,
+  type DescontoTipo,
+} from "@/components/admin/DescontoField";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const statusOptions = [
@@ -54,6 +58,7 @@ export default function EditOrcamentoForm({
   const [itens, setItens] = useState<ItemOrcamento[]>(itensIniciais);
   const [valorManual, setValorManual] = useState(valorEstimado);
   const [desconto, setDesconto] = useState(descontoInicial);
+  const [descontoTipo, setDescontoTipo] = useState<DescontoTipo>("valor");
 
   const toggleTipo = (tipo: string) => {
     setTipoProjeto((prev) =>
@@ -62,8 +67,8 @@ export default function EditOrcamentoForm({
   };
 
   const usaItens = itens.length > 0;
-  const descontoNum = parseFloat(desconto.replace(",", ".")) || 0;
   const baseValor = usaItens ? totalItens(itens) : parseFloat(valorManual) || 0;
+  const descontoNum = calcDescontoValor(descontoTipo, desconto, baseValor);
   const valorEfetivo = Math.max(0, baseValor - descontoNum).toFixed(2);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -272,24 +277,13 @@ export default function EditOrcamentoForm({
             />
           )}
         </div>
-        <div>
-          <label
-            htmlFor="desconto"
-            className="block text-sm font-medium text-charcoal-700 mb-1.5"
-          >
-            Desconto (R$)
-          </label>
-          <input
-            id="desconto"
-            type="number"
-            step="0.01"
-            min="0"
-            value={desconto}
-            onChange={(e) => setDesconto(e.target.value)}
-            placeholder="0,00"
-            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-          />
-        </div>
+        <DescontoField
+          tipo={descontoTipo}
+          onTipoChange={setDescontoTipo}
+          valor={desconto}
+          onValorChange={setDesconto}
+          base={baseValor}
+        />
       </div>
       <p className="-mt-3 text-xs text-charcoal-400">
         Valor final (após desconto):{" "}

@@ -6,6 +6,10 @@ import ItensOrcamentoField, {
   totalItens,
   type ItemOrcamento,
 } from "@/components/admin/ItensOrcamentoField";
+import DescontoField, {
+  calcDescontoValor,
+  type DescontoTipo,
+} from "@/components/admin/DescontoField";
 
 export default function NovoOrcamentoForm() {
   const [error, setError] = useState<string | null>(null);
@@ -15,6 +19,7 @@ export default function NovoOrcamentoForm() {
   ]);
   const [itens, setItens] = useState<ItemOrcamento[]>([]);
   const [desconto, setDesconto] = useState("");
+  const [descontoTipo, setDescontoTipo] = useState<DescontoTipo>("percentual");
 
   const toggleTipo = (tipo: string) => {
     setTipoProjeto((prev) =>
@@ -29,7 +34,7 @@ export default function NovoOrcamentoForm() {
 
     const formData = new FormData(event.currentTarget);
     const total = totalItens(itens);
-    const descontoNum = parseFloat(desconto.replace(",", ".")) || 0;
+    const descontoNum = calcDescontoValor(descontoTipo, desconto, total);
     const valorFinal = Math.max(0, total - descontoNum);
     const payload = {
       nome: String(formData.get("nome") ?? "").trim(),
@@ -157,28 +162,13 @@ export default function NovoOrcamentoForm() {
       />
 
       {itens.length > 0 && (
-        <div>
-          <label
-            htmlFor="desconto"
-            className="block text-sm font-medium text-charcoal-700 mb-1.5"
-          >
-            Desconto (R$)
-          </label>
-          <input
-            id="desconto"
-            type="number"
-            step="0.01"
-            min="0"
-            value={desconto}
-            onChange={(e) => setDesconto(e.target.value)}
-            placeholder="0,00"
-            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-          />
-          <p className="mt-1.5 text-xs text-charcoal-400">
-            Opcional. Subtraído do total dos itens para calcular o valor
-            estimado final.
-          </p>
-        </div>
+        <DescontoField
+          tipo={descontoTipo}
+          onTipoChange={setDescontoTipo}
+          valor={desconto}
+          onValorChange={setDesconto}
+          base={totalItens(itens)}
+        />
       )}
 
       <div>
