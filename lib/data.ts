@@ -88,6 +88,7 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Rodapé / soco",
     "Recorte (cooktop, pia, tomadas, embutidos)",
     "Iluminação em LED",
+    "Pedra de mármore/granito",
   ],
   "Sala de Estar": [
     "Módulo de baixo (painel de TV, aparador ou baú)",
