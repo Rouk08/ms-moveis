@@ -32,39 +32,45 @@ const styles = StyleSheet.create({
     color: "#1f1a17",
     lineHeight: 1.4,
   },
-  topBar: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 6,
-    backgroundColor: "#b3763a",
+  headerBand: {
+    flexDirection: "row",
+    marginHorizontal: -48,
+    marginTop: -48,
+    marginBottom: 20,
   },
-  header: {
+  headerBandLeft: {
+    width: "38%",
+    backgroundColor: "#2b2119",
+    paddingHorizontal: 26,
+    paddingVertical: 26,
     flexDirection: "row",
     alignItems: "center",
-    gap: 14,
-    marginBottom: 14,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e5ddd4",
+    gap: 10,
+  },
+  headerBandRight: {
+    flex: 1,
+    backgroundColor: "#faf6f0",
+    paddingHorizontal: 26,
+    paddingVertical: 26,
+    justifyContent: "center",
   },
   logo: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
   },
-  companyName: {
-    fontSize: 14,
+  headerCompanyName: {
+    fontSize: 12,
     fontFamily: "Helvetica-Bold",
+    color: "#f5ede2",
   },
-  companyMeta: {
-    fontSize: 8.5,
-    color: "#6b6156",
+  headerSlogan: {
+    fontSize: 7.5,
+    color: "#c9a468",
     marginTop: 2,
   },
   tagline: {
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "Helvetica-Bold",
     color: "#8a6d3f",
     marginBottom: 4,
@@ -72,7 +78,6 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 9,
     color: "#6b6156",
-    marginBottom: 14,
   },
   sectionTitle: {
     fontSize: 9,
@@ -83,26 +88,53 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     marginTop: 13,
   },
-  row: {
-    flexDirection: "row",
-    marginBottom: 4,
-  },
-  label: {
-    width: 110,
-    color: "#6b6156",
-  },
-  value: {
-    flex: 1,
-    color: "#1f1a17",
-  },
-  clientName: {
-    flex: 1,
-    color: "#1f1a17",
-    fontFamily: "Helvetica-Bold",
-  },
   paragraph: {
     textAlign: "justify",
     color: "#1f1a17",
+  },
+  clientSection: {
+    flexDirection: "row",
+    gap: 14,
+    marginBottom: 4,
+  },
+  clientCard: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#e5ddd4",
+    borderRadius: 8,
+    padding: 14,
+  },
+  clientCardRow: {
+    flexDirection: "row",
+    marginBottom: 7,
+  },
+  clientCardDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: "#b3763a",
+    marginTop: 4,
+    marginRight: 8,
+  },
+  clientCardLabel: {
+    fontSize: 8,
+    color: "#6b6156",
+    marginBottom: 1,
+  },
+  clientCardValue: {
+    color: "#1f1a17",
+    fontFamily: "Helvetica-Bold",
+  },
+  projectPhotoBox: {
+    width: 140,
+    height: 140,
+    borderRadius: 8,
+  },
+  projectPhotoImg: {
+    width: 140,
+    height: 140,
+    borderRadius: 8,
+    objectFit: "cover",
   },
   itemCategoria: {
     fontSize: 8.5,
@@ -154,52 +186,71 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     color: "#6b6156",
   },
-  itemTotalRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 8,
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: "#e5ddd4",
+  itemsCard: {
+    borderWidth: 1,
+    borderColor: "#e5ddd4",
+    borderRadius: 8,
+    padding: 12,
   },
-  itemTotalLabel: {
-    fontFamily: "Helvetica-Bold",
-    color: "#1f1a17",
-  },
-  itemTotalValor: {
-    fontFamily: "Helvetica-Bold",
-    color: "#8a5a2b",
-    fontSize: 11,
-  },
-  valorBox: {
+  resumoBox: {
     marginTop: 10,
     padding: 16,
     backgroundColor: "#faf6f0",
-    borderRadius: 6,
+    borderRadius: 8,
+  },
+  resumoRow: {
     flexDirection: "row",
-    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 5,
   },
-  valorBlock: {
-    flex: 1,
-  },
-  valorDivider: {
-    width: 1,
-    alignSelf: "stretch",
-    backgroundColor: "#e5ddd4",
-    marginHorizontal: 16,
-  },
-  valorLabel: {
+  resumoLabel: {
     fontSize: 9,
     color: "#6b6156",
-    marginBottom: 3,
   },
-  valorAmount: {
+  resumoValue: {
+    fontSize: 9,
+    color: "#1f1a17",
+    fontFamily: "Helvetica-Bold",
+  },
+  resumoDescontoValue: {
+    fontSize: 9,
+    color: "#a15c3c",
+    fontFamily: "Helvetica-Bold",
+  },
+  resumoDivider: {
+    height: 1,
+    backgroundColor: "#e5ddd4",
+    marginVertical: 8,
+  },
+  resumoTotalRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  resumoTotalLabel: {
+    fontSize: 11,
+    fontFamily: "Helvetica-Bold",
+    color: "#1f1a17",
+  },
+  resumoTotalValue: {
     fontSize: 20,
     fontFamily: "Helvetica-Bold",
     color: "#8a5a2b",
   },
-  prazoAmount: {
-    fontSize: 12,
+  footerInfoRow: {
+    flexDirection: "row",
+    marginTop: 13,
+  },
+  footerInfoCol: {
+    flex: 1,
+  },
+  footerInfoLabel: {
+    fontSize: 7.5,
+    color: "#6b6156",
+    marginBottom: 2,
+  },
+  footerInfoValue: {
+    fontSize: 9,
     fontFamily: "Helvetica-Bold",
     color: "#1f1a17",
   },
@@ -313,6 +364,7 @@ type OrcamentoData = {
   tipoProjeto: string[];
   mensagem: string;
   valorEstimado: number | null;
+  desconto?: number | null;
   incluiProjeto: boolean;
   createdAt: Date;
   itens?: OrcamentoItemData[];
@@ -333,63 +385,86 @@ export default function OrcamentoTemplate({
 }: OrcamentoTemplateProps) {
   const itens = o.itens ?? [];
   const totalItens = itens.reduce((soma, i) => soma + i.valorUnitario, 0);
+  const desconto = o.desconto ?? 0;
+  const valorFinal = o.valorEstimado;
+  const subtotal =
+    itens.length > 0 ? totalItens : valorFinal !== null ? valorFinal + desconto : null;
   const dataFormatada = formatDateLong(o.createdAt);
-  const validade = new Date(o.createdAt);
-  validade.setDate(validade.getDate() + 10);
+  const fotoDestaque = fotosSrc[0];
+  const maisFotos = fotosSrc.slice(1);
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <View style={styles.topBar} fixed />
-
-        <View style={styles.header}>
-          {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img */}
-          <Image src={logoSrc} style={styles.logo} />
-          <View>
-            <Text style={styles.companyName}>{company.name}</Text>
-            <Text style={styles.companyMeta}>
-              {company.address.full} · {company.phone.display} ·{" "}
-              {company.email}
+        <View style={styles.headerBand}>
+          <View style={styles.headerBandLeft}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img */}
+            <Image src={logoSrc} style={styles.logo} />
+            <View>
+              <Text style={styles.headerCompanyName}>{company.name}</Text>
+              <Text style={styles.headerSlogan}>Móveis planejados sob medida</Text>
+            </View>
+          </View>
+          <View style={styles.headerBandRight}>
+            <Text style={styles.tagline}>
+              Proposta personalizada para o seu projeto
             </Text>
+            <Text style={styles.subtitle}>Emitido em {dataFormatada}</Text>
           </View>
         </View>
 
-        <Text style={styles.tagline}>
-          Proposta personalizada para o seu projeto
-        </Text>
-        <Text style={styles.subtitle}>
-          Emitido em {dataFormatada} · Válido até{" "}
-          {formatDateLong(validade)}
-        </Text>
-
-        <Text style={styles.sectionTitle}>Dados do cliente</Text>
-        <View style={styles.row}>
-          <Text style={styles.label}>Nome</Text>
-          <Text style={styles.clientName}>{o.nome}</Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Telefone</Text>
-          <Text style={styles.value}>{o.telefone}</Text>
-        </View>
-        {o.email && (
-          <View style={styles.row}>
-            <Text style={styles.label}>E-mail</Text>
-            <Text style={styles.value}>{o.email}</Text>
+        <View style={styles.clientSection} wrap={false}>
+          <View style={styles.clientCard}>
+            <Text style={styles.sectionTitle}>Dados do cliente</Text>
+            <View style={styles.clientCardRow}>
+              <View style={styles.clientCardDot} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.clientCardLabel}>Nome</Text>
+                <Text style={styles.clientCardValue}>{o.nome}</Text>
+              </View>
+            </View>
+            <View style={styles.clientCardRow}>
+              <View style={styles.clientCardDot} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.clientCardLabel}>Telefone</Text>
+                <Text style={styles.clientCardValue}>{o.telefone}</Text>
+              </View>
+            </View>
+            {o.email && (
+              <View style={styles.clientCardRow}>
+                <View style={styles.clientCardDot} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.clientCardLabel}>E-mail</Text>
+                  <Text style={styles.clientCardValue}>{o.email}</Text>
+                </View>
+              </View>
+            )}
+            <View style={[styles.clientCardRow, { marginBottom: 0 }]}>
+              <View style={styles.clientCardDot} />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.clientCardLabel}>Tipo de projeto</Text>
+                <Text style={styles.clientCardValue}>
+                  {o.tipoProjeto.join(", ") || "—"}
+                </Text>
+              </View>
+            </View>
           </View>
-        )}
-        <View style={styles.row}>
-          <Text style={styles.label}>Tipo de projeto</Text>
-          <Text style={styles.value}>{o.tipoProjeto.join(", ") || "—"}</Text>
+          {fotoDestaque && (
+            <View style={styles.projectPhotoBox}>
+              {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img */}
+              <Image src={fotoDestaque} style={styles.projectPhotoImg} />
+            </View>
+          )}
         </View>
 
         <Text style={styles.sectionTitle}>Descrição do projeto</Text>
         <Text style={styles.paragraph}>{o.mensagem}</Text>
 
-        {fotosSrc.length > 0 && (
+        {maisFotos.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>Fotos do projeto</Text>
+            <Text style={styles.sectionTitle}>Mais fotos do projeto</Text>
             <View style={styles.fotosGrid}>
-              {fotosSrc.map((src, index) => (
+              {maisFotos.map((src, index) => (
                 // eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer's Image, not an HTML img
                 <Image key={index} src={src} style={styles.fotoItem} />
               ))}
@@ -400,66 +475,75 @@ export default function OrcamentoTemplate({
         {itens.length > 0 && (
           <>
             <Text style={styles.sectionTitle}>Itens do orçamento</Text>
-            {Object.entries(
-              itens.reduce<Record<string, OrcamentoItemData[]>>((grupos, i) => {
-                (grupos[i.categoria] ??= []).push(i);
-                return grupos;
-              }, {})
-            ).map(([categoria, itensDaCategoria]) => (
-              <View key={categoria}>
-                <Text style={styles.itemCategoria}>{categoria}</Text>
-                {itensDaCategoria.map((i, index) => (
-                  <View key={`${i.item}-${index}`} style={styles.itemRow}>
-                    <View style={styles.itemNomeBlock}>
-                      <Text style={styles.itemNome}>{i.item}</Text>
-                      {i.observacao && (
-                        <Text style={styles.itemObservacao}>
-                          {i.observacao}
-                        </Text>
-                      )}
+            <View style={styles.itemsCard}>
+              {Object.entries(
+                itens.reduce<Record<string, OrcamentoItemData[]>>((grupos, i) => {
+                  (grupos[i.categoria] ??= []).push(i);
+                  return grupos;
+                }, {})
+              ).map(([categoria, itensDaCategoria]) => (
+                <View key={categoria}>
+                  <Text style={styles.itemCategoria}>{categoria}</Text>
+                  {itensDaCategoria.map((i, index) => (
+                    <View
+                      key={`${i.item}-${index}`}
+                      style={styles.itemRow}
+                      wrap={false}
+                    >
+                      <View style={styles.itemNomeBlock}>
+                        <Text style={styles.itemNome}>{i.item}</Text>
+                        {i.observacao && (
+                          <Text style={styles.itemObservacao}>
+                            {i.observacao}
+                          </Text>
+                        )}
+                      </View>
+                      <Text style={styles.itemValor}>
+                        {formatBRL(i.valorUnitario)}
+                      </Text>
                     </View>
-                    <Text style={styles.itemValor}>
-                      {formatBRL(i.valorUnitario)}
+                  ))}
+                  <View style={styles.categoriaSubtotalRow}>
+                    <Text style={styles.categoriaSubtotalLabel}>
+                      Subtotal — {categoria.toLowerCase()}
+                    </Text>
+                    <Text style={styles.categoriaSubtotalValor}>
+                      {formatBRL(
+                        itensDaCategoria.reduce(
+                          (soma, i) => soma + i.valorUnitario,
+                          0
+                        )
+                      )}
                     </Text>
                   </View>
-                ))}
-                <View style={styles.categoriaSubtotalRow}>
-                  <Text style={styles.categoriaSubtotalLabel}>
-                    Subtotal — {categoria.toLowerCase()}
-                  </Text>
-                  <Text style={styles.categoriaSubtotalValor}>
-                    {formatBRL(
-                      itensDaCategoria.reduce(
-                        (soma, i) => soma + i.valorUnitario,
-                        0
-                      )
-                    )}
-                  </Text>
                 </View>
-              </View>
-            ))}
-            <View style={styles.itemTotalRow}>
-              <Text style={styles.itemTotalLabel}>Total dos itens</Text>
-              <Text style={styles.itemTotalValor}>
-                {formatBRL(totalItens)}
-              </Text>
+              ))}
             </View>
           </>
         )}
 
-        <View style={styles.valorBox}>
-          <View style={styles.valorBlock}>
-            <Text style={styles.valorLabel}>Valor estimado</Text>
-            <Text style={styles.valorAmount}>
-              {o.valorEstimado !== null
-                ? formatBRL(o.valorEstimado)
-                : "A definir"}
+        <Text style={styles.sectionTitle}>Resumo do investimento</Text>
+        <View style={styles.resumoBox} wrap={false}>
+          {subtotal !== null && (
+            <View style={styles.resumoRow}>
+              <Text style={styles.resumoLabel}>Subtotal</Text>
+              <Text style={styles.resumoValue}>{formatBRL(subtotal)}</Text>
+            </View>
+          )}
+          {desconto > 0 && (
+            <View style={styles.resumoRow}>
+              <Text style={styles.resumoLabel}>Desconto</Text>
+              <Text style={styles.resumoDescontoValue}>
+                - {formatBRL(desconto)}
+              </Text>
+            </View>
+          )}
+          <View style={styles.resumoDivider} />
+          <View style={styles.resumoTotalRow}>
+            <Text style={styles.resumoTotalLabel}>Total do investimento</Text>
+            <Text style={styles.resumoTotalValue}>
+              {valorFinal !== null ? formatBRL(valorFinal) : "A definir"}
             </Text>
-          </View>
-          <View style={styles.valorDivider} />
-          <View style={styles.valorBlock}>
-            <Text style={styles.valorLabel}>Prazo estimado</Text>
-            <Text style={styles.prazoAmount}>30 a 45 dias</Text>
           </View>
         </View>
 
@@ -471,7 +555,7 @@ export default function OrcamentoTemplate({
                 o.incluiProjeto || item.title !== PROJETO_DIFERENCIAL_TITLE
             )
             .map((item) => (
-              <View key={item.title} style={styles.includeItem}>
+              <View key={item.title} style={styles.includeItem} wrap={false}>
                 <View style={styles.includeBullet} />
                 <Text style={styles.includeTitle}>
                   {INCLUDE_TITLE_OVERRIDES[item.title] ?? item.title}
@@ -483,7 +567,7 @@ export default function OrcamentoTemplate({
         <Text style={styles.sectionTitle}>Como funciona</Text>
         <View style={styles.processRow}>
           {processSteps.map((step) => (
-            <View key={step.step} style={styles.processStep}>
+            <View key={step.step} style={styles.processStep} wrap={false}>
               <View style={styles.processNumberBadge}>
                 <Text style={styles.processNumberText}>{step.step}</Text>
               </View>
@@ -505,6 +589,23 @@ export default function OrcamentoTemplate({
           executivo. Após aprovação, será formalizado um contrato de
           prestação de serviços.
         </Text>
+
+        <View style={styles.footerInfoRow} wrap={false}>
+          <View style={styles.footerInfoCol}>
+            <Text style={styles.footerInfoLabel}>Validade da proposta</Text>
+            <Text style={styles.footerInfoValue}>10 dias</Text>
+          </View>
+          <View style={styles.footerInfoCol}>
+            <Text style={styles.footerInfoLabel}>Condições de pagamento</Text>
+            <Text style={styles.footerInfoValue}>
+              Sinal + parcela + entrega
+            </Text>
+          </View>
+          <View style={styles.footerInfoCol}>
+            <Text style={styles.footerInfoLabel}>Prazo de entrega</Text>
+            <Text style={styles.footerInfoValue}>30 a 45 dias</Text>
+          </View>
+        </View>
 
         <View style={styles.statsDivider} />
         <View style={styles.statsRow}>

@@ -14,6 +14,7 @@ export default function NovoOrcamentoForm() {
     "Cozinha Planejada",
   ]);
   const [itens, setItens] = useState<ItemOrcamento[]>([]);
+  const [desconto, setDesconto] = useState("");
 
   const toggleTipo = (tipo: string) => {
     setTipoProjeto((prev) =>
@@ -28,6 +29,8 @@ export default function NovoOrcamentoForm() {
 
     const formData = new FormData(event.currentTarget);
     const total = totalItens(itens);
+    const descontoNum = parseFloat(desconto.replace(",", ".")) || 0;
+    const valorFinal = Math.max(0, total - descontoNum);
     const payload = {
       nome: String(formData.get("nome") ?? "").trim(),
       telefone: String(formData.get("telefone") ?? "").trim(),
@@ -41,7 +44,9 @@ export default function NovoOrcamentoForm() {
         valorUnitario: i.valorUnitario.replace(",", ".") || "0",
         observacao: i.observacao.trim(),
       })),
-      ...(itens.length > 0 ? { valorEstimado: total.toFixed(2) } : {}),
+      ...(itens.length > 0
+        ? { valorEstimado: valorFinal.toFixed(2), desconto: descontoNum.toFixed(2) }
+        : {}),
     };
 
     try {
@@ -150,6 +155,31 @@ export default function NovoOrcamentoForm() {
         itens={itens}
         onChange={setItens}
       />
+
+      {itens.length > 0 && (
+        <div>
+          <label
+            htmlFor="desconto"
+            className="block text-sm font-medium text-charcoal-700 mb-1.5"
+          >
+            Desconto (R$)
+          </label>
+          <input
+            id="desconto"
+            type="number"
+            step="0.01"
+            min="0"
+            value={desconto}
+            onChange={(e) => setDesconto(e.target.value)}
+            placeholder="0,00"
+            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+          />
+          <p className="mt-1.5 text-xs text-charcoal-400">
+            Opcional. Subtraído do total dos itens para calcular o valor
+            estimado final.
+          </p>
+        </div>
+      )}
 
       <div>
         <label className="flex items-center gap-2.5 text-sm font-medium text-charcoal-700">

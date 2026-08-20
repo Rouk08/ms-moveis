@@ -35,6 +35,7 @@ model Orcamento {
   incluiProjeto Boolean         @default(true)
   status        OrcamentoStatus @default(NOVO)
   valorEstimado Decimal?        @db.Decimal(10, 2)
+  desconto      Decimal?        @db.Decimal(10, 2)
   notasInternas String?
   origem        Origem          @default(SITE)
   createdAt     DateTime        @default(now())

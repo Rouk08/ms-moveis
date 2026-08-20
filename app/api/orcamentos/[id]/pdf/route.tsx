@@ -62,6 +62,7 @@ export async function GET(
         valorEstimado: orcamento.valorEstimado
           ? Number(orcamento.valorEstimado)
           : null,
+        desconto: orcamento.desconto ? Number(orcamento.desconto) : null,
         incluiProjeto: orcamento.incluiProjeto,
         createdAt: orcamento.createdAt,
         itens: orcamento.itens.map((i) => ({

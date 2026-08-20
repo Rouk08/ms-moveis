@@ -28,6 +28,7 @@ type EditOrcamentoFormProps = {
   mensagem: string;
   status: OrcamentoStatus;
   valorEstimado: string;
+  desconto: string;
   notasInternas: string;
   incluiProjeto: boolean;
   itensIniciais: ItemOrcamento[];
@@ -42,6 +43,7 @@ export default function EditOrcamentoForm({
   mensagem,
   status,
   valorEstimado,
+  desconto: descontoInicial,
   notasInternas,
   incluiProjeto,
   itensIniciais,
@@ -51,6 +53,7 @@ export default function EditOrcamentoForm({
   const [tipoProjeto, setTipoProjeto] = useState<string[]>(tipoProjetoInicial);
   const [itens, setItens] = useState<ItemOrcamento[]>(itensIniciais);
   const [valorManual, setValorManual] = useState(valorEstimado);
+  const [desconto, setDesconto] = useState(descontoInicial);
 
   const toggleTipo = (tipo: string) => {
     setTipoProjeto((prev) =>
@@ -59,7 +62,9 @@ export default function EditOrcamentoForm({
   };
 
   const usaItens = itens.length > 0;
-  const valorEfetivo = usaItens ? totalItens(itens).toFixed(2) : valorManual;
+  const descontoNum = parseFloat(desconto.replace(",", ".")) || 0;
+  const baseValor = usaItens ? totalItens(itens) : parseFloat(valorManual) || 0;
+  const valorEfetivo = Math.max(0, baseValor - descontoNum).toFixed(2);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,6 +80,7 @@ export default function EditOrcamentoForm({
       mensagem: String(formData.get("mensagem") ?? "").trim(),
       status: String(formData.get("status") ?? ""),
       valorEstimado: valorEfetivo,
+      desconto: descontoNum.toFixed(2),
       notasInternas: String(formData.get("notasInternas") ?? "").trim(),
       incluiProjeto: formData.get("incluiProjeto") === "on",
       itens: itens.map((i) => ({
@@ -241,35 +247,56 @@ export default function EditOrcamentoForm({
         </select>
       </div>
 
-      <div>
-        <label
-          htmlFor="valorEstimado"
-          className="block text-sm font-medium text-charcoal-700 mb-1.5"
-        >
-          Valor estimado (R$)
-        </label>
-        {usaItens ? (
-          <div className="w-full rounded-lg border border-charcoal-100 bg-charcoal-50 px-4 py-2.5 text-charcoal-800">
-            {formatBRL(parseFloat(valorEfetivo))}
-          </div>
-        ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label
+            htmlFor="valorEstimado"
+            className="block text-sm font-medium text-charcoal-700 mb-1.5"
+          >
+            {usaItens ? "Total dos itens (R$)" : "Valor estimado (R$)"}
+          </label>
+          {usaItens ? (
+            <div className="w-full rounded-lg border border-charcoal-100 bg-charcoal-50 px-4 py-2.5 text-charcoal-800">
+              {formatBRL(totalItens(itens))}
+            </div>
+          ) : (
+            <input
+              id="valorEstimado"
+              type="number"
+              step="0.01"
+              min="0"
+              value={valorManual}
+              onChange={(e) => setValorManual(e.target.value)}
+              placeholder="0,00"
+              className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+            />
+          )}
+        </div>
+        <div>
+          <label
+            htmlFor="desconto"
+            className="block text-sm font-medium text-charcoal-700 mb-1.5"
+          >
+            Desconto (R$)
+          </label>
           <input
-            id="valorEstimado"
+            id="desconto"
             type="number"
             step="0.01"
             min="0"
-            value={valorManual}
-            onChange={(e) => setValorManual(e.target.value)}
+            value={desconto}
+            onChange={(e) => setDesconto(e.target.value)}
             placeholder="0,00"
             className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
           />
-        )}
-        <p className="mt-1.5 text-xs text-charcoal-400">
-          {usaItens
-            ? "Calculado automaticamente a partir dos itens selecionados acima."
-            : "Preencha manualmente ou selecione itens com preço acima para calcular automaticamente."}
-        </p>
+        </div>
       </div>
+      <p className="-mt-3 text-xs text-charcoal-400">
+        Valor final (após desconto):{" "}
+        <span className="font-semibold text-charcoal-600">
+          {formatBRL(parseFloat(valorEfetivo))}
+        </span>
+      </p>
 
       <div>
         <label className="flex items-center gap-2.5 text-sm font-medium text-charcoal-700">

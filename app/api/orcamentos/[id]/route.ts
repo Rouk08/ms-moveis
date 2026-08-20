@@ -32,6 +32,7 @@ export async function PATCH(
     : undefined;
 
   const valorRaw = String(body.valorEstimado ?? "").trim();
+  const descontoRaw = String(body.desconto ?? "").trim();
   const notasInternas = String(body.notasInternas ?? "").trim();
   const incluiProjeto = body.incluiProjeto !== false;
 
@@ -62,6 +63,7 @@ export async function PATCH(
         ...(tipoProjeto ? { tipoProjeto } : {}),
         ...(status ? { status } : {}),
         valorEstimado: valorRaw || null,
+        desconto: descontoRaw || null,
         notasInternas: notasInternas || null,
         incluiProjeto,
       },

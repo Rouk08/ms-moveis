@@ -105,6 +105,7 @@ export default async function OrcamentoDetailPage({
         mensagem={orcamento.mensagem}
         status={orcamento.status}
         valorEstimado={orcamento.valorEstimado?.toString() ?? ""}
+        desconto={orcamento.desconto?.toString() ?? ""}
         notasInternas={orcamento.notasInternas ?? ""}
         incluiProjeto={orcamento.incluiProjeto}
         itensIniciais={orcamento.itens.map((i) => ({

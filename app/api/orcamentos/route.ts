@@ -21,6 +21,7 @@ export async function POST(request: Request) {
   const incluiProjeto = body.incluiProjeto !== false;
   const itens = parseItensFromBody(body);
   const valorEstimadoRaw = String(body.valorEstimado ?? "").trim();
+  const descontoRaw = String(body.desconto ?? "").trim();
 
   if (!nome || !telefone || !mensagem) {
     return NextResponse.json(
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
       mensagem,
       incluiProjeto,
       valorEstimado: valorEstimadoRaw || null,
+      desconto: descontoRaw || null,
       origem: "MANUAL",
       itens: {
         create: itens.map((i) => ({
