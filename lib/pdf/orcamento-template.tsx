@@ -63,13 +63,9 @@ const styles = StyleSheet.create({
     color: "#6b6156",
     marginTop: 2,
   },
-  title: {
+  tagline: {
     fontSize: 18,
     fontFamily: "Helvetica-Bold",
-    marginBottom: 2,
-  },
-  tagline: {
-    fontSize: 10,
     color: "#8a6d3f",
     marginBottom: 4,
   },
@@ -358,7 +354,6 @@ export default function OrcamentoTemplate({
           </View>
         </View>
 
-        <Text style={styles.title}>Orçamento</Text>
         <Text style={styles.tagline}>
           Proposta personalizada para o seu projeto
         </Text>
