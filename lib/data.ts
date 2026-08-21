@@ -459,12 +459,6 @@ export const portfolio: PortfolioItem[] = [
       "https://images.unsplash.com/photo-1611048268330-53de574cae3b?w=900&q=80&auto=format&fit=crop",
   },
   {
-    title: "Estante para Sala de Jantar",
-    category: "Salas",
-    image:
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&q=80&auto=format&fit=crop",
-  },
-  {
     title: "Estação de Trabalho Planejada",
     category: "Escritórios",
     image: "/estacao-trabalho-planejada.jpg",
