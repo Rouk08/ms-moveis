@@ -421,8 +421,7 @@ export const portfolio: PortfolioItem[] = [
   {
     title: "Closet Sob Medida",
     category: "Quartos",
-    image:
-      "https://images.unsplash.com/photo-1558997519-83ea9252edf8?w=900&q=80&auto=format&fit=crop",
+    image: "/closet-sob-medida.png",
   },
   {
     title: "Painel de TV com Estante",
@@ -454,14 +453,12 @@ export const portfolio: PortfolioItem[] = [
   {
     title: "Cozinha Integrada com Ilha",
     category: "Cozinhas",
-    image:
-      "https://images.unsplash.com/photo-1556909212-d5b604d0c90d?w=900&q=80&auto=format&fit=crop",
+    image: "/cozinha-ilha.png",
   },
   {
     title: "Guarda-Roupa de Casal",
     category: "Quartos",
-    image:
-      "https://images.unsplash.com/photo-1611048268330-53de574cae3b?w=900&q=80&auto=format&fit=crop",
+    image: "/guarda-roupa-casal.png",
   },
   {
     title: "Estação de Trabalho Planejada",
