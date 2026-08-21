@@ -256,8 +256,7 @@ export const services: Service[] = [
       "Espelheiras com iluminação",
       "Otimização de espaço em lavabos pequenos",
     ],
-    image:
-      "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=1200&q=80&auto=format&fit=crop",
+    image: "/banheiro.jpg",
     portfolioCategory: "Banheiros",
   },
   {
