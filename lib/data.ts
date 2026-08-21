@@ -415,8 +415,7 @@ export const portfolio: PortfolioItem[] = [
   {
     title: "Cozinha Planejada Contemporânea",
     category: "Cozinhas",
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=900&q=80&auto=format&fit=crop",
+    image: "/cozinha-contemporanea.jpg",
   },
   {
     title: "Closet Sob Medida",
