@@ -430,7 +430,7 @@ export const portfolio: PortfolioItem[] = [
   {
     title: "Área de Descanso",
     category: "Salas",
-    image: "/painel-tv-estante.jpg",
+    image: "/area-descanso.jpg",
   },
   {
     title: "Home Office Compacto",
