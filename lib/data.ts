@@ -239,8 +239,7 @@ export const services: Service[] = [
       "Buffets e adegas planejadas",
       "Integração com sala de jantar",
     ],
-    image:
-      "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=1200&q=80&auto=format&fit=crop",
+    image: "/sala-de-estar.jpg",
     portfolioCategory: "Salas",
   },
   {
@@ -428,8 +427,7 @@ export const portfolio: PortfolioItem[] = [
   {
     title: "Painel de TV com Estante",
     category: "Salas",
-    image:
-      "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=80&auto=format&fit=crop",
+    image: "/painel-tv-estante.jpg",
   },
   {
     title: "Home Office Compacto",
