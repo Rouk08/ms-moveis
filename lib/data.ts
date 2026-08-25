@@ -417,11 +417,6 @@ export const portfolio: PortfolioItem[] = [
     image: "/cozinha-contemporanea.jpg",
   },
   {
-    title: "Closet Sob Medida",
-    category: "Quartos",
-    image: "/closet-sob-medida.png",
-  },
-  {
     title: "Painel de TV com Estante",
     category: "Salas",
     image: "/sala-de-estar.jpg",
@@ -452,11 +447,6 @@ export const portfolio: PortfolioItem[] = [
     title: "Cozinha Integrada com Ilha",
     category: "Cozinhas",
     image: "/cozinha-ilha.png",
-  },
-  {
-    title: "Guarda-Roupa de Casal",
-    category: "Quartos",
-    image: "/guarda-roupa-casal.png",
   },
   {
     title: "Estação de Trabalho Planejada",
