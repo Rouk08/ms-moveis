@@ -290,8 +290,7 @@ export const services: Service[] = [
       "Gôndolas e expositores sob medida",
       "Prazos compatíveis com a operação do negócio",
     ],
-    image:
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80&auto=format&fit=crop",
+    image: "/projeto-comercial.jpg",
     portfolioCategory: "Comercial",
   },
   {
@@ -438,10 +437,9 @@ export const portfolio: PortfolioItem[] = [
       "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=900&q=80&auto=format&fit=crop",
   },
   {
-    title: "Recepção Comercial",
+    title: "Sala de Aula Infantil",
     category: "Comercial",
-    image:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&q=80&auto=format&fit=crop",
+    image: "/sala-aula-infantil.jpg",
   },
   {
     title: "Cozinha Integrada com Ilha",
@@ -460,10 +458,9 @@ export const portfolio: PortfolioItem[] = [
       "https://images.unsplash.com/photo-1576698483491-8c43f0862543?w=900&q=80&auto=format&fit=crop",
   },
   {
-    title: "Balcão de Loja Sob Medida",
+    title: "Cantinho da Leitura",
     category: "Comercial",
-    image:
-      "https://images.unsplash.com/photo-1687583636159-6ecd166b8389?w=900&q=80&auto=format&fit=crop",
+    image: "/cantinho-leitura.jpg",
   },
 ];
 
