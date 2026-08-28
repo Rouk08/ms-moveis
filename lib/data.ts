@@ -552,7 +552,49 @@ export const materialCategories: MaterialCategory[] = [
     description: "Perfis embutidos para nichos, gavetas e painéis.",
   },
   {
-    title: "Materiais Antiumidade",
-    description: "Chapas próprias para cozinhas e banheiros.",
+    title: "Chapa WFP",
+    description: "Novidade 100% à prova d'água e fogo para áreas úmidas.",
   },
 ];
+
+export type NovidadeFeature = {
+  icon: "droplet" | "flame" | "bug" | "wrench";
+  title: string;
+  description: string;
+};
+
+export const novidade = {
+  badge: "Novidade",
+  title: "Chegou o WFP: o novo material à prova d'água e fogo",
+  description:
+    "Começamos a trabalhar com a chapa WFP, um painel à base de PVC expandido que vem ganhando espaço como alternativa ao MDF em ambientes que exigem mais resistência. Já usamos as mesmas ferragens, colas e acabamentos de sempre — só que com muito mais durabilidade em áreas críticas.",
+  features: [
+    {
+      icon: "droplet",
+      title: "100% à prova d'água",
+      description:
+        "Não estufa, não mofa e não delamina, mesmo em contato direto e constante com a água.",
+    },
+    {
+      icon: "flame",
+      title: "Resistente ao fogo",
+      description:
+        "Material antichamas, trazendo mais segurança para cozinhas e áreas técnicas.",
+    },
+    {
+      icon: "bug",
+      title: "Imune a cupins",
+      description:
+        "Não é atacado por cupins nem outras pragas comuns da madeira.",
+    },
+    {
+      icon: "wrench",
+      title: "Mesmo acabamento de sempre",
+      description:
+        "Compatível com as ferragens e técnicas de marcenaria que já usamos no dia a dia.",
+    },
+  ] satisfies NovidadeFeature[],
+  ctaLabel: "Perguntar sobre o WFP",
+  ctaMessage:
+    "Olá! Vi no site que vocês estão trabalhando com a chapa WFP e queria saber mais.",
+};
