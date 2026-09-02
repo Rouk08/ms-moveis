@@ -107,7 +107,7 @@ export default function Sidebar({ userName, userRole }: SidebarProps) {
           </div>
         </div>
 
-        <div className="px-3 pt-3">
+        <div className="px-3 pt-3 space-y-1">
           <Link
             href="/"
             onClick={() => setMobileOpen(false)}
@@ -116,6 +116,19 @@ export default function Sidebar({ userName, userRole }: SidebarProps) {
             <ExternalLink size={14} />
             Ver site
           </Link>
+          {/* Sistema à parte (operação de engenharia/construção do
+              grupo MS) — banco de dados, usuários e deploy próprios,
+              sem compartilhar dados com a marcenaria. Só um link
+              externo daqui. */}
+          <a
+            href="https://obras.msmoveissobmedida.com.br"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-medium text-charcoal-400 hover:bg-charcoal-50 hover:text-charcoal-600 transition-colors"
+          >
+            <ExternalLink size={14} />
+            MS Construções
+          </a>
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
