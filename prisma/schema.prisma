@@ -243,6 +243,10 @@ model Contrato {
   dataContrato         DateTime        @default(now())
   status               StatusContrato  @default(RASCUNHO)
   notasInternas        String?
+  // Texto livre, opcional — entra como a última cláusula do contrato
+  // (numerada automaticamente após o Foro), pra condições específicas
+  // daquele cliente sem mexer nas cláusulas fixas do modelo.
+  clausulaAdicional    String?
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
 }

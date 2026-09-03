@@ -34,6 +34,7 @@ type EditContratoFormProps = {
   dataContrato: string;
   status: StatusContrato;
   notasInternas: string;
+  clausulaAdicional: string;
 };
 
 export default function EditContratoForm(props: EditContratoFormProps) {
@@ -89,6 +90,9 @@ export default function EditContratoForm(props: EditContratoFormProps) {
       dataContrato: String(formData.get("dataContrato") ?? "").trim(),
       status: String(formData.get("status") ?? ""),
       notasInternas: String(formData.get("notasInternas") ?? "").trim(),
+      clausulaAdicional: String(
+        formData.get("clausulaAdicional") ?? ""
+      ).trim(),
     };
 
     try {
@@ -410,6 +414,24 @@ export default function EditContratoForm(props: EditContratoFormProps) {
             className={inputClass}
           />
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="clausulaAdicional" className={labelClass}>
+          Cláusula adicional (opcional)
+        </label>
+        <textarea
+          id="clausulaAdicional"
+          name="clausulaAdicional"
+          rows={5}
+          placeholder="Condições específicas deste contrato — entra no PDF como a última cláusula, numerada automaticamente após o Foro. Uma linha em branco separa parágrafos."
+          defaultValue={props.clausulaAdicional}
+          className={inputClass}
+        />
+        <p className="mt-1.5 text-xs text-charcoal-400">
+          As 11 cláusulas fixas do modelo não mudam — isso entra como uma
+          cláusula extra, só neste contrato.
+        </p>
       </div>
 
       <div>

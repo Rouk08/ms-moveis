@@ -101,6 +101,7 @@ type ContratoData = {
   foroCidade: string;
   foroUf: string;
   dataContrato: Date;
+  clausulaAdicional: string | null;
 };
 
 type ContratoTemplateProps = {
@@ -363,6 +364,23 @@ export default function ContratoTemplate({
           ressalvadas as hipóteses de competência absoluta previstas no
           Código de Defesa do Consumidor.
         </Text>
+
+        {c.clausulaAdicional && c.clausulaAdicional.trim() && (
+          <>
+            <Text style={styles.clauseTitle}>
+              13. CLÁUSULA DÉCIMA SEGUNDA – DISPOSIÇÕES ADICIONAIS
+            </Text>
+            {c.clausulaAdicional
+              .trim()
+              .split(/\n+/)
+              .filter((linha) => linha.trim())
+              .map((linha, index) => (
+                <Text key={index} style={styles.paragraph}>
+                  {linha.trim()}
+                </Text>
+              ))}
+          </>
+        )}
 
         <View style={styles.signatureBlock}>
           <Text style={styles.signatureLine}>{c.contratanteNome}</Text>

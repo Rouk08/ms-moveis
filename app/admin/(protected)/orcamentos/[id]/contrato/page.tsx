@@ -75,6 +75,7 @@ export default async function ContratoPage({
         dataContrato={contrato.dataContrato.toISOString().slice(0, 10)}
         status={contrato.status}
         notasInternas={contrato.notasInternas ?? ""}
+        clausulaAdicional={contrato.clausulaAdicional ?? ""}
       />
     </div>
   );

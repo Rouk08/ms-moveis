@@ -61,6 +61,9 @@ export default function NovoContratoForm({
       foroCidade: String(formData.get("foroCidade") ?? "").trim(),
       foroUf: String(formData.get("foroUf") ?? "").trim(),
       dataContrato: String(formData.get("dataContrato") ?? "").trim(),
+      clausulaAdicional: String(
+        formData.get("clausulaAdicional") ?? ""
+      ).trim(),
     };
 
     try {
@@ -351,6 +354,19 @@ export default function NovoContratoForm({
             className={inputClass}
           />
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="clausulaAdicional" className={labelClass}>
+          Cláusula adicional (opcional)
+        </label>
+        <textarea
+          id="clausulaAdicional"
+          name="clausulaAdicional"
+          rows={4}
+          placeholder="Condições específicas deste contrato — entra no PDF como a última cláusula. Pode preencher depois, na tela de edição."
+          className={inputClass}
+        />
       </div>
 
       {error && (

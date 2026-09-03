@@ -137,6 +137,9 @@ export async function PATCH(
       ...(body.notasInternas !== undefined
         ? { notasInternas: String(body.notasInternas).trim() || null }
         : {}),
+      ...(body.clausulaAdicional !== undefined
+        ? { clausulaAdicional: String(body.clausulaAdicional).trim() || null }
+        : {}),
     },
   });
 

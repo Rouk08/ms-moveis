@@ -51,6 +51,7 @@ export async function GET(
         foroCidade: contrato.foroCidade,
         foroUf: contrato.foroUf,
         dataContrato: contrato.dataContrato,
+        clausulaAdicional: contrato.clausulaAdicional,
       }}
       company={getCompanyInfo()}
     />

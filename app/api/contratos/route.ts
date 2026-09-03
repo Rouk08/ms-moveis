@@ -36,6 +36,7 @@ export async function POST(request: Request) {
   const foroCidade = String(body.foroCidade ?? "").trim();
   const foroUf = String(body.foroUf ?? "").trim();
   const dataContratoRaw = String(body.dataContrato ?? "").trim();
+  const clausulaAdicional = String(body.clausulaAdicional ?? "").trim();
 
   if (
     !orcamentoId ||
@@ -114,6 +115,7 @@ export async function POST(request: Request) {
       foroCidade,
       foroUf,
       ...(dataContratoRaw ? { dataContrato: new Date(dataContratoRaw) } : {}),
+      clausulaAdicional: clausulaAdicional || null,
     },
   });
 
