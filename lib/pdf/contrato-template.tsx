@@ -60,6 +60,23 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     textAlign: "justify",
   },
+  especCategoria: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 9,
+    marginTop: 6,
+    marginBottom: 2,
+    marginLeft: 12,
+  },
+  especItem: {
+    marginBottom: 3,
+    marginLeft: 20,
+    textAlign: "justify",
+  },
+  especObservacao: {
+    fontSize: 8.5,
+    fontStyle: "italic",
+    color: "#4a4038",
+  },
   signatureBlock: {
     marginTop: 40,
     flexDirection: "row",
@@ -119,6 +136,13 @@ type ParcelaOrcamentoData = {
   vencimento: string | null;
 };
 
+type ItemOrcamentoData = {
+  categoria: string;
+  item: string;
+  valorUnitario: number;
+  observacao: string | null;
+};
+
 type ContratoTemplateProps = {
   contrato: ContratoData;
   company: ReturnType<typeof getCompanyInfo>;
@@ -132,6 +156,7 @@ type ContratoTemplateProps = {
   parcelado?: boolean;
   numeroParcelas?: number | null;
   parcelasOrcamento?: ParcelaOrcamentoData[];
+  itensOrcamento?: ItemOrcamentoData[];
 };
 
 export default function ContratoTemplate({
@@ -142,6 +167,7 @@ export default function ContratoTemplate({
   parcelado,
   numeroParcelas,
   parcelasOrcamento,
+  itensOrcamento,
 }: ContratoTemplateProps) {
   const c = contrato;
   const dataFormatada = formatDateLong(c.dataContrato);
@@ -175,6 +201,17 @@ export default function ContratoTemplate({
             vencimento: "Entrega e instalação",
           },
         ];
+
+  // Especificação do que será produzido, agrupada por categoria, na
+  // mesma estrutura usada no PDF do orçamento — só aparece quando o
+  // orçamento de origem usou itens detalhados (nem todo orçamento usa,
+  // alguns têm só um valor estimado fechado).
+  const itensPorCategoria = (itensOrcamento ?? []).reduce<
+    Record<string, ItemOrcamentoData[]>
+  >((grupos, item) => {
+    (grupos[item.categoria] ??= []).push(item);
+    return grupos;
+  }, {});
 
   return (
     <Document>
@@ -271,6 +308,31 @@ export default function ContratoTemplate({
           original serão objeto de aditivo contratual com definição de
           prazo e preço adicionais.
         </Text>
+        {itensOrcamento && itensOrcamento.length > 0 && (
+          <>
+            <Text style={styles.paragraph}>
+              1.5. Os móveis planejados objeto deste contrato, conforme
+              especificado no Orçamento nº {orcamentoNumero}, compreendem
+              os seguintes itens:
+            </Text>
+            {Object.entries(itensPorCategoria).map(([categoria, itens]) => (
+              <View key={categoria}>
+                <Text style={styles.especCategoria}>{categoria}</Text>
+                {itens.map((item, index) => (
+                  <Text key={index} style={styles.especItem}>
+                    • {item.item} — {formatBRL(item.valorUnitario)}
+                    {item.observacao && (
+                      <Text style={styles.especObservacao}>
+                        {" "}
+                        ({item.observacao})
+                      </Text>
+                    )}
+                  </Text>
+                ))}
+              </View>
+            ))}
+          </>
+        )}
 
         <Text style={styles.clauseTitle}>
           3. CLÁUSULA SEGUNDA – DAS OBRIGAÇÕES DA CONTRATADA

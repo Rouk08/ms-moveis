@@ -26,6 +26,7 @@ export async function GET(
           parcelado: true,
           numeroParcelas: true,
           parcelas: { orderBy: { ordem: "asc" } },
+          itens: { orderBy: { createdAt: "asc" } },
         },
       },
     },
@@ -73,6 +74,12 @@ export async function GET(
         descricao: p.descricao,
         valor: Number(p.valor),
         vencimento: p.vencimento,
+      }))}
+      itensOrcamento={contrato.orcamento.itens.map((i) => ({
+        categoria: i.categoria,
+        item: i.item,
+        valorUnitario: Number(i.valorUnitario),
+        observacao: i.observacao,
       }))}
     />
   );
