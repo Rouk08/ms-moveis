@@ -28,6 +28,7 @@ export async function GET(
         take: MAX_FOTOS_NO_PDF,
       },
       itens: { orderBy: { createdAt: "asc" } },
+      parcelas: { orderBy: { ordem: "asc" } },
     },
   });
 
@@ -54,6 +55,7 @@ export async function GET(
   const buffer = await renderToBuffer(
     <OrcamentoTemplate
       orcamento={{
+        numero: orcamento.numero,
         nome: orcamento.nome,
         telefone: orcamento.telefone,
         email: orcamento.email,
@@ -66,13 +68,16 @@ export async function GET(
         incluiProjeto: orcamento.incluiProjeto,
         createdAt: orcamento.createdAt,
         formaPagamento: orcamento.formaPagamento,
-        parcelado: orcamento.parcelado,
-        numeroParcelas: orcamento.numeroParcelas,
         itens: orcamento.itens.map((i) => ({
           categoria: i.categoria,
           item: i.item,
           valorUnitario: Number(i.valorUnitario),
           observacao: i.observacao,
+        })),
+        parcelas: orcamento.parcelas.map((p) => ({
+          descricao: p.descricao,
+          valor: Number(p.valor),
+          vencimento: p.vencimento,
         })),
       }}
       company={company}

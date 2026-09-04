@@ -113,23 +113,35 @@ const FORMA_PAGAMENTO_LABELS: Record<string, string> = {
   TRANSFERENCIA: "transferência bancária",
 };
 
+type ParcelaOrcamentoData = {
+  descricao: string;
+  valor: number;
+  vencimento: string | null;
+};
+
 type ContratoTemplateProps = {
   contrato: ContratoData;
   company: ReturnType<typeof getCompanyInfo>;
-  // Forma de pagamento vem do Orçamento vinculado, não é campo do
-  // Contrato — mantém a origem única do dado (definida na etapa de
-  // orçamento, só refletida aqui).
+  // Número, forma de pagamento e parcelas vêm do Orçamento vinculado,
+  // não são campos do Contrato — mantém a origem única do dado
+  // (definida na etapa de orçamento, só refletida aqui). A Cláusula
+  // Quinta usa exatamente essas parcelas, na mesma ordem/descrição/
+  // valor definidos no orçamento.
+  orcamentoNumero: number;
   formaPagamento?: string | null;
   parcelado?: boolean;
   numeroParcelas?: number | null;
+  parcelasOrcamento?: ParcelaOrcamentoData[];
 };
 
 export default function ContratoTemplate({
   contrato,
   company,
+  orcamentoNumero,
   formaPagamento,
   parcelado,
   numeroParcelas,
+  parcelasOrcamento,
 }: ContratoTemplateProps) {
   const c = contrato;
   const dataFormatada = formatDateLong(c.dataContrato);
@@ -138,6 +150,31 @@ export default function ContratoTemplate({
       ? `parcelado em ${numeroParcelas} vezes`
       : "de forma parcelada"
     : "à vista";
+  // Contratos gerados antes das parcelas exatas do orçamento existirem
+  // (ou de orçamentos sem parcelas definidas) caem no split 30/40/30
+  // legado, calculado na criação do contrato — nunca deixa a Cláusula
+  // Quinta sem nenhum item.
+  const parcelasParaExibir: ParcelaOrcamentoData[] =
+    parcelasOrcamento && parcelasOrcamento.length > 0
+      ? parcelasOrcamento
+      : [
+          {
+            descricao:
+              "Sinal de 30% (trinta por cento) no ato da assinatura e aprovação do projeto",
+            valor: c.valorSinal,
+            vencimento: "Na assinatura",
+          },
+          {
+            descricao: "Parcela de 40% (quarenta por cento) no início da fabricação",
+            valor: c.valorFabricacao,
+            vencimento: "Início da fabricação",
+          },
+          {
+            descricao: "Parcela de 30% (trinta por cento) na entrega e instalação final",
+            valor: c.valorEntrega,
+            vencimento: "Entrega e instalação",
+          },
+        ];
 
   return (
     <Document>
@@ -151,7 +188,9 @@ export default function ContratoTemplate({
           Instrumento particular de prestação de serviços técnicos e
           industriais
         </Text>
-        <Text style={styles.date}>{dataFormatada}</Text>
+        <Text style={styles.date}>
+          Vinculado ao Orçamento nº {orcamentoNumero} · {dataFormatada}
+        </Text>
 
         <Text style={styles.clauseTitle}>1. PREÂMBULO</Text>
         <Text style={styles.paragraph}>
@@ -302,20 +341,17 @@ export default function ContratoTemplate({
           abrangendo todos os custos diretos e indiretos da operação.
         </Text>
         <Text style={styles.paragraph}>
-          5.2. O pagamento será escalonado da seguinte forma:
+          5.2. O pagamento será escalonado da seguinte forma, exatamente
+          como definido no Orçamento nº {orcamentoNumero}:
         </Text>
-        <Text style={styles.listItem}>
-          a) Sinal de 30% (trinta por cento) no ato da assinatura e
-          aprovação do projeto: {formatBRL(c.valorSinal)};
-        </Text>
-        <Text style={styles.listItem}>
-          b) Parcela de 40% (quarenta por cento) no início da fabricação:{" "}
-          {formatBRL(c.valorFabricacao)};
-        </Text>
-        <Text style={styles.listItem}>
-          c) Parcela de 30% (trinta por cento) na entrega e instalação
-          final: {formatBRL(c.valorEntrega)}.
-        </Text>
+        {parcelasParaExibir.map((parcela, index) => (
+          <Text key={index} style={styles.listItem}>
+            {String.fromCharCode(97 + index)}) {parcela.descricao}
+            {parcela.vencimento ? ` (${parcela.vencimento})` : ""}:{" "}
+            {formatBRL(parcela.valor)}
+            {index === parcelasParaExibir.length - 1 ? "." : ";"}
+          </Text>
+        ))}
         {formaPagamento && (
           <Text style={styles.paragraph}>
             5.3. Cada parcela acima será quitada via{" "}

@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { orcamentoFotosDir } from "@/lib/uploads";
 import { parseItensFromBody } from "@/lib/orcamento-itens";
+import { parseParcelasFromBody } from "@/lib/orcamento-parcelas";
 import type {
   FormaPagamento,
   OrcamentoStatus,
@@ -63,12 +64,12 @@ export async function PATCH(
   )
     ? (formaPagamentoRaw as FormaPagamento)
     : null;
-  const parcelado = body.parcelado === true;
-  const numeroParcelasRaw = parseInt(String(body.numeroParcelas ?? ""), 10);
-  const numeroParcelas =
-    parcelado && Number.isFinite(numeroParcelasRaw) && numeroParcelasRaw > 1
-      ? numeroParcelasRaw
-      : null;
+  const parcelas = parseParcelasFromBody(body);
+  // parcelado/numeroParcelas ficam derivados da lista de parcelas — não
+  // são mais escolhidos manualmente, evita os dois ficarem
+  // dessincronizados.
+  const parcelado = parcelas.length > 1;
+  const numeroParcelas = parcelado ? parcelas.length : null;
 
   if (!nome || !telefone || !mensagem) {
     return NextResponse.json(
@@ -106,6 +107,20 @@ export async function PATCH(
               item: i.item,
               valorUnitario: i.valorUnitario,
               observacao: i.observacao || null,
+            })),
+          }),
+        ]
+      : []),
+    prisma.orcamentoParcela.deleteMany({ where: { orcamentoId: id } }),
+    ...(parcelas.length > 0
+      ? [
+          prisma.orcamentoParcela.createMany({
+            data: parcelas.map((p, index) => ({
+              orcamentoId: id,
+              ordem: index,
+              descricao: p.descricao,
+              valor: p.valor,
+              vencimento: p.vencimento || null,
             })),
           }),
         ]

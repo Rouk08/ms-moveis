@@ -322,7 +322,14 @@ type OrcamentoItemData = {
   observacao?: string | null;
 };
 
+type OrcamentoParcelaData = {
+  descricao: string;
+  valor: number;
+  vencimento: string | null;
+};
+
 type OrcamentoData = {
+  numero: number;
   nome: string;
   telefone: string;
   email: string | null;
@@ -334,8 +341,7 @@ type OrcamentoData = {
   createdAt: Date;
   itens?: OrcamentoItemData[];
   formaPagamento?: string | null;
-  parcelado?: boolean;
-  numeroParcelas?: number | null;
+  parcelas?: OrcamentoParcelaData[];
 };
 
 const FORMA_PAGAMENTO_LABELS: Record<string, string> = {
@@ -346,14 +352,6 @@ const FORMA_PAGAMENTO_LABELS: Record<string, string> = {
   BOLETO: "Boleto",
   TRANSFERENCIA: "Transferência",
 };
-
-function formatParcelamento(
-  parcelado: boolean | undefined,
-  numeroParcelas: number | null | undefined
-): string {
-  if (!parcelado) return "À vista";
-  return numeroParcelas ? `${numeroParcelas}x` : "Parcelado";
-}
 
 type OrcamentoTemplateProps = {
   orcamento: OrcamentoData;
@@ -401,7 +399,7 @@ export default function OrcamentoTemplate({
           Proposta personalizada para o seu projeto
         </Text>
         <Text style={styles.subtitle}>
-          Emitido em {dataFormatada} · Válido até{" "}
+          Orçamento nº {o.numero} · Emitido em {dataFormatada} · Válido até{" "}
           {formatDateLong(validade)}
         </Text>
 
@@ -516,19 +514,32 @@ export default function OrcamentoTemplate({
         </View>
 
         {o.formaPagamento && (
+          <View style={styles.row}>
+            <Text style={styles.label}>Forma de pagamento</Text>
+            <Text style={styles.value}>
+              {FORMA_PAGAMENTO_LABELS[o.formaPagamento] ?? o.formaPagamento}
+            </Text>
+          </View>
+        )}
+
+        {o.parcelas && o.parcelas.length > 0 && (
           <>
-            <View style={styles.row}>
-              <Text style={styles.label}>Forma de pagamento</Text>
-              <Text style={styles.value}>
-                {FORMA_PAGAMENTO_LABELS[o.formaPagamento] ?? o.formaPagamento}
-              </Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Parcelamento</Text>
-              <Text style={styles.value}>
-                {formatParcelamento(o.parcelado, o.numeroParcelas)}
-              </Text>
-            </View>
+            <Text style={styles.sectionTitle}>Condições de pagamento</Text>
+            {o.parcelas.map((parcela, index) => (
+              <View key={index} style={styles.itemRow} wrap={false}>
+                <View style={styles.itemNomeBlock}>
+                  <Text style={styles.itemNome}>{parcela.descricao}</Text>
+                  {parcela.vencimento && (
+                    <Text style={styles.itemObservacao}>
+                      {parcela.vencimento}
+                    </Text>
+                  )}
+                </View>
+                <Text style={styles.itemValor}>
+                  {formatBRL(parcela.valor)}
+                </Text>
+              </View>
+            ))}
           </>
         )}
 

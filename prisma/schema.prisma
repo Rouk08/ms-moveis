@@ -27,6 +27,10 @@ enum Role {
 
 model Orcamento {
   id             String          @id @default(cuid())
+  // Número sequencial e legível pro cliente (o cuid do id não serve pra
+  // isso) — aparece no PDF do orçamento e, quando um contrato é gerado
+  // a partir dele, no PDF do contrato também, ligando os dois documentos.
+  numero         Int             @unique @default(autoincrement())
   nome           String
   telefone       String
   email          String?
@@ -47,6 +51,7 @@ model Orcamento {
   contrato       Contrato?
   fotos          OrcamentoFoto[]
   itens          OrcamentoItem[]
+  parcelas       OrcamentoParcela[]
 }
 
 enum FormaPagamento {
@@ -56,6 +61,21 @@ enum FormaPagamento {
   CARTAO_DEBITO
   BOLETO
   TRANSFERENCIA
+}
+
+// Condições de pagamento exatas do orçamento — definidas livremente
+// (quantas parcelas quiser, com descrição, valor e vencimento
+// próprios). O contrato gerado a partir do orçamento usa essa mesma
+// lista na Cláusula Quinta, em vez de um split fixo automático.
+model OrcamentoParcela {
+  id          String    @id @default(cuid())
+  orcamentoId String
+  orcamento   Orcamento @relation(fields: [orcamentoId], references: [id], onDelete: Cascade)
+  ordem       Int
+  descricao   String
+  valor       Decimal   @db.Decimal(10, 2)
+  vencimento  String?
+  createdAt   DateTime  @default(now())
 }
 
 model OrcamentoItem {

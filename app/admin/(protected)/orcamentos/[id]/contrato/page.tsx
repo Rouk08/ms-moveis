@@ -35,6 +35,7 @@ export default async function ContratoPage({
             Contrato — {contrato.contratanteNome}
           </h1>
           <p className="text-sm text-charcoal-500">
+            Vinculado ao Orçamento #{orcamento.numero} ·{" "}
             {Number(contrato.valorTotal).toLocaleString("pt-BR", {
               style: "currency",
               currency: "BRL",

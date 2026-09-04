@@ -20,10 +20,12 @@ export async function GET(
     include: {
       orcamento: {
         select: {
+          numero: true,
           nome: true,
           formaPagamento: true,
           parcelado: true,
           numeroParcelas: true,
+          parcelas: { orderBy: { ordem: "asc" } },
         },
       },
     },
@@ -63,9 +65,15 @@ export async function GET(
         clausulaAdicional: contrato.clausulaAdicional,
       }}
       company={getCompanyInfo()}
+      orcamentoNumero={contrato.orcamento.numero}
       formaPagamento={contrato.orcamento.formaPagamento}
       parcelado={contrato.orcamento.parcelado}
       numeroParcelas={contrato.orcamento.numeroParcelas}
+      parcelasOrcamento={contrato.orcamento.parcelas.map((p) => ({
+        descricao: p.descricao,
+        valor: Number(p.valor),
+        vencimento: p.vencimento,
+      }))}
     />
   );
 

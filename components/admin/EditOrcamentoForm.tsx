@@ -10,6 +10,9 @@ import DescontoField, {
   calcDescontoValor,
   type DescontoTipo,
 } from "@/components/admin/DescontoField";
+import ParcelasOrcamentoField, {
+  type ParcelaOrcamento,
+} from "@/components/admin/ParcelasOrcamentoField";
 import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
 
 const statusOptions = [
@@ -47,8 +50,7 @@ type EditOrcamentoFormProps = {
   incluiProjeto: boolean;
   itensIniciais: ItemOrcamento[];
   formaPagamento: string;
-  parcelado: boolean;
-  numeroParcelas: string;
+  parcelasIniciais: ParcelaOrcamento[];
 };
 
 export default function EditOrcamentoForm({
@@ -65,8 +67,7 @@ export default function EditOrcamentoForm({
   incluiProjeto,
   itensIniciais,
   formaPagamento: formaPagamentoInicial,
-  parcelado: parceladoInicial,
-  numeroParcelas: numeroParcelasInicial,
+  parcelasIniciais,
 }: EditOrcamentoFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -75,7 +76,7 @@ export default function EditOrcamentoForm({
   const [valorManual, setValorManual] = useState(valorEstimado);
   const [desconto, setDesconto] = useState(descontoInicial);
   const [descontoTipo, setDescontoTipo] = useState<DescontoTipo>("valor");
-  const [parcelado, setParcelado] = useState(parceladoInicial);
+  const [parcelas, setParcelas] = useState<ParcelaOrcamento[]>(parcelasIniciais);
 
   const toggleTipo = (tipo: string) => {
     setTipoProjeto((prev) =>
@@ -106,8 +107,11 @@ export default function EditOrcamentoForm({
       notasInternas: String(formData.get("notasInternas") ?? "").trim(),
       incluiProjeto: formData.get("incluiProjeto") === "on",
       formaPagamento: String(formData.get("formaPagamento") ?? "").trim(),
-      parcelado,
-      numeroParcelas: String(formData.get("numeroParcelas") ?? "").trim(),
+      parcelas: parcelas.map((p) => ({
+        descricao: p.descricao.trim(),
+        valor: p.valor.replace(",", ".") || "0",
+        vencimento: p.vencimento.trim(),
+      })),
       itens: itens.map((i) => ({
         categoria: i.categoria,
         item: i.item,
@@ -312,57 +316,37 @@ export default function EditOrcamentoForm({
         </span>
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label
-            htmlFor="formaPagamento"
-            className="block text-sm font-medium text-charcoal-700 mb-1.5"
-          >
-            Forma de pagamento
-          </label>
-          <select
-            id="formaPagamento"
-            name="formaPagamento"
-            defaultValue={formaPagamentoInicial}
-            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-          >
-            {formaPagamentoOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <span className="block text-sm font-medium text-charcoal-700 mb-1.5">
-            Parcelamento
-          </span>
-          <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 text-sm text-charcoal-600">
-              <input
-                type="checkbox"
-                checked={parcelado}
-                onChange={(e) => setParcelado(e.target.checked)}
-                className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
-              />
-              Parcelado
-            </label>
-            {parcelado && (
-              <input
-                name="numeroParcelas"
-                type="number"
-                min="2"
-                placeholder="Nº de parcelas"
-                defaultValue={numeroParcelasInicial}
-                className="w-32 rounded-lg border border-charcoal-200 px-3 py-2 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
-              />
-            )}
-          </div>
-          {!parcelado && (
-            <p className="mt-1.5 text-xs text-charcoal-400">À vista</p>
-          )}
-        </div>
+      <div>
+        <label
+          htmlFor="formaPagamento"
+          className="block text-sm font-medium text-charcoal-700 mb-1.5"
+        >
+          Forma de pagamento
+        </label>
+        <select
+          id="formaPagamento"
+          name="formaPagamento"
+          defaultValue={formaPagamentoInicial}
+          className="w-full sm:w-1/2 rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+        >
+          {formaPagamentoOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </div>
+
+      <ParcelasOrcamentoField
+        parcelas={parcelas}
+        onChange={setParcelas}
+        valorReferencia={parseFloat(valorEfetivo) || 0}
+      />
+      <p className="-mt-3 text-xs text-charcoal-400">
+        Essas condições saem no PDF do orçamento e, se um contrato for
+        gerado a partir dele, na Cláusula Quinta do contrato — exatamente
+        como definidas aqui.
+      </p>
 
       <div>
         <label className="flex items-center gap-2.5 text-sm font-medium text-charcoal-700">

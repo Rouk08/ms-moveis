@@ -20,6 +20,7 @@ export default async function OrcamentoDetailPage({
       contrato: true,
       fotos: { orderBy: { createdAt: "desc" } },
       itens: { orderBy: { createdAt: "asc" } },
+      parcelas: { orderBy: { ordem: "asc" } },
     },
   });
 
@@ -38,7 +39,10 @@ export default async function OrcamentoDetailPage({
       <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-charcoal-800">
-            {orcamento.nome}
+            {orcamento.nome}{" "}
+            <span className="text-charcoal-400 font-normal">
+              #{orcamento.numero}
+            </span>
           </h1>
           <p className="text-sm text-charcoal-500">
             {orcamento.origem === "SITE"
@@ -109,8 +113,11 @@ export default async function OrcamentoDetailPage({
         notasInternas={orcamento.notasInternas ?? ""}
         incluiProjeto={orcamento.incluiProjeto}
         formaPagamento={orcamento.formaPagamento ?? ""}
-        parcelado={orcamento.parcelado}
-        numeroParcelas={orcamento.numeroParcelas?.toString() ?? ""}
+        parcelasIniciais={orcamento.parcelas.map((p) => ({
+          descricao: p.descricao,
+          valor: p.valor.toString(),
+          vencimento: p.vencimento ?? "",
+        }))}
         itensIniciais={orcamento.itens.map((i) => ({
           categoria: i.categoria,
           item: i.item,

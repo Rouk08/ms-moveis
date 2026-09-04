@@ -78,6 +78,7 @@ export default async function OrcamentosPage({
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-charcoal-100 text-left text-xs uppercase tracking-wide text-charcoal-400">
+                  <th className="px-6 py-3 font-medium">Nº</th>
                   <th className="px-6 py-3 font-medium">Cliente</th>
                   <th className="px-6 py-3 font-medium">Tipo de projeto</th>
                   <th className="px-6 py-3 font-medium">Origem</th>
@@ -91,6 +92,11 @@ export default async function OrcamentosPage({
                     key={orcamento.id}
                     className="hover:bg-charcoal-50/60 transition-colors cursor-pointer"
                   >
+                    <td className="px-6 py-4 text-charcoal-500">
+                      <Link href={`/admin/orcamentos/${orcamento.id}`}>
+                        #{orcamento.numero}
+                      </Link>
+                    </td>
                     <td className="px-6 py-4">
                       <Link
                         href={`/admin/orcamentos/${orcamento.id}`}

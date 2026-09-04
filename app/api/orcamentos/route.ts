@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parseItensFromBody } from "@/lib/orcamento-itens";
+import { parseParcelasFromBody } from "@/lib/orcamento-parcelas";
 import type { FormaPagamento } from "@/lib/generated/prisma/enums";
 
 const FORMA_PAGAMENTO_VALUES: FormaPagamento[] = [
@@ -38,12 +39,9 @@ export async function POST(request: Request) {
   )
     ? (formaPagamentoRaw as FormaPagamento)
     : null;
-  const parcelado = body.parcelado === true;
-  const numeroParcelasRaw = parseInt(String(body.numeroParcelas ?? ""), 10);
-  const numeroParcelas =
-    parcelado && Number.isFinite(numeroParcelasRaw) && numeroParcelasRaw > 1
-      ? numeroParcelasRaw
-      : null;
+  const parcelas = parseParcelasFromBody(body);
+  const parcelado = parcelas.length > 1;
+  const numeroParcelas = parcelado ? parcelas.length : null;
 
   if (!nome || !telefone || !mensagem) {
     return NextResponse.json(
@@ -72,6 +70,14 @@ export async function POST(request: Request) {
           item: i.item,
           valorUnitario: i.valorUnitario,
           observacao: i.observacao || null,
+        })),
+      },
+      parcelas: {
+        create: parcelas.map((p, index) => ({
+          ordem: index,
+          descricao: p.descricao,
+          valor: p.valor,
+          vencimento: p.vencimento || null,
         })),
       },
     },
