@@ -171,6 +171,10 @@ export default function ContratoTemplate({
 }: ContratoTemplateProps) {
   const c = contrato;
   const dataFormatada = formatDateLong(c.dataContrato);
+  // "Local e data" da assinatura reflete o dia em que o PDF é gerado
+  // pra impressão (não a data de criação do contrato no sistema, que
+  // pode ser bem anterior ao dia em que ele é impresso pra assinar).
+  const dataImpressao = formatDateLong(new Date());
   const parcelamentoTexto = parcelado
     ? numeroParcelas
       ? `parcelado em ${numeroParcelas} vezes`
@@ -525,7 +529,7 @@ export default function ContratoTemplate({
           <Text style={styles.signatureLine}>Testemunha 2</Text>
         </View>
         <Text style={[styles.paragraph, { marginTop: 24, textAlign: "center" }]}>
-          Local e data: _________________________, {dataFormatada}
+          Local e data: {company.cidade}, {dataImpressao}
         </Text>
       </Page>
     </Document>
