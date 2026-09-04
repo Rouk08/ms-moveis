@@ -343,9 +343,10 @@ export default function ContratoTemplate({
           8. CLÁUSULA SÉTIMA – DA GARANTIA
         </Text>
         <Text style={styles.paragraph}>
-          7.1. A CONTRATADA oferece garantia de 90 (noventa) dias para
-          defeitos de fabricação e instalação, conforme o Art. 26, II, da
-          Lei nº 8.078/90 (CDC).
+          7.1. A CONTRATADA oferece garantia contratual de 24 (vinte e
+          quatro) meses para defeitos de fabricação e instalação, contados
+          a partir da data de entrega e instalação, sem prejuízo dos
+          direitos assegurados ao consumidor pela Lei nº 8.078/90 (CDC).
         </Text>
         <Text style={styles.paragraph}>
           7.2. A garantia não abrange danos por uso inadequado, agentes
