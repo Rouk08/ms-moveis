@@ -26,24 +26,36 @@ enum Role {
 }
 
 model Orcamento {
-  id            String          @id @default(cuid())
-  nome          String
-  telefone      String
-  email         String?
-  tipoProjeto   String[]
-  mensagem      String
-  incluiProjeto Boolean         @default(true)
-  status        OrcamentoStatus @default(NOVO)
-  valorEstimado Decimal?        @db.Decimal(10, 2)
-  desconto      Decimal?        @db.Decimal(10, 2)
-  notasInternas String?
-  origem        Origem          @default(SITE)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  contasReceber ContaReceber[]
-  contrato      Contrato?
-  fotos         OrcamentoFoto[]
-  itens         OrcamentoItem[]
+  id             String          @id @default(cuid())
+  nome           String
+  telefone       String
+  email          String?
+  tipoProjeto    String[]
+  mensagem       String
+  incluiProjeto  Boolean         @default(true)
+  status         OrcamentoStatus @default(NOVO)
+  valorEstimado  Decimal?        @db.Decimal(10, 2)
+  desconto       Decimal?        @db.Decimal(10, 2)
+  formaPagamento FormaPagamento?
+  parcelado      Boolean         @default(false)
+  numeroParcelas Int?
+  notasInternas  String?
+  origem         Origem          @default(SITE)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  contasReceber  ContaReceber[]
+  contrato       Contrato?
+  fotos          OrcamentoFoto[]
+  itens          OrcamentoItem[]
+}
+
+enum FormaPagamento {
+  DINHEIRO
+  PIX
+  CARTAO_CREDITO
+  CARTAO_DEBITO
+  BOLETO
+  TRANSFERENCIA
 }
 
 model OrcamentoItem {

@@ -5,13 +5,25 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { orcamentoFotosDir } from "@/lib/uploads";
 import { parseItensFromBody } from "@/lib/orcamento-itens";
-import type { OrcamentoStatus } from "@/lib/generated/prisma/enums";
+import type {
+  FormaPagamento,
+  OrcamentoStatus,
+} from "@/lib/generated/prisma/enums";
 
 const STATUS_VALUES: OrcamentoStatus[] = [
   "NOVO",
   "EM_ANDAMENTO",
   "APROVADO",
   "RECUSADO",
+];
+
+const FORMA_PAGAMENTO_VALUES: FormaPagamento[] = [
+  "DINHEIRO",
+  "PIX",
+  "CARTAO_CREDITO",
+  "CARTAO_DEBITO",
+  "BOLETO",
+  "TRANSFERENCIA",
 ];
 
 export async function PATCH(
@@ -45,6 +57,19 @@ export async function PATCH(
     : undefined;
   const itens = parseItensFromBody(body);
 
+  const formaPagamentoRaw = String(body.formaPagamento ?? "").trim();
+  const formaPagamento = FORMA_PAGAMENTO_VALUES.includes(
+    formaPagamentoRaw as FormaPagamento
+  )
+    ? (formaPagamentoRaw as FormaPagamento)
+    : null;
+  const parcelado = body.parcelado === true;
+  const numeroParcelasRaw = parseInt(String(body.numeroParcelas ?? ""), 10);
+  const numeroParcelas =
+    parcelado && Number.isFinite(numeroParcelasRaw) && numeroParcelasRaw > 1
+      ? numeroParcelasRaw
+      : null;
+
   if (!nome || !telefone || !mensagem) {
     return NextResponse.json(
       { error: "Preencha nome, telefone e mensagem." },
@@ -66,6 +91,9 @@ export async function PATCH(
         desconto: descontoRaw || null,
         notasInternas: notasInternas || null,
         incluiProjeto,
+        formaPagamento,
+        parcelado,
+        numeroParcelas,
       },
     }),
     prisma.orcamentoItem.deleteMany({ where: { orcamentoId: id } }),

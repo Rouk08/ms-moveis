@@ -65,6 +65,9 @@ export async function GET(
         desconto: orcamento.desconto ? Number(orcamento.desconto) : null,
         incluiProjeto: orcamento.incluiProjeto,
         createdAt: orcamento.createdAt,
+        formaPagamento: orcamento.formaPagamento,
+        parcelado: orcamento.parcelado,
+        numeroParcelas: orcamento.numeroParcelas,
         itens: orcamento.itens.map((i) => ({
           categoria: i.categoria,
           item: i.item,

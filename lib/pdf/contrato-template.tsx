@@ -104,17 +104,40 @@ type ContratoData = {
   clausulaAdicional: string | null;
 };
 
+const FORMA_PAGAMENTO_LABELS: Record<string, string> = {
+  DINHEIRO: "dinheiro",
+  PIX: "PIX",
+  CARTAO_CREDITO: "cartão de crédito",
+  CARTAO_DEBITO: "cartão de débito",
+  BOLETO: "boleto",
+  TRANSFERENCIA: "transferência bancária",
+};
+
 type ContratoTemplateProps = {
   contrato: ContratoData;
   company: ReturnType<typeof getCompanyInfo>;
+  // Forma de pagamento vem do Orçamento vinculado, não é campo do
+  // Contrato — mantém a origem única do dado (definida na etapa de
+  // orçamento, só refletida aqui).
+  formaPagamento?: string | null;
+  parcelado?: boolean;
+  numeroParcelas?: number | null;
 };
 
 export default function ContratoTemplate({
   contrato,
   company,
+  formaPagamento,
+  parcelado,
+  numeroParcelas,
 }: ContratoTemplateProps) {
   const c = contrato;
   const dataFormatada = formatDateLong(c.dataContrato);
+  const parcelamentoTexto = parcelado
+    ? numeroParcelas
+      ? `parcelado em ${numeroParcelas} vezes`
+      : "de forma parcelada"
+    : "à vista";
 
   return (
     <Document>
@@ -293,6 +316,13 @@ export default function ContratoTemplate({
           c) Parcela de 30% (trinta por cento) na entrega e instalação
           final: {formatBRL(c.valorEntrega)}.
         </Text>
+        {formaPagamento && (
+          <Text style={styles.paragraph}>
+            5.3. Cada parcela acima será quitada via{" "}
+            {FORMA_PAGAMENTO_LABELS[formaPagamento] ?? formaPagamento},{" "}
+            {parcelamentoTexto}.
+          </Text>
+        )}
 
         <Text style={styles.clauseTitle}>
           7. CLÁUSULA SEXTA – DO ATRASO E DA INADIMPLÊNCIA

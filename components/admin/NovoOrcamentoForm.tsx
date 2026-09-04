@@ -11,6 +11,16 @@ import DescontoField, {
   type DescontoTipo,
 } from "@/components/admin/DescontoField";
 
+const formaPagamentoOptions = [
+  { value: "", label: "Não definido" },
+  { value: "DINHEIRO", label: "Dinheiro" },
+  { value: "PIX", label: "PIX" },
+  { value: "CARTAO_CREDITO", label: "Cartão de crédito" },
+  { value: "CARTAO_DEBITO", label: "Cartão de débito" },
+  { value: "BOLETO", label: "Boleto" },
+  { value: "TRANSFERENCIA", label: "Transferência" },
+];
+
 export default function NovoOrcamentoForm() {
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -20,6 +30,7 @@ export default function NovoOrcamentoForm() {
   const [itens, setItens] = useState<ItemOrcamento[]>([]);
   const [desconto, setDesconto] = useState("");
   const [descontoTipo, setDescontoTipo] = useState<DescontoTipo>("percentual");
+  const [parcelado, setParcelado] = useState(false);
 
   const toggleTipo = (tipo: string) => {
     setTipoProjeto((prev) =>
@@ -43,6 +54,9 @@ export default function NovoOrcamentoForm() {
       tipoProjeto,
       mensagem: String(formData.get("mensagem") ?? "").trim(),
       incluiProjeto: formData.get("incluiProjeto") === "on",
+      formaPagamento: String(formData.get("formaPagamento") ?? "").trim(),
+      parcelado,
+      numeroParcelas: String(formData.get("numeroParcelas") ?? "").trim(),
       itens: itens.map((i) => ({
         categoria: i.categoria,
         item: i.item,
@@ -170,6 +184,56 @@ export default function NovoOrcamentoForm() {
           base={totalItens(itens)}
         />
       )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label
+            htmlFor="formaPagamento"
+            className="block text-sm font-medium text-charcoal-700 mb-1.5"
+          >
+            Forma de pagamento
+          </label>
+          <select
+            id="formaPagamento"
+            name="formaPagamento"
+            className="w-full rounded-lg border border-charcoal-200 px-4 py-2.5 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+          >
+            {formaPagamentoOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <span className="block text-sm font-medium text-charcoal-700 mb-1.5">
+            Parcelamento
+          </span>
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 text-sm text-charcoal-600">
+              <input
+                type="checkbox"
+                checked={parcelado}
+                onChange={(e) => setParcelado(e.target.checked)}
+                className="h-4 w-4 rounded border-charcoal-300 text-wood-500 focus:ring-wood-200"
+              />
+              Parcelado
+            </label>
+            {parcelado && (
+              <input
+                name="numeroParcelas"
+                type="number"
+                min="2"
+                placeholder="Nº de parcelas"
+                className="w-32 rounded-lg border border-charcoal-200 px-3 py-2 text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+              />
+            )}
+          </div>
+          {!parcelado && (
+            <p className="mt-1.5 text-xs text-charcoal-400">À vista</p>
+          )}
+        </div>
+      </div>
 
       <div>
         <label className="flex items-center gap-2.5 text-sm font-medium text-charcoal-700">

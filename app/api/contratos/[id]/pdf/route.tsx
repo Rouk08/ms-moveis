@@ -17,7 +17,16 @@ export async function GET(
   const { id } = await params;
   const contrato = await prisma.contrato.findUnique({
     where: { id },
-    include: { orcamento: { select: { nome: true } } },
+    include: {
+      orcamento: {
+        select: {
+          nome: true,
+          formaPagamento: true,
+          parcelado: true,
+          numeroParcelas: true,
+        },
+      },
+    },
   });
 
   if (!contrato) {
@@ -54,6 +63,9 @@ export async function GET(
         clausulaAdicional: contrato.clausulaAdicional,
       }}
       company={getCompanyInfo()}
+      formaPagamento={contrato.orcamento.formaPagamento}
+      parcelado={contrato.orcamento.parcelado}
+      numeroParcelas={contrato.orcamento.numeroParcelas}
     />
   );
 

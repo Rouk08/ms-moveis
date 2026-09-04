@@ -333,7 +333,27 @@ type OrcamentoData = {
   incluiProjeto: boolean;
   createdAt: Date;
   itens?: OrcamentoItemData[];
+  formaPagamento?: string | null;
+  parcelado?: boolean;
+  numeroParcelas?: number | null;
 };
+
+const FORMA_PAGAMENTO_LABELS: Record<string, string> = {
+  DINHEIRO: "Dinheiro",
+  PIX: "PIX",
+  CARTAO_CREDITO: "Cartão de crédito",
+  CARTAO_DEBITO: "Cartão de débito",
+  BOLETO: "Boleto",
+  TRANSFERENCIA: "Transferência",
+};
+
+function formatParcelamento(
+  parcelado: boolean | undefined,
+  numeroParcelas: number | null | undefined
+): string {
+  if (!parcelado) return "À vista";
+  return numeroParcelas ? `${numeroParcelas}x` : "Parcelado";
+}
 
 type OrcamentoTemplateProps = {
   orcamento: OrcamentoData;
@@ -494,6 +514,23 @@ export default function OrcamentoTemplate({
             <Text style={styles.prazoAmount}>30 a 45 dias</Text>
           </View>
         </View>
+
+        {o.formaPagamento && (
+          <>
+            <View style={styles.row}>
+              <Text style={styles.label}>Forma de pagamento</Text>
+              <Text style={styles.value}>
+                {FORMA_PAGAMENTO_LABELS[o.formaPagamento] ?? o.formaPagamento}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.label}>Parcelamento</Text>
+              <Text style={styles.value}>
+                {formatParcelamento(o.parcelado, o.numeroParcelas)}
+              </Text>
+            </View>
+          </>
+        )}
 
         <Text style={styles.sectionTitle}>O que está incluso</Text>
         <View style={styles.includeGrid}>

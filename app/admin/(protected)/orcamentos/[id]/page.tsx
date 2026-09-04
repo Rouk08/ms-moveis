@@ -108,6 +108,9 @@ export default async function OrcamentoDetailPage({
         desconto={orcamento.desconto?.toString() ?? ""}
         notasInternas={orcamento.notasInternas ?? ""}
         incluiProjeto={orcamento.incluiProjeto}
+        formaPagamento={orcamento.formaPagamento ?? ""}
+        parcelado={orcamento.parcelado}
+        numeroParcelas={orcamento.numeroParcelas?.toString() ?? ""}
         itensIniciais={orcamento.itens.map((i) => ({
           categoria: i.categoria,
           item: i.item,
