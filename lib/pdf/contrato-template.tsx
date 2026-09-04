@@ -344,14 +344,19 @@ export default function ContratoTemplate({
         </Text>
         <Text style={styles.paragraph}>
           7.1. A CONTRATADA oferece garantia contratual de 24 (vinte e
-          quatro) meses para defeitos de fabricação e instalação, contados
-          a partir da data de entrega e instalação, sem prejuízo dos
-          direitos assegurados ao consumidor pela Lei nº 8.078/90 (CDC).
+          quatro) meses, contados a partir da data de entrega e instalação,
+          exclusivamente para defeitos de fabricação e/ou instalação dos
+          móveis, não se aplicando a danos decorrentes de mau uso,
+          negligência ou desgaste natural, sem prejuízo dos direitos
+          assegurados ao consumidor pela Lei nº 8.078/90 (CDC).
         </Text>
         <Text style={styles.paragraph}>
-          7.2. A garantia não abrange danos por uso inadequado, agentes
-          externos (umidade, calor, infiltrações) ou intervenções
-          realizadas por terceiros não autorizados.
+          7.2. Não estão cobertos por esta garantia, por não constituírem
+          defeito de fabricação ou instalação: danos causados por mau uso
+          ou uso inadequado; agentes externos (umidade, calor,
+          infiltrações); desgaste natural pelo uso; e intervenções,
+          reparos ou modificações realizados por terceiros não autorizados
+          pela CONTRATADA.
         </Text>
 
         <Text style={styles.clauseTitle}>
