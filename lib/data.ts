@@ -77,6 +77,9 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Painel de TV",
   ],
   "Cozinha Planejada": [
+    "Canto alemão",
+    "Canto alemão com mesa",
+    "Ilha",
     "Módulo de baixo (gabinete de base)",
     "Módulo de alto/coluna (despensa, geladeira, forno)",
     "Módulo suspenso (parede)",
