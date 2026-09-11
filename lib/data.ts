@@ -95,6 +95,9 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Pedra de mármore/granito",
   ],
   "Sala de Estar": [
+    "Canto alemão",
+    "Canto alemão com mesa",
+    "Ilha",
     "Módulo de baixo (painel de TV, aparador ou baú)",
     "Módulo suspenso (parede)",
     "Módulo de coluna/alto (rack, estante ou adega)",
@@ -122,6 +125,9 @@ export const itensPorCategoria: Record<string, string[]> = {
     "Iluminação em LED",
   ],
   "Home Office": [
+    "Canto alemão",
+    "Canto alemão com mesa",
+    "Ilha",
     "Módulo da mesa/bancada (base)",
     "Módulo suspenso (parede)",
     "Módulo de coluna/alto (estante, arquivo)",
