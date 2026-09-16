@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ImagePlus, Trash2, X } from "lucide-react";
+import { ImagePlus, Printer, Trash2, X } from "lucide-react";
 
 type Foto = {
   id: string;
@@ -49,6 +49,42 @@ export default function OrcamentoFotos({
     } catch {
       setError("Não foi possível enviar as fotos. Tente novamente.");
       setUploading(false);
+    }
+  };
+
+  const handlePrint = (foto: Foto) => {
+    const janela = window.open("", "_blank");
+    if (!janela) return; // pop-up bloqueado pelo navegador
+
+    const src = `/api/orcamentos/${orcamentoId}/fotos/${foto.id}`;
+    janela.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${foto.nomeArquivo}</title>
+          <style>
+            @page { margin: 12mm; }
+            html, body { margin: 0; padding: 0; height: 100%; }
+            body { display: flex; align-items: center; justify-content: center; }
+            img { max-width: 100%; max-height: 100vh; object-fit: contain; }
+          </style>
+        </head>
+        <body>
+          <img src="${src}" alt="${foto.nomeArquivo}" />
+        </body>
+      </html>
+    `);
+    janela.document.close();
+
+    const img = janela.document.querySelector("img");
+    const disparaImpressao = () => {
+      janela.focus();
+      janela.print();
+    };
+    if (img?.complete) {
+      disparaImpressao();
+    } else {
+      img?.addEventListener("load", disparaImpressao);
     }
   };
 
@@ -149,14 +185,28 @@ export default function OrcamentoFotos({
           className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-900/80 p-6"
           onClick={() => setPreview(null)}
         >
-          <button
-            type="button"
-            onClick={() => setPreview(null)}
-            aria-label="Fechar"
-            className="absolute top-5 right-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
-          >
-            <X size={20} />
-          </button>
+          <div className="absolute top-5 right-5 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrint(preview);
+              }}
+              aria-label={`Imprimir ${preview.nomeArquivo}`}
+              title="Imprimir esta foto"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+            >
+              <Printer size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setPreview(null)}
+              aria-label="Fechar"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`/api/orcamentos/${orcamentoId}/fotos/${preview.id}`}
