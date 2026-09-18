@@ -11,11 +11,65 @@ export type ItemOrcamento = {
   observacao: string;
 };
 
+// Ambientes que costumam se repetir num mesmo projeto (mais de um quarto,
+// mais de um banheiro) — os outros (cozinha, sala, home office) normalmente
+// aparecem uma vez só, então não ganham o seletor de quantidade.
+export const CATEGORIAS_REPETIVEIS = ["Quarto Planejado", "Banheiro"];
+
 type ItensOrcamentoFieldProps = {
   tipoProjeto: string[];
+  quantidades: Record<string, number>;
   itens: ItemOrcamento[];
   onChange: (itens: ItemOrcamento[]) => void;
 };
+
+type Ambiente = { label: string; baseCategoria: string };
+
+function expandirAmbientes(
+  tipoProjeto: string[],
+  quantidades: Record<string, number>
+): Ambiente[] {
+  const resultado: Ambiente[] = [];
+  for (const tipo of tipoProjeto) {
+    if (!itensPorCategoria[tipo]) continue;
+    const qtd = CATEGORIAS_REPETIVEIS.includes(tipo)
+      ? Math.max(1, quantidades[tipo] ?? 1)
+      : 1;
+    if (qtd <= 1) {
+      resultado.push({ label: tipo, baseCategoria: tipo });
+    } else {
+      for (let i = 1; i <= qtd; i++) {
+        resultado.push({ label: `${tipo} ${i}`, baseCategoria: tipo });
+      }
+    }
+  }
+  return resultado;
+}
+
+// Reconstrói a quantidade de cada ambiente repetível a partir dos itens
+// já salvos (categoria "Quarto Planejado 2" etc.) — usado ao abrir um
+// orçamento existente pra edição, sem precisar guardar a quantidade
+// separadamente no banco.
+export function deriveQuantidades(
+  itens: { categoria: string }[]
+): Record<string, number> {
+  const resultado: Record<string, number> = {};
+  for (const base of CATEGORIAS_REPETIVEIS) {
+    let max = 0;
+    for (const item of itens) {
+      if (item.categoria === base) {
+        max = Math.max(max, 1);
+        continue;
+      }
+      const match = item.categoria.match(
+        new RegExp(`^${base} (\\d+)$`)
+      );
+      if (match) max = Math.max(max, parseInt(match[1], 10));
+    }
+    resultado[base] = Math.max(1, max);
+  }
+  return resultado;
+}
 
 export function totalItens(itens: ItemOrcamento[]): number {
   return itens.reduce(
@@ -34,6 +88,7 @@ function chaveItem(categoria: string, item: string) {
 
 export default function ItensOrcamentoField({
   tipoProjeto,
+  quantidades,
   itens,
   onChange,
 }: ItensOrcamentoFieldProps) {
@@ -46,11 +101,9 @@ export default function ItensOrcamentoField({
       )
   );
 
-  const categoriasComItens = tipoProjeto.filter(
-    (tipo) => itensPorCategoria[tipo]
-  );
+  const ambientes = expandirAmbientes(tipoProjeto, quantidades);
 
-  if (categoriasComItens.length === 0) return null;
+  if (ambientes.length === 0) return null;
 
   const toggleItem = (categoria: string, item: string) => {
     const existe = itens.some(
@@ -100,7 +153,7 @@ export default function ItensOrcamentoField({
 
   return (
     <div className="space-y-5">
-      {categoriasComItens.map((categoria) => {
+      {ambientes.map(({ label: categoria, baseCategoria }) => {
         const itensDaCategoria = itens.filter((i) => i.categoria === categoria);
         const subtotalCategoria = totalItens(itensDaCategoria);
 
@@ -110,7 +163,7 @@ export default function ItensOrcamentoField({
             Itens de {categoria.toLowerCase()}
           </span>
           <div className="space-y-2">
-            {itensPorCategoria[categoria].map((item) => {
+            {itensPorCategoria[baseCategoria].map((item) => {
               const selecionado = itens.find(
                 (i) => i.categoria === categoria && i.item === item
               );

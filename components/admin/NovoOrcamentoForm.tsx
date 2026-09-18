@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { projectTypes } from "@/lib/data";
 import ItensOrcamentoField, {
   totalItens,
+  CATEGORIAS_REPETIVEIS,
   type ItemOrcamento,
 } from "@/components/admin/ItensOrcamentoField";
 import DescontoField, {
@@ -30,6 +31,7 @@ export default function NovoOrcamentoForm() {
   const [tipoProjeto, setTipoProjeto] = useState<string[]>([
     "Cozinha Planejada",
   ]);
+  const [quantidades, setQuantidades] = useState<Record<string, number>>({});
   const [itens, setItens] = useState<ItemOrcamento[]>([]);
   const [desconto, setDesconto] = useState("");
   const [descontoTipo, setDescontoTipo] = useState<DescontoTipo>("percentual");
@@ -173,10 +175,50 @@ export default function NovoOrcamentoForm() {
             </label>
           ))}
         </div>
+        {CATEGORIAS_REPETIVEIS.filter((tipo) => tipoProjeto.includes(tipo)).map(
+          (tipo) => (
+            <div
+              key={tipo}
+              className="mt-2 flex items-center gap-3 text-sm text-charcoal-600"
+            >
+              <span>Quantos ambientes de {tipo.toLowerCase()}?</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setQuantidades((prev) => ({
+                      ...prev,
+                      [tipo]: Math.max(1, (prev[tipo] ?? 1) - 1),
+                    }))
+                  }
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-charcoal-200 text-charcoal-600 hover:bg-charcoal-50"
+                >
+                  −
+                </button>
+                <span className="w-4 text-center font-medium">
+                  {quantidades[tipo] ?? 1}
+                </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setQuantidades((prev) => ({
+                      ...prev,
+                      [tipo]: (prev[tipo] ?? 1) + 1,
+                    }))
+                  }
+                  className="flex h-7 w-7 items-center justify-center rounded-full border border-charcoal-200 text-charcoal-600 hover:bg-charcoal-50"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          )
+        )}
       </div>
 
       <ItensOrcamentoField
         tipoProjeto={tipoProjeto}
+        quantidades={quantidades}
         itens={itens}
         onChange={setItens}
       />
