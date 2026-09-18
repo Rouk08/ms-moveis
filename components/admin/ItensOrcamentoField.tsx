@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MessageSquarePlus } from "lucide-react";
+import { MessageSquarePlus, Plus, Trash2 } from "lucide-react";
 import { itensPorCategoria } from "@/lib/data";
 
 export type ItemOrcamento = {
@@ -149,6 +149,26 @@ export default function ItensOrcamentoField({
     setNotasAbertas((prev) => new Set(prev).add(chaveItem(categoria, item)));
   };
 
+  // Itens personalizados (fora da lista pré-definida) são identificados
+  // pela posição no array, não por categoria+nome — o nome começa em
+  // branco e pode repetir, então não dá pra usar como chave única como
+  // nos itens da lista fixa.
+  const addCustomItem = (categoria: string) => {
+    onChange([...itens, { categoria, item: "", valorUnitario: "", observacao: "" }]);
+  };
+
+  const updateCustomField = (
+    index: number,
+    campo: "item" | "valorUnitario" | "observacao",
+    valor: string
+  ) => {
+    onChange(itens.map((i, idx) => (idx === index ? { ...i, [campo]: valor } : i)));
+  };
+
+  const removeCustomItem = (index: number) => {
+    onChange(itens.filter((_, idx) => idx !== index));
+  };
+
   const total = totalItens(itens);
 
   return (
@@ -156,6 +176,10 @@ export default function ItensOrcamentoField({
       {ambientes.map(({ label: categoria, baseCategoria }) => {
         const itensDaCategoria = itens.filter((i) => i.categoria === categoria);
         const subtotalCategoria = totalItens(itensDaCategoria);
+
+        const itensPersonalizados = itensDaCategoria
+          .map((it) => ({ ...it, index: itens.indexOf(it) }))
+          .filter((it) => !itensPorCategoria[baseCategoria].includes(it.item));
 
         return (
         <div key={categoria}>
@@ -233,7 +257,85 @@ export default function ItensOrcamentoField({
                 </div>
               );
             })}
+
+            {itensPersonalizados.map(({ index, item, valorUnitario, observacao }) => {
+              const notaAberta = notasAbertas.has(chaveItem(categoria, `custom-${index}`));
+              return (
+                <div
+                  key={index}
+                  className="rounded-lg border border-wood-500 bg-wood-50 px-3 py-2.5"
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Nome do item (não está na lista acima)"
+                      value={item}
+                      onChange={(e) => updateCustomField(index, "item", e.target.value)}
+                      className="flex-1 min-w-[200px] rounded-lg border border-charcoal-200 px-3 py-1.5 text-sm text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+                    />
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs text-charcoal-400">R$</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        placeholder="Valor unitário"
+                        value={valorUnitario}
+                        onChange={(e) =>
+                          updateCustomField(index, "valorUnitario", e.target.value)
+                        }
+                        className="w-32 rounded-lg border border-charcoal-200 px-3 py-1.5 text-sm text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeCustomItem(index)}
+                      aria-label="Remover item"
+                      className="rounded-lg p-1.5 text-charcoal-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                    >
+                      <Trash2 size={15} />
+                    </button>
+                  </div>
+                  <div className="mt-2 pl-1">
+                    {notaAberta ? (
+                      <input
+                        type="text"
+                        placeholder="Observação (opcional) — cor, medida, detalhe combinado..."
+                        value={observacao}
+                        onChange={(e) =>
+                          updateCustomField(index, "observacao", e.target.value)
+                        }
+                        className="w-full rounded-lg border border-charcoal-200 px-3 py-1.5 text-sm text-charcoal-800 focus:border-wood-500 focus:outline-none focus:ring-2 focus:ring-wood-200"
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setNotasAbertas((prev) =>
+                            new Set(prev).add(chaveItem(categoria, `custom-${index}`))
+                          )
+                        }
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-charcoal-400 hover:text-wood-600 transition-colors"
+                      >
+                        <MessageSquarePlus size={13} />
+                        Adicionar observação
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
           </div>
+
+          <button
+            type="button"
+            onClick={() => addCustomItem(categoria)}
+            className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-wood-600 hover:text-wood-700 transition-colors"
+          >
+            <Plus size={13} />
+            Adicionar item que não está na lista
+          </button>
+
           {itensDaCategoria.length > 0 && (
             <div className="mt-2 flex items-center justify-between px-1">
               <span className="text-xs font-medium text-charcoal-500">
