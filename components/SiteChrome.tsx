@@ -8,7 +8,10 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 
 export default function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isChromeless = pathname?.startsWith("/admin") || pathname?.startsWith("/ponto");
+  const isChromeless =
+    pathname?.startsWith("/admin") ||
+    pathname?.startsWith("/ponto") ||
+    pathname?.startsWith("/producao");
 
   if (isChromeless) return <>{children}</>;
 

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import Image from "next/image";
+import Link from "next/link";
+import { BookText } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { MARCENEIRO_COOKIE, tokenMarceneiroEsperado } from "@/lib/marceneiro-auth";
 import MarceneiroPinForm from "@/components/MarceneiroPinForm";
@@ -57,23 +59,32 @@ export default async function ProducaoMarceneiroPage() {
   return (
     <div className="min-h-screen bg-charcoal-50/30 p-6">
       <div className="mx-auto max-w-2xl">
-        <div className="flex items-center gap-2.5 mb-6">
-          <Image
-            src="/logo.jpg"
-            alt="MS Móveis"
-            width={36}
-            height={36}
-            className="h-9 w-9 rounded-full object-cover"
-          />
-          <div>
-            <p className="font-heading font-semibold text-charcoal-800">
-              Painel de produção
-            </p>
-            <p className="text-xs text-charcoal-500">
-              {etapas.length} etapa{etapas.length === 1 ? "" : "s"} pendente
-              {etapas.length === 1 ? "" : "s"}
-            </p>
+        <div className="flex items-center justify-between gap-2 mb-6">
+          <div className="flex items-center gap-2.5">
+            <Image
+              src="/logo.jpg"
+              alt="MS Móveis"
+              width={36}
+              height={36}
+              className="h-9 w-9 rounded-full object-cover"
+            />
+            <div>
+              <p className="font-heading font-semibold text-charcoal-800">
+                Painel de produção
+              </p>
+              <p className="text-xs text-charcoal-500">
+                {etapas.length} etapa{etapas.length === 1 ? "" : "s"} pendente
+                {etapas.length === 1 ? "" : "s"}
+              </p>
+            </div>
           </div>
+          <Link
+            href="/producao/manual"
+            className="flex items-center gap-1.5 rounded-full border border-wood-200 bg-white px-3 py-1.5 text-xs font-medium text-wood-700 shadow-sm hover:bg-wood-50"
+          >
+            <BookText size={14} />
+            Manual de fabricação
+          </Link>
         </div>
 
         {etapas.length === 0 ? (

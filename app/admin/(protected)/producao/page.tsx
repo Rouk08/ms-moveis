@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, Calendar, Hammer } from "lucide-react";
+import { AlertTriangle, BookText, Calendar, Hammer } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import EtapaProducaoCheckbox from "@/components/admin/EtapaProducaoCheckbox";
 
@@ -28,11 +28,21 @@ export default async function ProducaoPage() {
 
   return (
     <div>
-      <div className="flex items-center gap-2 mb-1">
-        <Calendar size={22} className="text-wood-600" />
-        <h1 className="text-2xl font-semibold text-charcoal-800">
-          Calendário de produção
-        </h1>
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <div className="flex items-center gap-2">
+          <Calendar size={22} className="text-wood-600" />
+          <h1 className="text-2xl font-semibold text-charcoal-800">
+            Calendário de produção
+          </h1>
+        </div>
+        <Link
+          href="/producao/manual"
+          target="_blank"
+          className="flex items-center gap-1.5 rounded-full border border-wood-200 bg-white px-3 py-1.5 text-xs font-medium text-wood-700 shadow-sm hover:bg-wood-50"
+        >
+          <BookText size={14} />
+          Manual de fabricação
+        </Link>
       </div>
       <p className="text-sm text-charcoal-500 mb-4">
         Etapas de fabricação, entrega e instalação de todos os contratos
