@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AlertTriangle, Calendar } from "lucide-react";
+import { AlertTriangle, Calendar, Hammer } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import EtapaProducaoCheckbox from "@/components/admin/EtapaProducaoCheckbox";
 
@@ -34,10 +34,19 @@ export default async function ProducaoPage() {
           Calendário de produção
         </h1>
       </div>
-      <p className="text-sm text-charcoal-500 mb-6">
+      <p className="text-sm text-charcoal-500 mb-4">
         Etapas de fabricação, entrega e instalação de todos os contratos
         assinados, ordenadas por data.
       </p>
+
+      <div className="mb-6 flex items-center gap-2 rounded-lg bg-wood-50 px-4 py-3 text-sm text-wood-700">
+        <Hammer size={16} className="shrink-0" />
+        <span>
+          O marceneiro acompanha e marca etapas concluídas direto em{" "}
+          <span className="font-semibold">msmoveissobmedida.com.br/producao</span>{" "}
+          — sem precisar de login do admin (código de acesso próprio).
+        </span>
+      </div>
 
       <div className="rounded-2xl border border-charcoal-100 bg-white shadow-sm overflow-hidden">
         {etapas.length === 0 ? (
