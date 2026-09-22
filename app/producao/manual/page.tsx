@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Hammer } from "lucide-react";
 import {
   dicasOperacionais,
   etapasFluxo,
@@ -8,7 +8,6 @@ import {
   kpisFluxo,
 } from "@/lib/fluxo-fabricacao";
 import EsquadroCalculator from "@/components/producao/EsquadroCalculator";
-import FabricacaoChecklist from "@/components/producao/FabricacaoChecklist";
 import PrintButton from "@/components/producao/PrintButton";
 
 export const metadata: Metadata = {
@@ -159,7 +158,21 @@ export default function ManualFabricacaoPage() {
           </div>
         </section>
 
-        <FabricacaoChecklist />
+        <section className="print:hidden rounded-2xl border border-wood-200 bg-wood-50 p-5 text-center shadow-sm">
+          <Hammer size={20} className="mx-auto mb-2 text-wood-700" />
+          <p className="text-sm font-medium text-wood-800">
+            O checklist de cada peça agora fica dentro do projeto do cliente.
+          </p>
+          <p className="mt-1 text-xs text-wood-600">
+            Acesse a lista de projetos em produção para marcar as etapas conforme avança.
+          </p>
+          <Link
+            href="/producao"
+            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-wood-600 px-4 py-2 text-sm font-semibold text-white hover:bg-wood-700"
+          >
+            Ver projetos em produção
+          </Link>
+        </section>
       </main>
 
       <footer className="border-t border-charcoal-100 px-6 py-6 text-center text-xs text-charcoal-400">

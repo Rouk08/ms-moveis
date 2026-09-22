@@ -2,26 +2,55 @@ import Link from "next/link";
 import { AlertTriangle, BookText, Calendar, Hammer } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import EtapaProducaoCheckbox from "@/components/admin/EtapaProducaoCheckbox";
+import { etapasFluxo } from "@/lib/fluxo-fabricacao";
 
 function formatData(date: Date) {
   return date.toLocaleDateString("pt-BR", { timeZone: "UTC" });
 }
 
 export default async function ProducaoPage() {
-  const etapas = await prisma.etapaProducao.findMany({
-    where: { concluida: false },
-    orderBy: { dataPrevista: "asc" },
-    include: {
-      contrato: {
-        select: {
-          id: true,
-          contratanteNome: true,
-          orcamentoId: true,
-          orcamento: { select: { numero: true } },
+  const [etapas, contratos] = await Promise.all([
+    prisma.etapaProducao.findMany({
+      where: { concluida: false },
+      orderBy: { dataPrevista: "asc" },
+      include: {
+        contrato: {
+          select: {
+            id: true,
+            contratanteNome: true,
+            orcamentoId: true,
+            orcamento: { select: { numero: true } },
+          },
         },
       },
-    },
-  });
+    }),
+    prisma.contrato.findMany({
+      where: { status: "ASSINADO" },
+      orderBy: { dataContrato: "asc" },
+      select: {
+        id: true,
+        contratanteNome: true,
+        orcamentoId: true,
+        orcamento: { select: { numero: true } },
+        etapasFabricacao: { orderBy: { numero: "asc" } },
+      },
+    }),
+  ]);
+
+  const projetos = contratos
+    .map((c) => {
+      const total = c.etapasFabricacao.length;
+      const feitos = c.etapasFabricacao.filter((i) => i.concluida).length;
+      const proximaEtapa = etapasFluxo.find((e) => e.numero === feitos + 1);
+      return {
+        contrato: c,
+        total,
+        feitos,
+        completo: total > 0 && feitos === total,
+        proximaEtapa,
+      };
+    })
+    .sort((a, b) => Number(a.completo) - Number(b.completo));
 
   const hoje = new Date();
   hoje.setUTCHours(0, 0, 0, 0);
@@ -58,6 +87,57 @@ export default async function ProducaoPage() {
         </span>
       </div>
 
+      <h2 className="mb-2 text-sm font-semibold text-charcoal-700">
+        Progresso de fabricação por projeto
+      </h2>
+      <div className="mb-6 rounded-2xl border border-charcoal-100 bg-white shadow-sm overflow-hidden">
+        {projetos.length === 0 ? (
+          <p className="px-6 py-10 text-sm text-charcoal-400 text-center">
+            Nenhum contrato assinado ainda.
+          </p>
+        ) : (
+          <div className="divide-y divide-charcoal-100">
+            {projetos.map(({ contrato, total, feitos, completo, proximaEtapa }) => (
+              <Link
+                key={contrato.id}
+                href={`/admin/orcamentos/${contrato.orcamentoId}/contrato`}
+                className="flex items-center gap-4 px-6 py-4 hover:bg-charcoal-50/60 transition-colors"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-charcoal-800 truncate">
+                    {contrato.contratanteNome} · Orçamento #
+                    {contrato.orcamento.numero}
+                  </p>
+                  <p className="text-xs text-charcoal-400 mt-0.5">
+                    {completo
+                      ? "Fabricação concluída"
+                      : proximaEtapa
+                        ? `Próxima etapa: ${proximaEtapa.numero}. ${proximaEtapa.titulo}`
+                        : "Sem checklist"}
+                  </p>
+                  <div className="mt-2 flex items-center gap-2 max-w-xs">
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-charcoal-100">
+                      <div
+                        className={`h-full rounded-full ${completo ? "bg-moss-500" : "bg-wood-500"}`}
+                        style={{ width: `${total ? (feitos / total) * 100 : 0}%` }}
+                      />
+                    </div>
+                    <span
+                      className={`shrink-0 text-xs font-medium ${completo ? "text-moss-700" : "text-wood-700"}`}
+                    >
+                      {feitos}/{total}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <h2 className="mb-2 text-sm font-semibold text-charcoal-700">
+        Entrega e instalação
+      </h2>
       <div className="rounded-2xl border border-charcoal-100 bg-white shadow-sm overflow-hidden">
         {etapas.length === 0 ? (
           <p className="px-6 py-10 text-sm text-charcoal-400 text-center">

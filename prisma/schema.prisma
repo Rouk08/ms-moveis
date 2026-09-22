@@ -282,6 +282,7 @@ model Contrato {
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
   etapasProducao       EtapaProducao[]
+  etapasFabricacao     EtapaFabricacaoItem[]
 }
 
 enum TipoContratante {
@@ -307,6 +308,26 @@ model EtapaProducao {
 
   @@index([contratoId])
   @@index([dataPrevista])
+}
+
+// Checklist das 8 etapas de bancada (corte, usinagem, lixamento,
+// acabamento, montagem, inspeção, embalagem — ver lib/fluxo-fabricacao.ts),
+// uma linha por etapa por contrato. Criado automaticamente junto com o
+// EtapaProducao quando o contrato é assinado. O marceneiro só pode
+// concluir em ordem (ver /api/producao/marceneiro/fabricacao/[itemId]);
+// o admin pode alterar livremente.
+model EtapaFabricacaoItem {
+  id            String    @id @default(cuid())
+  contratoId    String
+  contrato      Contrato  @relation(fields: [contratoId], references: [id], onDelete: Cascade)
+  numero        Int
+  concluida     Boolean   @default(false)
+  dataConclusao DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([contratoId, numero])
+  @@index([contratoId])
 }
 
 enum StatusContrato {

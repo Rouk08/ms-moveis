@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import StatusBadgeContrato from "@/components/admin/StatusBadgeContrato";
 import EditContratoForm from "@/components/admin/EditContratoForm";
 import EtapasProducaoList from "@/components/admin/EtapasProducaoList";
+import EtapaFabricacaoAdminList from "@/components/admin/EtapaFabricacaoAdminList";
 
 export default async function ContratoPage({
   params,
@@ -16,7 +17,10 @@ export default async function ContratoPage({
     where: { id },
     include: {
       contrato: {
-        include: { etapasProducao: { orderBy: { ordem: "asc" } } },
+        include: {
+          etapasProducao: { orderBy: { ordem: "asc" } },
+          etapasFabricacao: { orderBy: { numero: "asc" } },
+        },
       },
     },
   });
@@ -60,16 +64,26 @@ export default async function ContratoPage({
       </a>
 
       {contrato.status === "ASSINADO" && (
-        <EtapasProducaoList
-          contratoId={contrato.id}
-          etapasIniciais={contrato.etapasProducao.map((etapa) => ({
-            id: etapa.id,
-            nome: etapa.nome,
-            dataPrevista: etapa.dataPrevista.toISOString(),
-            concluida: etapa.concluida,
-            observacao: etapa.observacao,
-          }))}
-        />
+        <div className="space-y-6">
+          <EtapaFabricacaoAdminList
+            contratoId={contrato.id}
+            itens={contrato.etapasFabricacao.map((item) => ({
+              id: item.id,
+              numero: item.numero,
+              concluida: item.concluida,
+            }))}
+          />
+          <EtapasProducaoList
+            contratoId={contrato.id}
+            etapasIniciais={contrato.etapasProducao.map((etapa) => ({
+              id: etapa.id,
+              nome: etapa.nome,
+              dataPrevista: etapa.dataPrevista.toISOString(),
+              concluida: etapa.concluida,
+              observacao: etapa.observacao,
+            }))}
+          />
+        </div>
       )}
 
       <EditContratoForm
