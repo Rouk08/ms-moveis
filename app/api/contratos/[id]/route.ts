@@ -6,6 +6,7 @@ import type {
   StatusContrato,
   TipoContratante,
 } from "@/lib/generated/prisma/enums";
+import { calcularEtapasPadrao } from "@/lib/etapas-producao";
 
 const STATUS_VALUES: StatusContrato[] = ["RASCUNHO", "GERADO", "ASSINADO"];
 
@@ -143,8 +144,32 @@ export async function PATCH(
     },
   });
 
+  // Ao assinar o contrato (transição pra ASSINADO), gera o calendário de
+  // produção automaticamente — só na primeira vez que assina, nunca
+  // duplica se o status for salvo de novo já como ASSINADO.
+  if (status === "ASSINADO" && existente.status !== "ASSINADO") {
+    const jaTemEtapas = await prisma.etapaProducao.count({
+      where: { contratoId: id },
+    });
+    if (jaTemEtapas === 0) {
+      const etapas = calcularEtapasPadrao(
+        contrato.dataContrato,
+        contrato.prazoExecucaoDias
+      );
+      await prisma.etapaProducao.createMany({
+        data: etapas.map((etapa, index) => ({
+          contratoId: id,
+          ordem: index,
+          nome: etapa.nome,
+          dataPrevista: etapa.dataPrevista,
+        })),
+      });
+    }
+  }
+
   revalidatePath(`/admin/orcamentos/${contrato.orcamentoId}`);
   revalidatePath(`/admin/orcamentos/${contrato.orcamentoId}/contrato`);
+  revalidatePath("/admin/producao");
 
   return NextResponse.json({ success: true });
 }

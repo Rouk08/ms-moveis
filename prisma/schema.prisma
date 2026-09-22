@@ -281,11 +281,32 @@ model Contrato {
   clausulaAdicional    String?
   createdAt            DateTime        @default(now())
   updatedAt            DateTime        @updatedAt
+  etapasProducao       EtapaProducao[]
 }
 
 enum TipoContratante {
   PESSOA_FISICA
   PESSOA_JURIDICA
+}
+
+// Calendário de produção/entrega — criado automaticamente quando o
+// contrato é assinado (ver POST/PATCH /api/contratos/[id]), com etapas
+// padrão calculadas a partir do prazo de execução. Editável depois.
+model EtapaProducao {
+  id            String    @id @default(cuid())
+  contratoId    String
+  contrato      Contrato  @relation(fields: [contratoId], references: [id], onDelete: Cascade)
+  ordem         Int
+  nome          String
+  dataPrevista  DateTime
+  concluida     Boolean   @default(false)
+  dataConclusao DateTime?
+  observacao    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([contratoId])
+  @@index([dataPrevista])
 }
 
 enum StatusContrato {

@@ -4,6 +4,7 @@ import { ArrowLeft, Download } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import StatusBadgeContrato from "@/components/admin/StatusBadgeContrato";
 import EditContratoForm from "@/components/admin/EditContratoForm";
+import EtapasProducaoList from "@/components/admin/EtapasProducaoList";
 
 export default async function ContratoPage({
   params,
@@ -13,7 +14,11 @@ export default async function ContratoPage({
   const { id } = await params;
   const orcamento = await prisma.orcamento.findUnique({
     where: { id },
-    include: { contrato: true },
+    include: {
+      contrato: {
+        include: { etapasProducao: { orderBy: { ordem: "asc" } } },
+      },
+    },
   });
 
   if (!orcamento || !orcamento.contrato) notFound();
@@ -53,6 +58,19 @@ export default async function ContratoPage({
         <Download size={16} />
         Baixar PDF
       </a>
+
+      {contrato.status === "ASSINADO" && (
+        <EtapasProducaoList
+          contratoId={contrato.id}
+          etapasIniciais={contrato.etapasProducao.map((etapa) => ({
+            id: etapa.id,
+            nome: etapa.nome,
+            dataPrevista: etapa.dataPrevista.toISOString(),
+            concluida: etapa.concluida,
+            observacao: etapa.observacao,
+          }))}
+        />
+      )}
 
       <EditContratoForm
         id={contrato.id}
