@@ -176,6 +176,19 @@ enum StatusRecebimento {
   RECEBIDO
 }
 
+// Aporte de capital feito por um sócio na empresa — entrada de caixa
+// separada do faturamento operacional (contas a receber), então não
+// entra no cálculo de "saldo previsto" do financeiro.
+model Aporte {
+  id         String   @id @default(cuid())
+  socio      String
+  valor      Decimal  @db.Decimal(10, 2)
+  data       DateTime
+  observacao String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 model Colaborador {
   id            String        @id @default(cuid())
   nome          String

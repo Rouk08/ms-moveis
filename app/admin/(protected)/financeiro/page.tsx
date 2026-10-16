@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { TrendingDown, TrendingUp, Scale, AlertTriangle } from "lucide-react";
+import {
+  TrendingDown,
+  TrendingUp,
+  Scale,
+  AlertTriangle,
+  HandCoins,
+} from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import StatCard from "@/components/admin/StatCard";
 
@@ -15,6 +21,7 @@ export default async function FinanceiroPage() {
   const [
     pagarMes,
     receberMes,
+    aportesMes,
     atrasadosPagar,
     atrasadosReceber,
     proximosPagar,
@@ -33,6 +40,10 @@ export default async function FinanceiroPage() {
         status: "PENDENTE",
         vencimento: { gte: startOfMonth, lte: endOfMonth },
       },
+    }),
+    prisma.aporte.aggregate({
+      _sum: { valor: true },
+      where: { data: { gte: startOfMonth, lte: endOfMonth } },
     }),
     prisma.contaPagar.count({
       where: { status: "PENDENTE", vencimento: { lt: now } },
@@ -54,6 +65,7 @@ export default async function FinanceiroPage() {
 
   const totalPagarMes = Number(pagarMes._sum.valor ?? 0);
   const totalReceberMes = Number(receberMes._sum.valor ?? 0);
+  const totalAportesMes = Number(aportesMes._sum.valor ?? 0);
   const saldoPrevisto = totalReceberMes - totalPagarMes;
   const atrasados = atrasadosPagar + atrasadosReceber;
 
@@ -104,6 +116,11 @@ export default async function FinanceiroPage() {
           icon={Scale}
         />
         <StatCard label="Contas atrasadas" value={atrasados} icon={AlertTriangle} />
+        <StatCard
+          label="Aportes dos sócios este mês"
+          value={formatBRL(totalAportesMes)}
+          icon={HandCoins}
+        />
       </div>
 
       <div className="flex flex-wrap gap-3 mb-8">
@@ -118,6 +135,12 @@ export default async function FinanceiroPage() {
           className="rounded-full bg-white border border-charcoal-200 px-5 py-2.5 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors"
         >
           Ver contas a receber
+        </Link>
+        <Link
+          href="/admin/financeiro/aportes"
+          className="rounded-full bg-white border border-charcoal-200 px-5 py-2.5 text-sm font-medium text-charcoal-700 hover:bg-charcoal-50 transition-colors"
+        >
+          Ver aportes dos sócios
         </Link>
       </div>
 
