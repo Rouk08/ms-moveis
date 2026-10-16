@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Plus, Repeat } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import StatusBadgePagamento from "@/components/admin/StatusBadgePagamento";
+import DuplicarContaButton from "@/components/admin/DuplicarContaButton";
+import FiltroMesNav from "@/components/admin/FiltroMesNav";
+import { resolverMes } from "@/lib/filtro-mes";
 
 const filters = [
   { label: "Todos", value: "TODOS" },
@@ -24,23 +27,38 @@ const categoriaLabels: Record<string, string> = {
 export default async function ContasAPagarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; mes?: string }>;
 }) {
-  const { status } = await searchParams;
+  const { status, mes: mesParam } = await searchParams;
   const activeStatus = filters.some((f) => f.value === status)
     ? (status as (typeof filters)[number]["value"])
     : "TODOS";
+  const mes = resolverMes(mesParam);
 
-  const where =
+  const statusWhere =
     activeStatus === "TODOS"
       ? {}
       : activeStatus === "PENDENTE"
         ? { status: "PENDENTE" as const }
         : activeStatus === "ATRASADO"
-          ? { status: "PENDENTE" as const, vencimento: { lt: new Date() } }
+          ? { status: "PENDENTE" as const }
           : activeStatus === "RECORRENTE"
             ? { grupoRecorrencia: { not: null } }
             : { status: "PAGO" as const };
+
+  const vencimentoWhere: { gte?: Date; lte?: Date; lt?: Date } = {};
+  if (mes) {
+    vencimentoWhere.gte = mes.start;
+    vencimentoWhere.lte = mes.end;
+  }
+  if (activeStatus === "ATRASADO") {
+    vencimentoWhere.lt = new Date();
+  }
+
+  const where = {
+    ...statusWhere,
+    ...(Object.keys(vencimentoWhere).length ? { vencimento: vencimentoWhere } : {}),
+  };
 
   const contas = await prisma.contaPagar.findMany({
     where,
@@ -67,24 +85,32 @@ export default async function ContasAPagarPage({
         </Link>
       </div>
 
+      <FiltroMesNav
+        basePath="/admin/financeiro/contas-a-pagar"
+        mes={mes}
+        status={activeStatus}
+      />
+
       <div className="flex flex-wrap gap-2 mb-6">
-        {filters.map((filter) => (
-          <Link
-            key={filter.value}
-            href={
-              filter.value === "TODOS"
-                ? "/admin/financeiro/contas-a-pagar"
-                : `/admin/financeiro/contas-a-pagar?status=${filter.value}`
-            }
-            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-              activeStatus === filter.value
-                ? "bg-charcoal-800 text-white"
-                : "bg-white text-charcoal-600 border border-charcoal-200 hover:bg-charcoal-50"
-            }`}
-          >
-            {filter.label}
-          </Link>
-        ))}
+        {filters.map((filter) => {
+          const params = new URLSearchParams();
+          if (filter.value !== "TODOS") params.set("status", filter.value);
+          if (mes) params.set("mes", mes.atual);
+          const qs = params.toString();
+          return (
+            <Link
+              key={filter.value}
+              href={`/admin/financeiro/contas-a-pagar${qs ? `?${qs}` : ""}`}
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                activeStatus === filter.value
+                  ? "bg-charcoal-800 text-white"
+                  : "bg-white text-charcoal-600 border border-charcoal-200 hover:bg-charcoal-50"
+              }`}
+            >
+              {filter.label}
+            </Link>
+          );
+        })}
       </div>
 
       <div className="rounded-2xl border border-charcoal-100 bg-white shadow-sm overflow-hidden">
@@ -103,6 +129,7 @@ export default async function ContasAPagarPage({
                   <th className="px-6 py-3 font-medium">Valor</th>
                   <th className="px-6 py-3 font-medium">Vencimento</th>
                   <th className="px-6 py-3 font-medium">Status</th>
+                  <th className="px-6 py-3 font-medium"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-charcoal-100">
@@ -161,6 +188,9 @@ export default async function ContasAPagarPage({
                           vencimento={conta.vencimento}
                         />
                       </Link>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <DuplicarContaButton id={conta.id} tipo="pagar" variant="icon" />
                     </td>
                   </tr>
                 ))}

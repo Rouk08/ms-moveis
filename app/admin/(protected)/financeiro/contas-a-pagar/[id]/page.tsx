@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import StatusBadgePagamento from "@/components/admin/StatusBadgePagamento";
 import EditContaPagarForm from "@/components/admin/EditContaPagarForm";
 import ExcluirContaPagarButton from "@/components/admin/ExcluirContaPagarButton";
+import DuplicarContaButton from "@/components/admin/DuplicarContaButton";
 
 const categoriaLabels: Record<string, string> = {
   MATERIAL: "Material",
@@ -111,7 +112,8 @@ export default async function ContaPagarDetailPage({
         </dl>
       </div>
 
-      <div className="mb-6">
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <DuplicarContaButton id={conta.id} tipo="pagar" />
         <ExcluirContaPagarButton
           id={conta.id}
           ehRecorrente={Boolean(conta.grupoRecorrencia)}

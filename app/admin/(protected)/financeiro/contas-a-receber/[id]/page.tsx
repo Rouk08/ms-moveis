@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, Mail, Phone, Layers, FileText } from "lucide-react
 import { prisma } from "@/lib/prisma";
 import StatusBadgeRecebimento from "@/components/admin/StatusBadgeRecebimento";
 import EditContaReceberForm from "@/components/admin/EditContaReceberForm";
+import DuplicarContaButton from "@/components/admin/DuplicarContaButton";
 
 export default async function ContaReceberDetailPage({
   params,
@@ -112,6 +113,10 @@ export default async function ContaReceberDetailPage({
             </div>
           )}
         </dl>
+      </div>
+
+      <div className="mb-6">
+        <DuplicarContaButton id={conta.id} tipo="receber" />
       </div>
 
       <EditContaReceberForm
