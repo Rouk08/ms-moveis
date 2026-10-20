@@ -1,7 +1,9 @@
+import { rm } from "fs/promises";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { aporteComprovantesDir } from "@/lib/uploads";
 
 export async function PATCH(
   request: Request,
@@ -53,6 +55,7 @@ export async function DELETE(
   }
 
   await prisma.aporte.delete({ where: { id } });
+  await rm(aporteComprovantesDir(id), { recursive: true, force: true });
 
   revalidatePath("/admin/financeiro");
   revalidatePath("/admin/financeiro/aportes");

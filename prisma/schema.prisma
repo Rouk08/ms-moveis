@@ -128,6 +128,20 @@ model ContaPagar {
   notasInternas          String?
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
+  comprovantes           ContaPagarComprovante[]
+}
+
+// Comprovante de pagamento (NF, boleto pago, recibo) anexado a uma
+// conta a pagar — mesmo padrão de OrcamentoFoto, aceitando também PDF.
+model ContaPagarComprovante {
+  id           String     @id @default(cuid())
+  contaPagarId String
+  contaPagar   ContaPagar @relation(fields: [contaPagarId], references: [id], onDelete: Cascade)
+  nomeArquivo  String
+  caminho      String
+  contentType  String
+  tamanho      Int
+  createdAt    DateTime   @default(now())
 }
 
 enum FrequenciaRecorrencia {
@@ -187,6 +201,20 @@ model Aporte {
   observacao String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  comprovantes AporteComprovante[]
+}
+
+// Comprovante do aporte (recibo, print da transferência) — mesmo
+// padrão de ContaPagarComprovante.
+model AporteComprovante {
+  id          String   @id @default(cuid())
+  aporteId    String
+  aporte      Aporte   @relation(fields: [aporteId], references: [id], onDelete: Cascade)
+  nomeArquivo String
+  caminho     String
+  contentType String
+  tamanho     Int
+  createdAt   DateTime @default(now())
 }
 
 model Colaborador {

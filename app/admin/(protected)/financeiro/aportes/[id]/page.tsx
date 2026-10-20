@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, User } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import EditAporteForm from "@/components/admin/EditAporteForm";
 import ExcluirAporteButton from "@/components/admin/ExcluirAporteButton";
+import Comprovantes from "@/components/admin/Comprovantes";
 
 export default async function AporteDetailPage({
   params,
@@ -11,7 +12,10 @@ export default async function AporteDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const aporte = await prisma.aporte.findUnique({ where: { id } });
+  const aporte = await prisma.aporte.findUnique({
+    where: { id },
+    include: { comprovantes: true },
+  });
 
   if (!aporte) notFound();
 
@@ -59,6 +63,16 @@ export default async function AporteDetailPage({
           </div>
         </dl>
       </div>
+
+      <Comprovantes
+        tipo="aportes"
+        entidadeId={aporte.id}
+        comprovantesIniciais={aporte.comprovantes.map((c) => ({
+          id: c.id,
+          nomeArquivo: c.nomeArquivo,
+          contentType: c.contentType,
+        }))}
+      />
 
       <div className="mb-6">
         <ExcluirAporteButton id={aporte.id} />

@@ -6,6 +6,7 @@ import StatusBadgePagamento from "@/components/admin/StatusBadgePagamento";
 import EditContaPagarForm from "@/components/admin/EditContaPagarForm";
 import ExcluirContaPagarButton from "@/components/admin/ExcluirContaPagarButton";
 import DuplicarContaButton from "@/components/admin/DuplicarContaButton";
+import Comprovantes from "@/components/admin/Comprovantes";
 
 const categoriaLabels: Record<string, string> = {
   MATERIAL: "Material",
@@ -30,7 +31,10 @@ export default async function ContaPagarDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const conta = await prisma.contaPagar.findUnique({ where: { id } });
+  const conta = await prisma.contaPagar.findUnique({
+    where: { id },
+    include: { comprovantes: true },
+  });
 
   if (!conta) notFound();
 
@@ -111,6 +115,16 @@ export default async function ContaPagarDetailPage({
           )}
         </dl>
       </div>
+
+      <Comprovantes
+        tipo="contas-pagar"
+        entidadeId={conta.id}
+        comprovantesIniciais={conta.comprovantes.map((c) => ({
+          id: c.id,
+          nomeArquivo: c.nomeArquivo,
+          contentType: c.contentType,
+        }))}
+      />
 
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <DuplicarContaButton id={conta.id} tipo="pagar" />

@@ -1,7 +1,9 @@
+import { rm } from "fs/promises";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { contaPagarComprovantesDir } from "@/lib/uploads";
 import type {
   CategoriaPagar,
   StatusPagamento,
@@ -95,19 +97,29 @@ export async function DELETE(
   }
 
   if (scope === "futuras" && conta.grupoRecorrencia) {
-    const { count } = await prisma.contaPagar.deleteMany({
+    const afetadas = await prisma.contaPagar.findMany({
       where: {
         grupoRecorrencia: conta.grupoRecorrencia,
         status: "PENDENTE",
         vencimento: { gte: conta.vencimento },
       },
+      select: { id: true },
     });
+    const { count } = await prisma.contaPagar.deleteMany({
+      where: { id: { in: afetadas.map((c) => c.id) } },
+    });
+    await Promise.all(
+      afetadas.map((c) =>
+        rm(contaPagarComprovantesDir(c.id), { recursive: true, force: true })
+      )
+    );
     revalidatePath("/admin/financeiro");
     revalidatePath("/admin/financeiro/contas-a-pagar");
     return NextResponse.json({ success: true, count });
   }
 
   await prisma.contaPagar.delete({ where: { id } });
+  await rm(contaPagarComprovantesDir(id), { recursive: true, force: true });
 
   revalidatePath("/admin/financeiro");
   revalidatePath("/admin/financeiro/contas-a-pagar");
